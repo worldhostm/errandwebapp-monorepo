@@ -1,27 +1,37 @@
 {
-  "name": "errandwebapp",
+  "name": "errandwebapp-monorepo",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.2"
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "build": "npm run build --workspace=packages/shared && npm run build --workspace=apps/frontend && npm run build --workspace=apps/backend",
+    "build:frontend": "npm run build --workspace=apps/frontend",
+    "build:backend": "npm run build --workspace=apps/backend",
+    "build:shared": "npm run build --workspace=packages/shared",
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "npm run start --workspace=apps/frontend",
+    "start:backend": "npm run start --workspace=apps/backend",
+    "lint": "npm run lint --workspace=apps/frontend && npm run lint --workspace=apps/backend",
+    "typecheck": "npm run typecheck --workspace=apps/frontend && npm run typecheck --workspace=apps/backend",
+    "setup": "node -e \"const os = require('os'); const { exec } = require('child_process'); const script = os.platform() === 'win32' ? 'scripts/setup.bat' : 'bash scripts/setup.sh'; exec(script, (err, stdout, stderr) => { if (stdout) console.log(stdout); if (stderr) console.error(stderr); if (err) process.exit(1); });\"",
+    "quick-start": "node -e \"const os = require('os'); const { exec } = require('child_process'); const script = os.platform() === 'win32' ? 'scripts/start.bat' : 'bash scripts/start.sh'; exec(script, (err, stdout, stderr) => { if (stdout) console.log(stdout); if (stderr) console.error(stderr); if (err) process.exit(1); });\"",
+    "clean": "rm -rf node_modules package-lock.json && rm -rf apps/*/node_modules apps/*/package-lock.json && rm -rf apps/*/.next apps/*/dist",
+    "clean:win": "rmdir /s /q node_modules & del package-lock.json & rmdir /s /q apps\\frontend\\node_modules apps\\backend\\node_modules & rmdir /s /q apps\\frontend\\.next apps\\backend\\dist",
+    "reset": "npm run clean && npm install",
+    "health": "curl -s http://localhost:5000/api/health || echo 'Backend not running'",
+    "mongo:start": "node -e \"const os = require('os'); const { exec } = require('child_process'); const cmd = os.platform() === 'win32' ? 'net start MongoDB' : (os.platform() === 'darwin' ? 'brew services start mongodb/brew/mongodb-community' : 'sudo systemctl start mongod'); exec(cmd, (err, stdout) => { console.log(stdout || 'MongoDB start attempted'); });\"",
+    "mongo:stop": "node -e \"const os = require('os'); const { exec } = require('child_process'); const cmd = os.platform() === 'win32' ? 'net stop MongoDB' : (os.platform() === 'darwin' ? 'brew services stop mongodb/brew/mongodb-community' : 'sudo systemctl stop mongod'); exec(cmd, (err, stdout) => { console.log(stdout || 'MongoDB stop attempted'); });\"",
+    "docker:mongo": "docker run -d -p 27017:27017 --name errand-mongodb --restart unless-stopped mongo:latest",
+    "docker:mongo:stop": "docker stop errand-mongodb && docker rm errand-mongodb"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.2",
-    "@eslint/eslintrc": "^3"
+    "concurrently": "^8.2.2",
+    "typescript": "^5.6.3"
   }
 }

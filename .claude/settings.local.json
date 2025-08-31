@@ -11,7 +11,10 @@
       "Bash(taskkill:*)",
       "Bash(PORT=5001 npm run dev)",
       "Bash(git add:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(wmic process where:*)"
     ],
     "deny": [],
     "ask": []

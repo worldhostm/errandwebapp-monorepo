@@ -14,7 +14,11 @@
       "Bash(git reset:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(wmic process where:*)"
+      "Bash(wmic process where:*)",
+      "Bash(chmod:*)",
+      "Bash(./scripts/setup.sh:*)",
+      "Bash(./scripts/start.sh:*)",
+      "Bash(npm run lint:*)"
     ],
     "deny": [],
     "ask": []

@@ -7,6 +7,8 @@ import { getDefaultProfileImage } from '../lib/imageUtils'
 import { createProfileMarkerImage } from '../lib/profileMarker'
 import { getRadiusFromZoomLevel } from '../lib/mapUtils'
 import { getDefaultMarkerImages } from '../lib/categoryUtils'
+import { createClusters, createClusterMarkerImage, shouldCluster, type ClusterMarker } from '../lib/clustering'
+import { debounceLocationQuery } from '../lib/throttle'
 import KakaoMapWrapper from './KakaoMapWrapper'
 
 interface MapComponentProps {
@@ -17,6 +19,7 @@ interface MapComponentProps {
   userLocation?: { lat: number; lng: number } | null
   centerLocation?: { lat: number; lng: number } | null
   selectedErrandId?: string | null
+  onMapMove?: (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => void
 }
 
 export default function MapComponent({ 
@@ -26,7 +29,8 @@ export default function MapComponent({
   onRadiusChange,
   userLocation: propUserLocation,
   centerLocation,
-  selectedErrandId
+  selectedErrandId,
+  onMapMove
 }: MapComponentProps) {
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(propUserLocation || null)
   const [selectedErrand, setSelectedErrand] = useState<ErrandLocation | null>(null)
@@ -35,6 +39,16 @@ export default function MapComponent({
   const [defaultMarkers, setDefaultMarkers] = useState<Record<string, string>>({})
   const [animatingMarker, setAnimatingMarker] = useState<string | null>(null)
   const [animationRadius, setAnimationRadius] = useState(0)
+  const [clusters, setClusters] = useState<ClusterMarker[]>([])
+  const [unclusteredErrands, setUnclusteredErrands] = useState<ErrandLocation[]>([])
+  const [clusterImages, setClusterImages] = useState<Record<string, string>>({})
+
+  // 디바운스된 지도 이동 콜백 함수
+  const debouncedOnMapMove = debounceLocationQuery((center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+    if (onMapMove) {
+      onMapMove(center, bounds)
+    }
+  }, 1000)
 
   // centerLocation이 변경되면 지도 중심 이동
   useEffect(() => {
@@ -72,6 +86,37 @@ export default function MapComponent({
     }
   }, [currentUser])
 
+  // 클러스터링 처리
+  useEffect(() => {
+    // 클러스터링 조건: 심부름이 5개 이상이고, 브라우저 환경일 때만
+    if (typeof window !== 'undefined' && errands.length >= 5) {
+      try {
+        const { clusters: newClusters, unclustered } = createClusters(errands, currentZoom)
+        setClusters(newClusters)
+        setUnclusteredErrands(unclustered)
+
+        // 클러스터 마커 이미지 생성
+        const newClusterImages: Record<string, string> = {}
+        newClusters.forEach(cluster => {
+          if (!clusterImages[cluster.count.toString()]) {
+            newClusterImages[cluster.count.toString()] = createClusterMarkerImage(cluster.count)
+          }
+        })
+        
+        if (Object.keys(newClusterImages).length > 0) {
+          setClusterImages(prev => ({ ...prev, ...newClusterImages }))
+        }
+      } catch (error) {
+        console.error('클러스터링 처리 중 오류:', error)
+        setClusters([])
+        setUnclusteredErrands(errands)
+      }
+    } else {
+      setClusters([])
+      setUnclusteredErrands(errands)
+    }
+  }, [errands, currentZoom])
+
   // 외부에서 선택된 심부름에 대한 반복 파동 애니메이션 효과
   useEffect(() => {
     if (selectedErrandId && errands.length > 0) {
@@ -79,6 +124,9 @@ export default function MapComponent({
       if (errand) {
         setSelectedErrand(errand)
         setAnimatingMarker(errand.id)
+        
+        // 선택된 심부름으로 지도 중심 이동
+        setMapCenter({ lat: errand.lat, lng: errand.lng })
         
         // 무한 반복 파동 애니메이션
         let intervalId: NodeJS.Timeout
@@ -132,13 +180,45 @@ export default function MapComponent({
     }
   }
 
-  const handleZoomChanged = (map: { getLevel: () => number }) => {
+  const handleZoomChanged = (map: { getLevel: () => number; getCenter: () => any; getBounds: () => any }) => {
     const newZoom = map.getLevel()
     setCurrentZoom(newZoom)
     
     if (onRadiusChange) {
       const newRadius = getRadiusFromZoomLevel(newZoom)
       onRadiusChange(newRadius)
+    }
+
+    // 줌 변경 시에도 위치 기반 조회 트리거
+    handleMapMove(map)
+  }
+
+  const handleMapMove = (map: { getCenter: () => any; getBounds: () => any }) => {
+    if (!onMapMove) return
+
+    try {
+      const center = map.getCenter()
+      const bounds = map.getBounds()
+      
+      const mapCenter = {
+        lat: center.getLat(),
+        lng: center.getLng()
+      }
+      
+      const mapBounds = {
+        sw: {
+          lat: bounds.getSouthWest().getLat(),
+          lng: bounds.getSouthWest().getLng()
+        },
+        ne: {
+          lat: bounds.getNorthEast().getLat(),
+          lng: bounds.getNorthEast().getLng()
+        }
+      }
+
+      debouncedOnMapMove(mapCenter, mapBounds)
+    } catch (error) {
+      console.error('지도 이동 처리 중 오류:', error)
     }
   }
 
@@ -177,8 +257,34 @@ export default function MapComponent({
           level={currentZoom}
           onClick={handleMapClick}
           onZoomChanged={handleZoomChanged}
+          onCenterChanged={handleMapMove}
+          onDragEnd={handleMapMove}
         >
-          {errands.map((errand) => (
+          {/* 클러스터 마커들 */}
+          {clusters.map((cluster) => (
+            <MapMarker
+              key={cluster.id}
+              position={{ lat: cluster.lat, lng: cluster.lng }}
+              image={{
+                src: clusterImages[cluster.count.toString()] || createClusterMarkerImage(cluster.count),
+                size: { 
+                  width: cluster.count > 99 ? 50 : cluster.count > 9 ? 45 : 40,
+                  height: cluster.count > 99 ? 50 : cluster.count > 9 ? 45 : 40
+                },
+              }}
+              clickable={true}
+              onClick={() => {
+                // 클러스터를 클릭하면 줌인하여 개별 마커들을 보여줌
+                if (currentZoom > 1) {
+                  setCurrentZoom(currentZoom - 2)
+                  setMapCenter({ lat: cluster.lat, lng: cluster.lng })
+                }
+              }}
+            />
+          ))}
+
+          {/* 클러스터되지 않은 개별 심부름 마커들 */}
+          {unclusteredErrands.map((errand) => (
             <MapMarker
               key={errand.id}
               position={{ lat: errand.lat, lng: errand.lng }}

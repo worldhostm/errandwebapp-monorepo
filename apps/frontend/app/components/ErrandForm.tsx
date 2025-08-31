@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
 const MapComponent = dynamic(() => import('./Map'), {
@@ -33,6 +33,28 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     deadline: '',
     category: categories[0]
   })
+  
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+
+  // 사용자 위치 가져오기
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          })
+        },
+        () => {
+          // 위치 가져오기 실패 시 서울시청으로 기본 설정
+          setUserLocation({ lat: 37.5665, lng: 126.9780 })
+        }
+      )
+    } else {
+      setUserLocation({ lat: 37.5665, lng: 126.9780 })
+    }
+  }, [])
 
   const handleLocationSelect = (lat: number, lng: number) => {
     setFormData(prev => ({ ...prev, lat, lng }))
@@ -149,7 +171,12 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   </span>
                 )}
               </p>
-              <MapComponent onLocationSelect={handleLocationSelect} />
+              <MapComponent 
+                onLocationSelect={handleLocationSelect} 
+                userLocation={userLocation}
+                centerLocation={userLocation}
+                errands={[]} // 등록 폼에서는 빈 배열로 설정
+              />
             </div>
 
             <div className="flex gap-4 pt-4">

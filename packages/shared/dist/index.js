@@ -20,3 +20,5 @@ __exportStar(require("./types"), exports);
 __exportStar(require("./constants"), exports);
 // Export all utilities
 __exportStar(require("./utils"), exports);
+// Export sample data
+__exportStar(require("./data/sampleData"), exports);

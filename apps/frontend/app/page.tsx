@@ -9,6 +9,8 @@ import ProfileModal from './components/ProfileModal'
 import { getDefaultProfileImage } from './lib/imageUtils'
 import { processErrands, calculateDistance } from './lib/mapUtils'
 import { getCategoryInfo } from './lib/categoryUtils'
+// 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
+import { SAMPLE_ERRANDS, SAMPLE_USERS, SEOUL_LOCATIONS, DONGTAN2_LOCATIONS } from '../../../packages/shared/src/data/sampleData'
 import type { User, ErrandLocation, ErrandFormData } from './lib/types'
 
 const MapComponent = dynamic(() => import('./components/Map'), {
@@ -35,83 +37,29 @@ export default function Home() {
   const [mapRadius, setMapRadius] = useState(10) // 기본 10km 반경
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null)
   const [selectedErrandId, setSelectedErrandId] = useState<string | null>(null)
-  const [allErrands] = useState<ErrandLocation[]>([
-    {
-      id: '1',
-      title: '편의점에서 음료 구매',
-      description: '세븐일레븐에서 콜라 2개 구매해주세요',
-      lat: 37.5665,
-      lng: 126.9780,
-      reward: 5000,
-      status: 'pending',
-      category: '쇼핑/구매',
-      deadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(), // 4시간 후 (긴급)
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: '2',
-      title: '문서 배달',
-      description: '중요한 서류를 A동에서 B동으로 배달',
-      lat: 37.5675,
-      lng: 126.9790,
-      reward: 15000,
-      status: 'accepted',
-      category: '배달/픽업',
-      deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24시간 후
-      createdAt: new Date().toISOString(),
-      acceptedBy: 'test-user'
-    },
-    {
-      id: '3',
-      title: '청소 도움',
-      description: '사무실 청소 도와주세요',
-      lat: 37.5655,
-      lng: 126.9770,
-      reward: 8000,
-      status: 'in_progress',
-      category: '청소/정리',
-      deadline: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(), // 12시간 후
-      createdAt: new Date().toISOString(),
-      acceptedBy: 'another-user'
-    },
-    {
-      id: '4',
-      title: '강아지 산책',
-      description: '1시간 정도 강아지 산책시켜 주세요',
-      lat: 37.5685,
-      lng: 126.9800,
-      reward: 12000,
-      status: 'completed',
-      category: '기타',
-      deadline: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2시간 전 완료
-      createdAt: new Date().toISOString(),
-      acceptedBy: 'test-user'
-    },
-    {
-      id: '5',
-      title: '식료품 구매',
-      description: '마트에서 야채 구매 부탁드려요',
-      lat: 37.5645,
-      lng: 126.9750,
-      reward: 7000,
-      status: 'pending',
-      category: '쇼핑/구매',
-      deadline: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(), // 8시간 후
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: '6',
-      title: '택배 수령',
-      description: '부재중 택배 대신 받아주세요',
-      lat: 37.5695,
-      lng: 126.9810,
-      reward: 3000,
-      status: 'pending',
-      category: '배달/픽업',
-      deadline: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2시간 후 (긴급)
-      createdAt: new Date().toISOString()
+  const [currentMapBounds, setCurrentMapBounds] = useState<{ sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } | null>(null)
+  const [isLoadingErrands, setIsLoadingErrands] = useState(false)
+  
+  // 샘플 심부름 데이터를 ErrandLocation 형태로 변환
+  const convertSampleErrandToErrandLocation = (sampleErrand: any): ErrandLocation => {
+    return {
+      id: sampleErrand.id,
+      title: sampleErrand.title,
+      description: sampleErrand.description,
+      lat: sampleErrand.location.coordinates[1], // latitude
+      lng: sampleErrand.location.coordinates[0], // longitude
+      reward: sampleErrand.reward,
+      status: sampleErrand.status,
+      category: sampleErrand.category,
+      deadline: sampleErrand.deadline?.toISOString() || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: sampleErrand.createdAt?.toISOString() || new Date().toISOString(),
+      acceptedBy: sampleErrand.acceptedBy
     }
-  ])
+  }
+
+  const [allErrands] = useState<ErrandLocation[]>(
+    SAMPLE_ERRANDS.map(convertSampleErrandToErrandLocation)
+  )
   const [filteredErrands, setFilteredErrands] = useState<ErrandLocation[]>([])
 
   // 사용자 위치 가져오기
@@ -133,13 +81,49 @@ export default function Home() {
     }
   }, [])
 
-  // 심부름 필터링 (반경 기반)
+  // 위치 기반 심부름 조회 함수
+  const fetchErrandsInBounds = (bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+    setIsLoadingErrands(true)
+    
+    // 실제 환경에서는 서버 API 호출
+    // const response = await fetch(`/api/errands?swLat=${bounds.sw.lat}&swLng=${bounds.sw.lng}&neLat=${bounds.ne.lat}&neLng=${bounds.ne.lng}`)
+    
+    // 지금은 샘플 데이터에서 영역 내 심부름 필터링
+    setTimeout(() => {
+      const errandsInBounds = allErrands.filter(errand => 
+        errand.lat >= bounds.sw.lat && 
+        errand.lat <= bounds.ne.lat &&
+        errand.lng >= bounds.sw.lng && 
+        errand.lng <= bounds.ne.lng
+      )
+
+      // 사용자 위치가 있으면 거리별로 정렬
+      if (userLocation) {
+        const processed = processErrands(errandsInBounds, userLocation.lat, userLocation.lng, mapRadius)
+        setFilteredErrands(processed)
+      } else {
+        setFilteredErrands(errandsInBounds)
+      }
+      
+      setIsLoadingErrands(false)
+      console.log(`지도 영역 내 ${errandsInBounds.length}개 심부름 조회됨`)
+    }, 300) // 로딩 효과를 위한 지연
+  }
+
+  // 지도 이동 시 호출되는 핸들러
+  const handleMapMove = (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+    setCurrentMapBounds(bounds)
+    fetchErrandsInBounds(bounds)
+  }
+
+  // 초기 로딩: 사용자 위치 기반 심부름 필터링
   useEffect(() => {
-    if (userLocation) {
+    if (userLocation && !currentMapBounds) {
+      // 사용자 위치 중심으로 초기 필터링
       const processed = processErrands(allErrands, userLocation.lat, userLocation.lng, mapRadius)
       setFilteredErrands(processed)
     }
-  }, [allErrands, userLocation, mapRadius])
+  }, [allErrands, userLocation, mapRadius, currentMapBounds])
 
   const handleLogin = (email: string, password: string) => {
     setUser({ id: '1', name: '홍길동', email })
@@ -310,18 +294,29 @@ export default function Home() {
               주변 심부름 찾기
             </h2>
             <p className="text-gray-600">
-              지도에서 근처 심부름을 확인하고 수락해보세요
+              지도를 움직여서 다른 지역의 심부름을 확인해보세요
             </p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-500">
-              반경 <span className="font-semibold text-blue-600">{mapRadius.toFixed(1)}km</span> 내 
-              <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
-            </p>
+            <div className="flex items-center gap-2">
+              {isLoadingErrands && (
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              )}
+              <p className="text-sm text-gray-500">
+                {currentMapBounds ? '지도 영역 내' : `반경 ${mapRadius.toFixed(1)}km 내`} 
+                <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
+              </p>
+            </div>
           </div>
         </div>
 
-        <div id="map-container" className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div id="map-container" className="bg-white rounded-lg shadow-sm overflow-hidden relative">
+          {isLoadingErrands && (
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg z-20 flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm text-gray-600">심부름 조회 중...</span>
+            </div>
+          )}
           <MapComponent 
             errands={filteredErrands} 
             currentUser={user} 
@@ -329,12 +324,19 @@ export default function Home() {
             userLocation={userLocation}
             centerLocation={mapCenter}
             selectedErrandId={selectedErrandId}
+            onMapMove={handleMapMove}
           />
         </div>
 
         <div className="mt-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            주변 심부름 목록 <span className="text-sm font-normal text-gray-500">(거리순 정렬)</span>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            {currentMapBounds ? '지도 영역 내' : '주변'} 심부름 목록 
+            <span className="text-sm font-normal text-gray-500">
+              {userLocation && !currentMapBounds ? '(거리순 정렬)' : ''}
+            </span>
+            {isLoadingErrands && (
+              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            )}
           </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredErrands.map((errand) => {
@@ -443,10 +445,19 @@ export default function Home() {
             )})}
           </div>
           
-          {filteredErrands.length === 0 && (
+          {filteredErrands.length === 0 && !isLoadingErrands && (
             <div className="text-center py-12 text-gray-500">
-              <p>주변 {mapRadius.toFixed(1)}km 내에 심부름이 없습니다.</p>
-              <p className="text-sm mt-1">지도를 확대/축소하여 다른 지역을 확인해보세요.</p>
+              <p>
+                {currentMapBounds ? '현재 지도 영역' : `주변 ${mapRadius.toFixed(1)}km 내`}에 심부름이 없습니다.
+              </p>
+              <p className="text-sm mt-1">지도를 이동하거나 확대/축소하여 다른 지역을 확인해보세요.</p>
+            </div>
+          )}
+          
+          {isLoadingErrands && filteredErrands.length === 0 && (
+            <div className="text-center py-12">
+              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-500">심부름을 조회하고 있습니다...</p>
             </div>
           )}
         </div>

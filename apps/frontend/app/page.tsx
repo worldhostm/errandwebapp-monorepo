@@ -34,6 +34,7 @@ export default function Home() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [mapRadius, setMapRadius] = useState(10) // 기본 10km 반경
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null)
+  const [selectedErrandId, setSelectedErrandId] = useState<string | null>(null)
   const [allErrands] = useState<ErrandLocation[]>([
     {
       id: '1',
@@ -226,11 +227,19 @@ export default function Home() {
     // 지도 중심을 심부름 위치로 이동
     setMapCenter({ lat: errand.lat, lng: errand.lng })
     
+    // 선택된 심부름 ID 설정 (애니메이션을 위해)
+    setSelectedErrandId(errand.id)
+    
     // 스크롤을 지도 위치로 이동
     const mapElement = document.querySelector('#map-container')
     if (mapElement) {
       mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
+    
+    // 애니메이션이 끝나면 선택 상태 초기화
+    setTimeout(() => {
+      setSelectedErrandId(null)
+    }, 2000)
   }
 
   return (
@@ -319,6 +328,7 @@ export default function Home() {
             onRadiusChange={handleMapRadiusChange}
             userLocation={userLocation}
             centerLocation={mapCenter}
+            selectedErrandId={selectedErrandId}
           />
         </div>
 

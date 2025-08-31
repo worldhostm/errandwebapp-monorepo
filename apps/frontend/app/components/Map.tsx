@@ -16,6 +16,7 @@ interface MapComponentProps {
   onRadiusChange?: (radius: number) => void
   userLocation?: { lat: number; lng: number } | null
   centerLocation?: { lat: number; lng: number } | null
+  selectedErrandId?: string | null
 }
 
 export default function MapComponent({ 
@@ -24,7 +25,8 @@ export default function MapComponent({
   currentUser, 
   onRadiusChange,
   userLocation: propUserLocation,
-  centerLocation
+  centerLocation,
+  selectedErrandId
 }: MapComponentProps) {
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(propUserLocation || null)
   const [selectedErrand, setSelectedErrand] = useState<ErrandLocation | null>(null)
@@ -69,6 +71,59 @@ export default function MapComponent({
         })
     }
   }, [currentUser])
+
+  // 외부에서 선택된 심부름에 대한 반복 파동 애니메이션 효과
+  useEffect(() => {
+    if (selectedErrandId && errands.length > 0) {
+      const errand = errands.find(e => e.id === selectedErrandId)
+      if (errand) {
+        setSelectedErrand(errand)
+        setAnimatingMarker(errand.id)
+        
+        // 무한 반복 파동 애니메이션
+        let intervalId: NodeJS.Timeout
+        
+        const createContinuousRipple = () => {
+          intervalId = setInterval(() => {
+            if (selectedErrandId === errand.id) {
+              let startTime: number | null = null
+              const duration = 800 // 0.8초 동안 퍼짐
+              const maxRadius = 500 // 더 크게 퍼지도록
+              
+              const animate = (timestamp: number) => {
+                if (!startTime) startTime = timestamp
+                const elapsed = timestamp - startTime
+                const progress = Math.min(elapsed / duration, 1)
+                
+                // 부드러운 확장
+                const currentRadius = 8 + (maxRadius - 8) * progress
+                setAnimationRadius(currentRadius)
+                
+                if (progress < 1 && selectedErrandId === errand.id) {
+                  requestAnimationFrame(animate)
+                }
+              }
+              
+              requestAnimationFrame(animate)
+            }
+          }, 1000)
+        }
+        
+        // 즉시 첫 파동 시작하고 무한 반복 설정
+        createContinuousRipple()
+        
+        // 정리 함수
+        return () => {
+          if (intervalId) {
+            clearInterval(intervalId)
+          }
+        }
+      }
+    } else {
+      setAnimatingMarker(null)
+      setAnimationRadius(0)
+    }
+  }, [selectedErrandId, errands])
 
   const handleMapClick = (_target: unknown, mouseEvent: { latLng: { getLat: () => number; getLng: () => number } }) => {
     if (onLocationSelect) {
@@ -134,21 +189,6 @@ export default function MapComponent({
               clickable={true}
               onClick={() => {
                 setSelectedErrand(errand)
-                setAnimatingMarker(errand.id)
-                setAnimationRadius(50)
-                
-                // 애니메이션 시퀀스
-                const animateCircle = () => {
-                  setAnimationRadius(100)
-                  setTimeout(() => setAnimationRadius(200), 300)
-                  setTimeout(() => setAnimationRadius(400), 600)
-                  setTimeout(() => {
-                    setAnimatingMarker(null)
-                    setAnimationRadius(0)
-                  }, 1200)
-                }
-                
-                setTimeout(animateCircle, 100)
               }}
             />
           ))}
@@ -163,19 +203,16 @@ export default function MapComponent({
             />
           )}
           
-          {/* 선택된 마커 애니메이션 서클 */}
-          {selectedErrand && animatingMarker === selectedErrand.id && (
+          {/* 목록에서 선택된 심부름 파동 애니메이션 서클 */}
+          {selectedErrand && animatingMarker === selectedErrand.id && animationRadius > 0 && (
             <Circle
               center={{ lat: selectedErrand.lat, lng: selectedErrand.lng }}
               radius={animationRadius}
-              strokeWeight={2}
+              strokeWeight={3}
               strokeColor="#3B82F6"
-              strokeOpacity={0.6}
+              strokeOpacity={Math.max(0.9 - (animationRadius / 500) * 0.85, 0.05)}
               fillColor="#3B82F6"
-              fillOpacity={0.1}
-              style={{
-                transition: 'all 0.3s ease-out'
-              }}
+              fillOpacity={Math.max(0.2 - (animationRadius / 500) * 0.195, 0.005)}
             />
           )}
         </Map>

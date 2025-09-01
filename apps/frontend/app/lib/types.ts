@@ -86,3 +86,13 @@ export interface ErrandsResponse {
     pages: number
   }
 }
+
+// API 응답을 프론트엔드 타입으로 변환하는 헬퍼 함수들
+export const convertApiUserToUser = (apiUser: ApiUser): User => {
+  return {
+    id: apiUser._id,
+    name: apiUser.name,
+    email: apiUser.email,
+    profileImage: apiUser.profileImage
+  }
+}

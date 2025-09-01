@@ -87,7 +87,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
           {!isLoginMode && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-black mb-1">
                   이름
                 </label>
                 <input
@@ -101,7 +101,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-black mb-1">
                   프로필 사진 (선택사항)
                 </label>
                 <div className="flex items-center gap-4">
@@ -143,7 +143,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-black mb-1">
               이메일
             </label>
             <input
@@ -157,7 +157,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-black mb-1">
               비밀번호
             </label>
             <input
@@ -173,7 +173,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
 
           {!isLoginMode && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-black mb-1">
                 비밀번호 확인
               </label>
               <input
@@ -197,7 +197,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
         </form>
 
         <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-black">
             {isLoginMode ? '계정이 없으신가요?' : '이미 계정이 있으신가요?'}
             <button
               onClick={toggleMode}

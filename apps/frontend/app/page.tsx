@@ -18,6 +18,7 @@ import { checkLocationPermission, requestLocationWithPermission } from './lib/lo
 // 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
 import { SAMPLE_ERRANDS } from '../../../packages/shared/src/data/sampleData'
 import type { User, ErrandLocation, ErrandFormData } from './lib/types'
+import { convertApiUserToUser } from './lib/types'
 
 const MapComponent = dynamic(() => import('./components/Map'), {
   ssr: false,
@@ -35,7 +36,7 @@ export default function Home() {
       // JWT 토큰이 있으면 프로필 정보 가져오기
       authApi.getProfile().then(response => {
         if (response.success && response.data) {
-          setUser(response.data.user)
+          setUser(convertApiUserToUser(response.data.user))
         } else {
           // 토큰이 유효하지 않으면 제거
           localStorage.removeItem('authToken')
@@ -225,7 +226,7 @@ export default function Home() {
       if (response.success && response.data) {
         // JWT 토큰 저장
         localStorage.setItem('authToken', response.data.token)
-        setUser(response.data.user)
+        setUser(convertApiUserToUser(response.data.user))
         setShowAuthModal(false)
         console.log('로그인 성공:', response.data.user)
       } else {
@@ -246,11 +247,11 @@ export default function Home() {
         localStorage.setItem('authToken', response.data.token)
         
         // 프로필 이미지가 있으면 업데이트
-        let user = response.data.user
+        let user = convertApiUserToUser(response.data.user)
         if (profileImage) {
           const updateResponse = await authApi.updateProfile({ profileImage })
           if (updateResponse.success && updateResponse.data) {
-            user = updateResponse.data.user
+            user = convertApiUserToUser(updateResponse.data.user)
           }
         }
         
@@ -275,7 +276,7 @@ export default function Home() {
         const response = await authApi.updateProfile(updatedUser)
         
         if (response.success && response.data) {
-          setUser(response.data.user)
+          setUser(convertApiUserToUser(response.data.user))
           console.log('프로필 업데이트 성공:', response.data.user)
         } else {
           alert(response.error || '프로필 업데이트에 실패했습니다.')

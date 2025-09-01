@@ -269,7 +269,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">
+              <label className="block text-sm font-bold text-black mb-1">
                 제목
               </label>
               <input
@@ -283,7 +283,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">
+              <label className="block text-sm font-bold text-black mb-1">
                 카테고리
               </label>
               <select
@@ -300,7 +300,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">
+              <label className="block text-sm font-bold text-black mb-1">
                 상세 설명
               </label>
               <textarea
@@ -314,7 +314,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1">
+                <label className="block text-sm font-bold text-black mb-1">
                   보상 금액 (원)
                 </label>
                 <input
@@ -330,7 +330,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1">
+                <label className="block text-sm font-bold text-black mb-1">
                   마감 시간
                 </label>
                 <input
@@ -349,7 +349,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
 
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="block text-sm font-bold text-gray-900">
+                <label className="block text-sm font-bold text-black">
                   위치 선택
                 </label>
                 <button
@@ -453,7 +453,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   )}
                 </div>
               )}
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-black mb-2">
                 {locationPermissionDenied 
                   ? "주소를 검색하거나 지도를 클릭하여 심부름 위치를 선택하세요"
                   : "현재 위치 버튼, 주소 검색, 또는 지도 클릭으로 심부름 위치를 선택하세요"
@@ -506,7 +506,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">위치 권한 요청</h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-black mb-4">
               정확한 심부름 위치 선택을 위해 현재 위치가 필요합니다.
               위치 권한을 허용하시겠습니까?
             </p>

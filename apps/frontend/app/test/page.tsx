@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function TestLoginPage() {
   const [password, setPassword] = useState('')
@@ -66,17 +67,17 @@ export default function TestLoginPage() {
         </form>
         
         <div className="mt-6 text-center">
-          <a
+          <Link
             href="/"
             className="text-blue-500 hover:text-blue-600 text-sm"
           >
             메인 페이지로 돌아가기
-          </a>
+          </Link>
         </div>
         
         <div className="mt-4 p-3 bg-yellow-50 rounded-md">
           <p className="text-xs text-yellow-800">
-            <strong>힌트:</strong> 비밀번호는 "1234"입니다
+            <strong>힌트:</strong> 비밀번호는 &quot;1234&quot;입니다
           </p>
         </div>
       </div>

@@ -49,25 +49,25 @@ async function apiRequest<T>(
 // 인증 관련 API
 export const authApi = {
   async login(email: string, password: string) {
-    return apiRequest<{ token: string; user: any }>('/auth/login', {
+    return apiRequest<{ token: string; user: import('./types').ApiUser }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
   },
 
   async register(email: string, password: string, name: string) {
-    return apiRequest<{ token: string; user: any }>('/auth/register', {
+    return apiRequest<{ token: string; user: import('./types').ApiUser }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     })
   },
 
   async getProfile() {
-    return apiRequest<{ user: any }>('/auth/profile')
+    return apiRequest<{ user: import('./types').ApiUser }>('/auth/profile')
   },
 
-  async updateProfile(userData: any) {
-    return apiRequest<{ user: any }>('/auth/profile', {
+  async updateProfile(userData: Partial<import('./types').ApiUser>) {
+    return apiRequest<{ user: import('./types').ApiUser }>('/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(userData),
     })
@@ -84,11 +84,11 @@ export const errandApi = {
       ...(status && { status }),
     })
     
-    return apiRequest<{ errands: any[]; pagination: any }>(`/errands/nearby?${params}`)
+    return apiRequest<import('./types').ErrandsResponse>(`/errands/nearby?${params}`)
   },
 
   async getErrandById(id: string) {
-    return apiRequest<{ errand: any }>(`/errands/${id}`)
+    return apiRequest<{ errand: import('./types').ApiErrand }>(`/errands/${id}`)
   },
 
   async createErrand(errandData: {
@@ -97,25 +97,26 @@ export const errandApi = {
     location: {
       type: 'Point'
       coordinates: [number, number]
+      address?: string
     }
     reward: number
     category: string
     deadline: string
   }) {
-    return apiRequest<{ errand: any }>('/errands', {
+    return apiRequest<{ errand: import('./types').ApiErrand }>('/errands', {
       method: 'POST',
       body: JSON.stringify(errandData),
     })
   },
 
   async acceptErrand(id: string) {
-    return apiRequest<{ errand: any }>(`/errands/${id}/accept`, {
+    return apiRequest<{ errand: import('./types').ApiErrand }>(`/errands/${id}/accept`, {
       method: 'POST',
     })
   },
 
   async updateErrandStatus(id: string, status: string) {
-    return apiRequest<{ errand: any }>(`/errands/${id}/status`, {
+    return apiRequest<{ errand: import('./types').ApiErrand }>(`/errands/${id}/status`, {
       method: 'PUT',
       body: JSON.stringify({ status }),
     })
@@ -127,10 +128,22 @@ export const errandApi = {
       ...(status && { status }),
     })
     
-    return apiRequest<{ errands: any[]; pagination: any }>(`/errands/user?${params}`)
+    return apiRequest<import('./types').ErrandsResponse>(`/errands/user?${params}`)
   },
 
   async cancelErrand(id: string) {
+    return apiRequest<{ message: string }>(`/errands/${id}`, {
+      method: 'DELETE',
+    })
+  },
+
+  // 내가 등록한 심부름 목록 조회
+  async getMyErrands() {
+    return apiRequest<import('./types').ErrandsResponse>('/errands/my')
+  },
+
+  // 심부름 삭제
+  async deleteErrand(id: string) {
     return apiRequest<{ message: string }>(`/errands/${id}`, {
       method: 'DELETE',
     })

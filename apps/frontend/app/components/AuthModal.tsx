@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { handleImageUpload, getDefaultProfileImage } from '../lib/imageUtils'
+import { handleImageUpload } from '../lib/imageUtils'
 
 interface AuthModalProps {
   isOpen: boolean

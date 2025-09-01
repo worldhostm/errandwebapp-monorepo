@@ -40,3 +40,49 @@ export interface ErrandFormData {
   category: string
   address?: string
 }
+
+// API 응답 타입들
+export interface ApiUser {
+  _id: string
+  name: string
+  email: string
+  profileImage?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ApiErrand {
+  _id: string
+  title: string
+  description: string
+  location: {
+    type: 'Point'
+    coordinates: [number, number]
+  }
+  reward: number
+  status: 'pending' | 'accepted' | 'in_progress' | 'completed'
+  category: string
+  deadline: string
+  createdAt: string
+  createdBy: string
+  acceptedBy?: {
+    _id: string
+    name: string
+    profileImage?: string
+  } | string
+}
+
+export interface AuthResponse {
+  token: string
+  user: ApiUser
+}
+
+export interface ErrandsResponse {
+  errands: ApiErrand[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    pages: number
+  }
+}

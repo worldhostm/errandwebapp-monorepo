@@ -18,7 +18,11 @@
       "Bash(chmod:*)",
       "Bash(./scripts/setup.sh:*)",
       "Bash(./scripts/start.sh:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(grep:*)",
+      "Bash(npm run health:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npx kill-port:*)"
     ],
     "deny": [],
     "ask": []

@@ -25,6 +25,10 @@ const categories = [
 ]
 
 export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
+  const [currentStep, setCurrentStep] = useState(1)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const totalSteps = 5
+
   const [formData, setFormData] = useState<ErrandFormData>({
     title: '',
     description: '',
@@ -240,6 +244,37 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     }
   }
 
+  const nextStep = () => {
+    if (currentStep < totalSteps) {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentStep(prev => prev + 1)
+        setIsTransitioning(false)
+      }, 300)
+    }
+  }
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentStep(prev => prev - 1)
+        setIsTransitioning(false)
+      }, 300)
+    }
+  }
+
+  const canProceedToNext = () => {
+    switch (currentStep) {
+      case 1: return formData.title.trim() !== ''
+      case 2: return formData.category !== ''
+      case 3: return formData.description.trim() !== ''
+      case 4: return formData.lat !== null && formData.lng !== null
+      case 5: return formData.reward > 0 && formData.deadline !== ''
+      default: return false
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.lat || !formData.lng) {
@@ -253,12 +288,28 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     onSubmit(formData)
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (currentStep < totalSteps && canProceedToNext()) {
+        nextStep()
+      } else if (currentStep === totalSteps && canProceedToNext()) {
+        handleSubmit(e as any)
+      }
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">심부름 요청하기</h2>
+            <div>
+              <h2 className="text-2xl font-bold">심부름 요청하기</h2>
+              <div className="text-sm text-gray-500 mt-1">
+                단계 {currentStep} / {totalSteps}
+              </div>
+            </div>
             <button
               onClick={onCancel}
               className="text-gray-500 hover:text-gray-700 text-xl"
@@ -267,237 +318,244 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold text-black mb-1">
-                제목
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="심부름 제목을 입력하세요"
-                required
-              />
-            </div>
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
+            <div 
+              className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            ></div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-bold text-black mb-1">
-                카테고리
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-black mb-1">
-                상세 설명
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
-                placeholder="심부름 내용을 자세히 설명해주세요"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-bold text-black mb-1">
-                  보상 금액 (원)
-                </label>
-                <input
-                  type="number"
-                  value={formData.reward}
-                  onChange={(e) => setFormData(prev => ({ ...prev, reward: parseInt(e.target.value) || 0 }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="10000"
-                  min="1000"
-                  step="1000"
-                  required
-                />
+          <div 
+            className={`transition-all duration-300 ${
+              isTransitioning ? 'opacity-0 transform translate-y-4' : 'opacity-100 transform translate-y-0'
+            }`}
+          >
+            {currentStep === 1 && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">어떤 심부름인가요?</h3>
+                  <p className="text-gray-500 text-sm">심부름의 제목을 간단하게 적어주세요</p>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    onKeyPress={handleKeyPress}
+                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+                    placeholder="예: 편의점에서 음료수 사와주세요"
+                    autoFocus
+                  />
+                </div>
               </div>
+            )}
 
-              <div>
-                <label className="block text-sm font-bold text-black mb-1">
-                  마감 시간
-                </label>
-                <input
-                  type="datetime-local"
-                  value={formData.deadline}
-                  onChange={(e) => {
-                    setFormData(prev => ({ ...prev, deadline: e.target.value }))
-                    // 날짜 선택 후 포커스 해제하여 datepicker 자동 닫기
-                    e.target.blur()
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+            {currentStep === 2 && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">카테고리를 선택해주세요</h3>
+                  <p className="text-gray-500 text-sm">어떤 종류의 심부름인지 선택해주세요</p>
+                </div>
+                <div className="grid grid-cols-1 gap-3">
+                  {categories.map(category => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, category }))}
+                      className={`p-4 rounded-lg border-2 transition-all ${
+                        formData.category === category
+                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <span className="text-lg">{category}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="block text-sm font-bold text-black">
-                  위치 선택
-                </label>
-                <button
-                  type="button"
-                  onClick={() => getUserLocation(true)}
-                  disabled={isGettingLocation}
-                  className="flex items-center gap-1 px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                >
-                  {isGettingLocation ? (
-                    <>
-                      <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-                      위치 가져오는 중...
-                    </>
-                  ) : (
-                    <>
-                      📍 현재 위치로 설정
-                    </>
-                  )}
-                </button>
+            {currentStep === 3 && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">자세한 내용을 알려주세요</h3>
+                  <p className="text-gray-500 text-sm">구체적인 요청사항을 적어주세요</p>
+                </div>
+                <div>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    onKeyPress={handleKeyPress}
+                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-32 resize-none"
+                    placeholder="예: 편의점에서 콜라 2병과 과자 1봉지 사와주세요. 계산은 카드로 부탁드립니다."
+                    autoFocus
+                  />
+                </div>
               </div>
-              
-              {/* 주소 검색 섹션 */}
-              <div className="mb-3">
-                <div className="flex gap-2">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                          handleAddressSearch()
-                        }
-                      }}
-                      placeholder="주소나 장소명을 입력하세요 (예: 강남역, 서울시 강남구)"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+            )}
+
+            {currentStep === 4 && (
+              <div className="space-y-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-semibold mb-2">어디서 해주시면 될까요?</h3>
+                  <p className="text-gray-500 text-sm">심부름 위치를 선택해주세요</p>
+                </div>
+                
+                <div className="flex gap-2 mb-4">
                   <button
                     type="button"
-                    onClick={handleAddressSearch}
-                    disabled={isSearching || !searchQuery.trim()}
-                    className="px-4 py-2 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
+                    onClick={() => getUserLocation(true)}
+                    disabled={isGettingLocation}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
                   >
-                    {isSearching ? (
+                    {isGettingLocation ? (
                       <>
-                        <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-                        검색중
+                        <div className="w-4 h-4 border border-white border-t-transparent rounded-full animate-spin"></div>
+                        위치 가져오는 중...
                       </>
                     ) : (
                       <>
-                        🔍 검색
+                        📍 현재 위치로 설정
                       </>
                     )}
                   </button>
                 </div>
-                
-                {locationPermissionDenied && (
-                  <p className="text-xs text-orange-600 mt-1">
-                    💡 위치 권한이 없어 주소 검색을 이용해주세요
-                  </p>
-                )}
-              </div>
-              
-              {/* 검색 결과 */}
-              {showSearchResults && (
-                <div className="mb-3 border border-gray-200 rounded-md bg-white shadow-sm max-h-48 overflow-y-auto">
-                  {searchResults.length > 0 ? (
-                    <>
-                      <div className="p-2 bg-gray-50 border-b text-xs text-gray-600">
-                        검색 결과 ({searchResults.length}개)
-                      </div>
-                      {searchResults.map((result, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => handleSearchResultSelect(result)}
-                          className="w-full p-3 text-left hover:bg-blue-50 border-b border-gray-100 last:border-b-0 transition-colors"
-                        >
-                          <div className="font-semibold text-sm text-gray-900">
-                            {result.place_name}
-                          </div>
-                          <div className="text-xs text-gray-600 mt-1">
-                            📍 {result.address_name}
-                          </div>
-                        </button>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => setShowSearchResults(false)}
-                        className="w-full p-2 text-xs text-gray-500 hover:bg-gray-50"
-                      >
-                        검색 결과 닫기
-                      </button>
-                    </>
-                  ) : (
-                    <div className="p-3 text-sm text-gray-500 text-center">
-                      검색 결과가 없습니다
-                    </div>
-                  )}
-                </div>
-              )}
-              <p className="text-sm text-black mb-2">
-                {locationPermissionDenied 
-                  ? "주소를 검색하거나 지도를 클릭하여 심부름 위치를 선택하세요"
-                  : "현재 위치 버튼, 주소 검색, 또는 지도 클릭으로 심부름 위치를 선택하세요"
-                }
-                {formData.lat && formData.lng && (
-                  <span className="text-green-600 ml-2">
-                    ✓ 위치 선택됨
-                  </span>
-                )}
-              </p>
-              {selectedAddress && (
-                <div className="mb-2 p-2 bg-green-50 border border-green-200 rounded-md">
-                  <p className="text-sm text-green-800">
-                    <span className="font-semibold">📍 선택된 주소:</span> {selectedAddress}
-                  </p>
-                  <p className="text-xs text-green-600 mt-1">
-                    좌표: {formData.lat?.toFixed(6)}, {formData.lng?.toFixed(6)}
-                  </p>
-                </div>
-              )}
-              <MapComponent 
-                onLocationSelect={handleLocationSelect} 
-                userLocation={userLocation}
-                centerLocation={userLocation}
-                errands={[]} // 등록 폼에서는 빈 배열로 설정
-              />
-            </div>
 
-            <div className="flex gap-4 pt-4">
+                <div className="flex gap-2 mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleAddressSearch()
+                      }
+                    }}
+                    placeholder="주소나 장소명 검색"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddressSearch}
+                    disabled={isSearching || !searchQuery.trim()}
+                    className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400"
+                  >
+                    {isSearching ? '검색중' : '🔍'}
+                  </button>
+                </div>
+
+                {showSearchResults && searchResults.length > 0 && (
+                  <div className="mb-4 border border-gray-200 rounded-lg bg-white shadow-sm max-h-48 overflow-y-auto">
+                    {searchResults.map((result, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => handleSearchResultSelect(result)}
+                        className="w-full p-3 text-left hover:bg-blue-50 border-b border-gray-100 last:border-b-0"
+                      >
+                        <div className="font-semibold text-sm">{result.place_name}</div>
+                        <div className="text-xs text-gray-600 mt-1">📍 {result.address_name}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {selectedAddress && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm text-green-800">
+                      <span className="font-semibold">📍 선택된 위치:</span> {selectedAddress}
+                    </p>
+                  </div>
+                )}
+
+                <MapComponent 
+                  onLocationSelect={handleLocationSelect} 
+                  userLocation={userLocation}
+                  centerLocation={userLocation}
+                  errands={[]}
+                />
+              </div>
+            )}
+
+            {currentStep === 5 && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">마지막으로...</h3>
+                  <p className="text-gray-500 text-sm">보상금과 마감시간을 설정해주세요</p>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      보상 금액 (원)
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.reward}
+                      onChange={(e) => setFormData(prev => ({ ...prev, reward: parseInt(e.target.value) || 0 }))}
+                      onKeyPress={handleKeyPress}
+                      className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+                      placeholder="10000"
+                      min="1000"
+                      step="1000"
+                      autoFocus
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      마감 시간
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={formData.deadline}
+                      onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
+                      onKeyPress={handleKeyPress}
+                      className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-4 pt-8">
+            {currentStep > 1 && (
               <button
                 type="button"
-                onClick={onCancel}
-                className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                onClick={prevStep}
+                className="flex-1 py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                취소
+                이전
               </button>
+            )}
+            {currentStep < totalSteps ? (
               <button
-                type="submit"
-                className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                type="button"
+                onClick={nextStep}
+                disabled={!canProceedToNext()}
+                className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
+                  canProceedToNext()
+                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                다음
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={!canProceedToNext()}
+                className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
+                  canProceedToNext()
+                    ? 'bg-green-500 text-white hover:bg-green-600'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
                 심부름 등록하기
               </button>
-            </div>
-          </form>
+            )}
+          </div>
         </div>
       </div>
 

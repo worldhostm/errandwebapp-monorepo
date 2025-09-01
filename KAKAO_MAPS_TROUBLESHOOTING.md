@@ -23,7 +23,7 @@
 2. **JavaScript 키**를 복사 (Native App Key나 REST API Key가 아님)
 3. `.env.local` 파일 확인:
    ```env
-   NEXT_PUBLIC_KAKAO_APP_KEY=afe28321c721fd948dd527453ed70747
+   NEXT_PUBLIC_KAKAO_APP_KEY=your_javascript_key_here
    ```
 
 ### 3. **도메인 불일치 문제**
@@ -144,5 +144,4 @@ console.log(window.kakao)  // 객체가 정상적으로 로드되었는지 확�
 ---
 
 **수정 적용일**: 2025-08-31  
-**개발서버**: http://localhost:3001  
-**현재 사용 API 키**: `afe28321c721fd948dd527453ed70747`
+**개발서버**: http://localhost:3001

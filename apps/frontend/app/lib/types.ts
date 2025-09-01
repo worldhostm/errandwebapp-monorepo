@@ -38,4 +38,5 @@ export interface ErrandFormData {
   lng: number | null
   deadline: string
   category: string
+  address?: string
 }

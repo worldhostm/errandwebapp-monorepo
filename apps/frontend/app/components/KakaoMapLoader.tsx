@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-declare global {
-  interface Window {
-    kakao: any
-  }
-}
+// KakaoMapLoader는 kakao 객체 타입을 간단히 정의
 
 export function useKakaoMapsLoaded() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -14,12 +10,12 @@ export function useKakaoMapsLoaded() {
   useEffect(() => {
     const checkKakaoMaps = () => {
       if (typeof window !== 'undefined' && 
-          window.kakao && 
-          window.kakao.maps && 
-          window.kakao.maps.LatLng &&
-          window.kakao.maps.Map) {
+          (window as any).kakao && 
+          (window as any).kakao.maps && 
+          (window as any).kakao.maps.LatLng &&
+          (window as any).kakao.maps.Map) {
         // Kakao Maps API 초기화
-        window.kakao.maps.load(() => {
+        (window as any).kakao.maps.load(() => {
           setIsLoaded(true)
         })
         return true

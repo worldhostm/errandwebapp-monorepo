@@ -42,6 +42,7 @@ export default function MapComponent({
   const [clusters, setClusters] = useState<ClusterMarker[]>([])
   const [unclusteredErrands, setUnclusteredErrands] = useState<ErrandLocation[]>([])
   const [clusterImages, setClusterImages] = useState<Record<string, string>>({})
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null)
 
   // 디바운스된 지도 이동 콜백 함수
   const debouncedOnMapMove = debounceLocationQuery((center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
@@ -176,7 +177,14 @@ export default function MapComponent({
   const handleMapClick = (_target: unknown, mouseEvent: { latLng: { getLat: () => number; getLng: () => number } }) => {
     if (onLocationSelect) {
       const latlng = mouseEvent.latLng
-      onLocationSelect(latlng.getLat(), latlng.getLng())
+      const lat = latlng.getLat()
+      const lng = latlng.getLng()
+      
+      // 선택된 위치 저장
+      setSelectedLocation({ lat, lng })
+      
+      // 콜백 호출
+      onLocationSelect(lat, lng)
     }
   }
 
@@ -306,6 +314,18 @@ export default function MapComponent({
                 src: userMarkerImage,
                 size: { width: 40, height: 40 },
               }}
+            />
+          )}
+          
+          {/* 선택된 위치 마커 (심부름 등록시) */}
+          {selectedLocation && onLocationSelect && (
+            <MapMarker
+              position={selectedLocation}
+              image={{
+                src: 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
+                size: { width: 24, height: 35 },
+              }}
+              title="선택된 위치"
             />
           )}
           

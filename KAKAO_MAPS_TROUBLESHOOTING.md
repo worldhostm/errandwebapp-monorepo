@@ -11,8 +11,7 @@
 3. **플랫폼** 메뉴에서 "Web" 플랫폼 추가
 4. **사이트 도메인** 설정:
    ```
-   http://localhost:3001    (개발환경)
-   http://localhost:3000    (대체 포트)
+   http://localhost:3000    (개발환경)
    https://yourdomain.com   (운영환경)
    ```
 

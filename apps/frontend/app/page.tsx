@@ -1,16 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import AuthModal from './components/AuthModal'
 import ErrandForm from './components/ErrandForm'
 import ChatModal from './components/ChatModal'
 import ProfileModal from './components/ProfileModal'
 import { getDefaultProfileImage } from './lib/imageUtils'
-import { processErrands, calculateDistance } from './lib/mapUtils'
+import { processErrands } from './lib/mapUtils'
 import { getCategoryInfo } from './lib/categoryUtils'
+import { authApi, errandApi } from './lib/api'
+import { checkLocationPermission, requestLocationWithPermission } from './lib/locationUtils'
 // 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
-import { SAMPLE_ERRANDS, SAMPLE_USERS, SEOUL_LOCATIONS, DONGTAN2_LOCATIONS } from '../../../packages/shared/src/data/sampleData'
+import { SAMPLE_ERRANDS } from '../../../packages/shared/src/data/sampleData'
 import type { User, ErrandLocation, ErrandFormData } from './lib/types'
 
 const MapComponent = dynamic(() => import('./components/Map'), {
@@ -21,10 +24,24 @@ const MapComponent = dynamic(() => import('./components/Map'), {
 export default function Home() {
   const [user, setUser] = useState<User | null>(null)
   
-  // 테스트 사용자 로그인 상태 확인
+  // 로그인 상태 확인
   useEffect(() => {
+    const token = localStorage.getItem('authToken')
+    if (token) {
+      // JWT 토큰이 있으면 프로필 정보 가져오기
+      authApi.getProfile().then(response => {
+        if (response.success && response.data) {
+          setUser(response.data.user)
+        } else {
+          // 토큰이 유효하지 않으면 제거
+          localStorage.removeItem('authToken')
+        }
+      })
+    }
+    
+    // 테스트 사용자도 확인 (개발용)
     const testUser = localStorage.getItem('testUser')
-    if (testUser) {
+    if (testUser && !token) {
       setUser(JSON.parse(testUser))
     }
   }, [])
@@ -39,9 +56,50 @@ export default function Home() {
   const [selectedErrandId, setSelectedErrandId] = useState<string | null>(null)
   const [currentMapBounds, setCurrentMapBounds] = useState<{ sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } | null>(null)
   const [isLoadingErrands, setIsLoadingErrands] = useState(false)
+  const [showLocationPermissionModal, setShowLocationPermissionModal] = useState(false)
   
-  // 샘플 심부름 데이터를 ErrandLocation 형태로 변환
-  const convertSampleErrandToErrandLocation = (sampleErrand: any): ErrandLocation => {
+  // 백엔드 심부름 데이터를 ErrandLocation 형태로 변환
+  const convertApiErrandToErrandLocation = (apiErrand: {
+    _id?: string;
+    id?: string;
+    title: string;
+    description: string;
+    location: { coordinates: [number, number] };
+    reward: number;
+    status: string;
+    category: string;
+    deadline: string;
+    createdAt: string;
+    acceptedBy?: { _id: string } | string;
+  }): ErrandLocation => {
+    return {
+      id: apiErrand._id || apiErrand.id || '',
+      title: apiErrand.title,
+      description: apiErrand.description,
+      lat: apiErrand.location.coordinates[1], // latitude
+      lng: apiErrand.location.coordinates[0], // longitude
+      reward: apiErrand.reward,
+      status: apiErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
+      category: apiErrand.category,
+      deadline: apiErrand.deadline,
+      createdAt: apiErrand.createdAt,
+      acceptedBy: typeof apiErrand.acceptedBy === 'object' && apiErrand.acceptedBy ? apiErrand.acceptedBy._id : apiErrand.acceptedBy as string | undefined
+    }
+  }
+
+  // 샘플 심부름 데이터를 ErrandLocation 형태로 변환 (폴백용)
+  const convertSampleErrandToErrandLocation = (sampleErrand: {
+    id: string;
+    title: string;
+    description: string;
+    location: { coordinates: [number, number] };
+    reward: number;
+    status: string;
+    category: string;
+    deadline?: Date;
+    createdAt?: Date;
+    acceptedBy?: string | { id: string };
+  }): ErrandLocation => {
     return {
       id: sampleErrand.id,
       title: sampleErrand.title,
@@ -49,136 +107,246 @@ export default function Home() {
       lat: sampleErrand.location.coordinates[1], // latitude
       lng: sampleErrand.location.coordinates[0], // longitude
       reward: sampleErrand.reward,
-      status: sampleErrand.status,
+      status: sampleErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
       category: sampleErrand.category,
       deadline: sampleErrand.deadline?.toISOString() || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       createdAt: sampleErrand.createdAt?.toISOString() || new Date().toISOString(),
-      acceptedBy: sampleErrand.acceptedBy
+      acceptedBy: typeof sampleErrand.acceptedBy === 'object' ? sampleErrand.acceptedBy.id : sampleErrand.acceptedBy
     }
   }
 
-  const [allErrands] = useState<ErrandLocation[]>(
-    SAMPLE_ERRANDS.map(convertSampleErrandToErrandLocation)
-  )
+  const [allErrands, setAllErrands] = useState<ErrandLocation[]>([])
+  const [isUsingApi, setIsUsingApi] = useState(false)
   const [filteredErrands, setFilteredErrands] = useState<ErrandLocation[]>([])
+
+  // 위치 권한 확인 및 요청 함수
+  const checkAndRequestLocation = async () => {
+    const permission = await checkLocationPermission()
+    
+    if (permission === 'granted') {
+      // 이미 권한이 허용되어 있으면 바로 위치 요청
+      const result = await requestLocationWithPermission()
+      if (result.success && result.location) {
+        setUserLocation(result.location)
+      } else {
+        console.warn('위치 가져오기 실패, 기본 위치(서울시청)로 설정합니다.')
+        setUserLocation({ lat: 37.5665, lng: 126.9780 })
+      }
+    } else if (permission === 'prompt' || permission === 'denied') {
+      // 권한이 필요하면 팝업 표시
+      setShowLocationPermissionModal(true)
+    } else {
+      // 위치 서비스 미지원
+      console.warn('이 브라우저는 위치 서비스를 지원하지 않습니다. 기본 위치(서울시청)로 설정합니다.')
+      setUserLocation({ lat: 37.5665, lng: 126.9780 })
+    }
+  }
 
   // 사용자 위치 가져오기
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          })
-        },
-        () => {
-          setUserLocation({ lat: 37.5665, lng: 126.9780 }) // 기본값: 서울시청
-        }
-      )
-    } else {
-      setUserLocation({ lat: 37.5665, lng: 126.9780 })
-    }
+    checkAndRequestLocation()
   }, [])
 
-  // 위치 기반 심부름 조회 함수
-  const fetchErrandsInBounds = (bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+
+  // 현재 위치 기반 심부름 조회 함수
+  const fetchErrandsAroundUserLocation = useCallback(async () => {
+    if (!userLocation) return
+    
     setIsLoadingErrands(true)
     
-    // 실제 환경에서는 서버 API 호출
-    // const response = await fetch(`/api/errands?swLat=${bounds.sw.lat}&swLng=${bounds.sw.lng}&neLat=${bounds.ne.lat}&neLng=${bounds.ne.lng}`)
-    
-    // 지금은 샘플 데이터에서 영역 내 심부름 필터링
-    setTimeout(() => {
-      const errandsInBounds = allErrands.filter(errand => 
-        errand.lat >= bounds.sw.lat && 
-        errand.lat <= bounds.ne.lat &&
-        errand.lng >= bounds.sw.lng && 
-        errand.lng <= bounds.ne.lng
-      )
-
-      // 사용자 위치가 있으면 거리별로 정렬
-      if (userLocation) {
-        const processed = processErrands(errandsInBounds, userLocation.lat, userLocation.lng, mapRadius)
+    try {
+      // 현재 위치 중심으로 10km 범위에서 조회
+      let response = await errandApi.getNearbyErrands(userLocation.lng, userLocation.lat, 10000, 'pending')
+      
+      if (response.success && response.data) {
+        let apiErrands = response.data.errands.map(convertApiErrandToErrandLocation)
+        
+        // 10km 내에 심부름이 없으면 30km로 확장하여 재시도
+        if (apiErrands.length === 0) {
+          console.log('현재 위치 10km 내에 심부름이 없어 30km로 확장하여 재조회합니다.')
+          const expandedResponse = await errandApi.getNearbyErrands(userLocation.lng, userLocation.lat, 30000, 'pending')
+          
+          if (expandedResponse.success && expandedResponse.data) {
+            apiErrands = expandedResponse.data.errands.map(convertApiErrandToErrandLocation)
+            console.log(`현재 위치 30km 확장 조회에서 ${apiErrands.length}개 심부름 발견`)
+          }
+        }
+        
+        // 거리별로 정렬
+        const processed = processErrands(apiErrands, userLocation.lat, userLocation.lng, 30)
         setFilteredErrands(processed)
+        
+        setIsUsingApi(true)
+        console.log(`현재 위치 기준 API에서 총 ${apiErrands.length}개 심부름 조회됨`)
       } else {
-        setFilteredErrands(errandsInBounds)
+        throw new Error(response.error || 'API 호출 실패')
+      }
+    } catch (error) {
+      console.warn('현재 위치 기반 API 호출 실패, 샘플 데이터 사용:', error)
+      
+      // API 호출 실패시 샘플 데이터 사용
+      if (allErrands.length === 0) {
+        const sampleErrands = SAMPLE_ERRANDS.map(convertSampleErrandToErrandLocation)
+        setAllErrands(sampleErrands)
       }
       
-      setIsLoadingErrands(false)
-      console.log(`지도 영역 내 ${errandsInBounds.length}개 심부름 조회됨`)
-    }, 300) // 로딩 효과를 위한 지연
-  }
+      // 사용자 위치 기준으로 샘플 데이터 필터링
+      const processed = processErrands(allErrands, userLocation.lat, userLocation.lng, 30)
+      setFilteredErrands(processed)
+      
+      setIsUsingApi(false)
+      console.log(`현재 위치 기준 샘플 데이터에서 ${processed.length}개 심부름 조회됨`)
+    }
+    
+    setIsLoadingErrands(false)
+  }, [userLocation, allErrands])
 
-  // 지도 이동 시 호출되는 핸들러
+  // 지도 이동 시 호출되는 핸들러 (현재 위치 기준으로만 조회하므로 지도 이동으로는 심부름 조회하지 않음)
   const handleMapMove = (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
     setCurrentMapBounds(bounds)
-    fetchErrandsInBounds(bounds)
+    // 지도 이동으로는 심부름을 새로 조회하지 않음
   }
 
-  // 초기 로딩: 사용자 위치 기반 심부름 필터링
+  // 사용자 위치 변경 시 심부름 조회
   useEffect(() => {
-    if (userLocation && !currentMapBounds) {
-      // 사용자 위치 중심으로 초기 필터링
-      const processed = processErrands(allErrands, userLocation.lat, userLocation.lng, mapRadius)
-      setFilteredErrands(processed)
+    if (userLocation) {
+      fetchErrandsAroundUserLocation()
     }
-  }, [allErrands, userLocation, mapRadius, currentMapBounds])
+  }, [userLocation, fetchErrandsAroundUserLocation])
 
-  const handleLogin = (email: string, password: string) => {
-    setUser({ id: '1', name: '홍길동', email })
-    setShowAuthModal(false)
-    console.log('로그인:', { email, password })
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const response = await authApi.login(email, password)
+      
+      if (response.success && response.data) {
+        // JWT 토큰 저장
+        localStorage.setItem('authToken', response.data.token)
+        setUser(response.data.user)
+        setShowAuthModal(false)
+        console.log('로그인 성공:', response.data.user)
+      } else {
+        alert(response.error || '로그인에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('로그인 오류:', error)
+      alert('로그인 중 오류가 발생했습니다.')
+    }
   }
 
-  const handleRegister = (email: string, password: string, name: string, profileImage?: string) => {
-    const newUser: User = { 
-      id: '1', 
-      name, 
-      email,
-      profileImage 
+  const handleRegister = async (email: string, password: string, name: string, profileImage?: string) => {
+    try {
+      const response = await authApi.register(email, password, name)
+      
+      if (response.success && response.data) {
+        // JWT 토큰 저장
+        localStorage.setItem('authToken', response.data.token)
+        
+        // 프로필 이미지가 있으면 업데이트
+        let user = response.data.user
+        if (profileImage) {
+          const updateResponse = await authApi.updateProfile({ profileImage })
+          if (updateResponse.success && updateResponse.data) {
+            user = updateResponse.data.user
+          }
+        }
+        
+        setUser(user)
+        setShowAuthModal(false)
+        console.log('회원가입 성공:', user)
+      } else {
+        alert(response.error || '회원가입에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('회원가입 오류:', error)
+      alert('회원가입 중 오류가 발생했습니다.')
     }
-    setUser(newUser)
-    setShowAuthModal(false)
-    console.log('회원가입:', { email, password, name, profileImage })
   }
 
-  const handleUpdateProfile = (updatedUser: User) => {
-    setUser(updatedUser)
-    // localStorage에도 업데이트 (테스트 사용자인 경우)
-    const testUser = localStorage.getItem('testUser')
-    if (testUser) {
-      localStorage.setItem('testUser', JSON.stringify(updatedUser))
+  const handleUpdateProfile = async (updatedUser: User) => {
+    try {
+      const token = localStorage.getItem('authToken')
+      
+      if (token) {
+        // JWT 토큰이 있으면 서버에 업데이트
+        const response = await authApi.updateProfile(updatedUser)
+        
+        if (response.success && response.data) {
+          setUser(response.data.user)
+          console.log('프로필 업데이트 성공:', response.data.user)
+        } else {
+          alert(response.error || '프로필 업데이트에 실패했습니다.')
+          return
+        }
+      } else {
+        // 테스트 사용자인 경우 로컬에만 저장
+        setUser(updatedUser)
+        const testUser = localStorage.getItem('testUser')
+        if (testUser) {
+          localStorage.setItem('testUser', JSON.stringify(updatedUser))
+        }
+      }
+    } catch (error) {
+      console.error('프로필 업데이트 오류:', error)
+      alert('프로필 업데이트 중 오류가 발생했습니다.')
     }
-    console.log('프로필 업데이트:', updatedUser)
   }
 
   const handleLogout = () => {
     setUser(null)
-    // 테스트 사용자 데이터도 삭제
+    // JWT 토큰과 테스트 사용자 데이터 삭제
+    localStorage.removeItem('authToken')
     localStorage.removeItem('testUser')
   }
 
-  const handleErrandSubmit = (formData: ErrandFormData) => {
+  const handleErrandSubmit = async (formData: ErrandFormData) => {
     if (!formData.lat || !formData.lng) {
       alert('위치를 선택해주세요.')
       return
     }
-    const newErrand: ErrandLocation = {
-      id: Date.now().toString(),
-      title: formData.title,
-      description: formData.description,
-      lat: formData.lat,
-      lng: formData.lng,
-      reward: formData.reward,
-      status: 'pending',
-      category: formData.category,
-      deadline: formData.deadline,
-      createdAt: new Date().toISOString()
+    
+    if (!user) {
+      alert('로그인이 필요합니다.')
+      return
     }
-    // 실제로는 서버 API 호출하여 등록
-    setShowErrandForm(false)
-    console.log('새 심부름 등록:', newErrand)
+    
+    try {
+      const errandData = {
+        title: formData.title,
+        description: formData.description,
+        location: {
+          type: 'Point' as const,
+          coordinates: [formData.lng as number, formData.lat as number] as [number, number], // [longitude, latitude]
+          address: formData.address || '주소 정보 없음' // 주소 정보 추가
+        },
+        reward: formData.reward,
+        category: formData.category,
+        deadline: formData.deadline
+      }
+      
+      console.log('API 전송할 errandData:', errandData)
+      console.log('실제 좌표값:', {
+        latitude: formData.lat,
+        longitude: formData.lng,
+        coordinates: [formData.lng as number, formData.lat as number]
+      })
+      
+      const response = await errandApi.createErrand(errandData);
+      
+      if (response.success && response.data) {
+        setShowErrandForm(false)
+        alert('심부름이 성공적으로 등록되었습니다!')
+        
+        // 새로 등록된 심부름을 보이기 위해 현재 위치 기준 조회 새로고침
+        fetchErrandsAroundUserLocation()
+        
+        console.log('새 심부름 등록 성공:', response.data.errand)
+      } else {
+        alert(response.error || '심부름 등록에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('심부름 등록 오류:', error)
+      alert('심부름 등록 중 오류가 발생했습니다.')
+    }
   }
 
   const handleChatOpen = (errand: ErrandLocation) => {
@@ -186,21 +354,51 @@ export default function Home() {
     setShowChat(true)
   }
 
-  const handleErrandAccept = (errandId: string) => {
+  const handleErrandAccept = async (errandId: string) => {
     if (!user) {
       alert('로그인이 필요합니다.')
       return
     }
-    // 실제로는 서버 API 호출
-    console.log(`심부름 ${errandId} 수락됨 by ${user.id}`)
-    alert('심부름을 수락했습니다!')
+    
+    try {
+      const response = await errandApi.acceptErrand(errandId)
+      
+      if (response.success && response.data) {
+        alert('심부름을 수락했습니다!')
+        
+        // 심부름 리스트 새로고침
+        fetchErrandsAroundUserLocation()
+        
+        console.log(`심부름 ${errandId} 수락 성공:`, response.data.errand)
+      } else {
+        alert(response.error || '심부름 수락에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('심부름 수락 오류:', error)
+      alert('심부름 수락 중 오류가 발생했습니다.')
+    }
   }
 
-  const handleErrandComplete = (errandId: string) => {
+  const handleErrandComplete = async (errandId: string) => {
     if (!user) return
-    // 실제로는 서버 API 호출
-    console.log(`심부름 ${errandId} 완료됨 by ${user.id}`)
-    alert('심부름이 완료되었습니다!')
+    
+    try {
+      const response = await errandApi.updateErrandStatus(errandId, 'completed')
+      
+      if (response.success && response.data) {
+        alert('심부름이 완료되었습니다!')
+        
+        // 심부름 리스트 새로고침
+        fetchErrandsAroundUserLocation()
+        
+        console.log(`심부름 ${errandId} 완료 성공:`, response.data.errand)
+      } else {
+        alert(response.error || '심부름 완료 처리에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('심부름 완료 오류:', error)
+      alert('심부름 완료 처리 중 오류가 발생했습니다.')
+    }
   }
 
   const handleMapRadiusChange = (newRadius: number) => {
@@ -249,11 +447,12 @@ export default function Home() {
                       onClick={() => setShowProfile(true)}
                       className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded-lg"
                     >
-                      <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300">
-                        <img
+                      <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 relative">
+                        <Image
                           src={user.profileImage || (typeof window !== 'undefined' ? getDefaultProfileImage(user.name) : '')}
                           alt={`${user.name} 프로필`}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       </div>
                       <span className="text-gray-700">{user.name}님</span>
@@ -305,6 +504,8 @@ export default function Home() {
               <p className="text-sm text-gray-500">
                 {currentMapBounds ? '지도 영역 내' : `반경 ${mapRadius.toFixed(1)}km 내`} 
                 <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
+                {isUsingApi && <span className="ml-2 text-green-600 text-xs">• API 연동</span>}
+                {!isUsingApi && allErrands.length > 0 && <span className="ml-2 text-orange-600 text-xs">• 샘플 데이터</span>}
               </p>
             </div>
           </div>
@@ -329,15 +530,25 @@ export default function Home() {
         </div>
 
         <div className="mt-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            {currentMapBounds ? '지도 영역 내' : '주변'} 심부름 목록 
-            <span className="text-sm font-normal text-gray-500">
-              {userLocation && !currentMapBounds ? '(거리순 정렬)' : ''}
-            </span>
-            {isLoadingErrands && (
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            )}
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              현재 위치 주변 심부름 목록
+              <span className="text-sm font-normal text-gray-500">
+                (거리순 정렬)
+              </span>
+              {isLoadingErrands && (
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              )}
+            </h3>
+            <button
+              onClick={fetchErrandsAroundUserLocation}
+              disabled={isLoadingErrands}
+              className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+            >
+              <span>🔄</span>
+              새로고침
+            </button>
+          </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredErrands.map((errand) => {
               const categoryInfo = getCategoryInfo(errand.category)
@@ -448,9 +659,9 @@ export default function Home() {
           {filteredErrands.length === 0 && !isLoadingErrands && (
             <div className="text-center py-12 text-gray-500">
               <p>
-                {currentMapBounds ? '현재 지도 영역' : `주변 ${mapRadius.toFixed(1)}km 내`}에 심부름이 없습니다.
+                현재 위치 주변 30km 내에 심부름이 없습니다.
               </p>
-              <p className="text-sm mt-1">지도를 이동하거나 확대/축소하여 다른 지역을 확인해보세요.</p>
+              <p className="text-sm mt-1">잠시 후 다시 확인해보시거나 심부름을 새로 등록해보세요.</p>
             </div>
           )}
           
@@ -494,6 +705,46 @@ export default function Home() {
           user={user}
           onUpdateProfile={handleUpdateProfile}
         />
+      )}
+
+      {/* 위치 권한 확인 모달 */}
+      {showLocationPermissionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">위치 권한 요청</h2>
+            <p className="text-gray-600 mb-4">
+              근처 심부름을 찾기 위해 현재 위치가 필요합니다.
+              위치 권한을 허용하시겠습니까?
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={async () => {
+                  setShowLocationPermissionModal(false)
+                  const result = await requestLocationWithPermission()
+                  if (result.success && result.location) {
+                    setUserLocation(result.location)
+                  } else {
+                    console.warn('위치 가져오기 실패, 기본 위치(서울시청)로 설정합니다.')
+                    setUserLocation({ lat: 37.5665, lng: 126.9780 })
+                  }
+                }}
+                className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                허용
+              </button>
+              <button
+                onClick={() => {
+                  setShowLocationPermissionModal(false)
+                  console.log('사용자가 위치 권한을 거부했습니다. 기본 위치(서울시청)로 설정합니다.')
+                  setUserLocation({ lat: 37.5665, lng: 126.9780 })
+                }}
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+              >
+                거부
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

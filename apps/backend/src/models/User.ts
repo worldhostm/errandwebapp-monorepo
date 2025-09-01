@@ -48,12 +48,10 @@ const UserSchema = new Schema<IUser>({
   location: {
     type: {
       type: String,
-      enum: ['Point'],
-      default: 'Point'
+      enum: ['Point']
     },
     coordinates: {
-      type: [Number],
-      index: '2dsphere'
+      type: [Number]
     },
     address: String
   },
@@ -93,7 +91,7 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Create geospatial index for location-based queries
-UserSchema.index({ 'location': '2dsphere' });
+// Create sparse geospatial index for location-based queries (only when location exists)
+UserSchema.index({ 'location': '2dsphere' }, { sparse: true });
 
 export default mongoose.model<IUser>('User', UserSchema);

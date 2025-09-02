@@ -1,5 +1,5 @@
 // 쓰로틀링 유틸리티 함수
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: never[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -26,7 +26,7 @@ export function throttle<T extends (...args: any[]) => any>(
 }
 
 // 디바운싱 유틸리티 함수 (지도 이동 완료 후 조회용)
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -44,7 +44,7 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 // 위치 기반 심부름 조회를 위한 특화된 디바운스 함수
-export function debounceLocationQuery<T extends (...args: any[]) => any>(
+export function debounceLocationQuery<T extends (...args: never[]) => unknown>(
   func: T,
   delay: number = 1000
 ): (...args: Parameters<T>) => void {

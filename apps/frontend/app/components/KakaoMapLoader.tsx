@@ -10,12 +10,12 @@ export function useKakaoMapsLoaded() {
   useEffect(() => {
     const checkKakaoMaps = () => {
       if (typeof window !== 'undefined' && 
-          (window as any).kakao && 
-          (window as any).kakao.maps && 
-          (window as any).kakao.maps.LatLng &&
-          (window as any).kakao.maps.Map) {
+          window.kakao && 
+          window.kakao.maps && 
+          window.kakao.maps.LatLng &&
+          window.kakao.maps.Map) {
         // Kakao Maps API 초기화
-        (window as any).kakao.maps.load(() => {
+        window.kakao.maps.load(() => {
           setIsLoaded(true)
         })
         return true

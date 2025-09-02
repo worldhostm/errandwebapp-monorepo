@@ -17,8 +17,8 @@ import { authApi, errandApi } from './lib/api'
 import { checkLocationPermission, requestLocationWithPermission } from './lib/locationUtils'
 // 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
 import { SAMPLE_ERRANDS } from '../../../packages/shared/src/data/sampleData'
-import type { User, ErrandLocation, ErrandFormData } from './lib/types'
-import { convertApiUserToUser } from './lib/types'
+import type { ErrandLocation, ErrandFormData } from './lib/types'
+import { convertApiUserToUser, convertErrandToErrandLocation, User } from './lib/types'
 
 const MapComponent = dynamic(() => import('./components/Map'), {
   ssr: false,
@@ -36,7 +36,7 @@ export default function Home() {
       // JWT 토큰이 있으면 프로필 정보 가져오기
       authApi.getProfile().then(response => {
         if (response.success && response.data) {
-          setUser(convertApiUserToUser(response.data.user))
+          setUser(response.data.user)
         } else {
           // 토큰이 유효하지 않으면 제거
           localStorage.removeItem('authToken')
@@ -63,34 +63,6 @@ export default function Home() {
   const [isLoadingErrands, setIsLoadingErrands] = useState(false)
   const [showLocationPermissionModal, setShowLocationPermissionModal] = useState(false)
   
-  // 백엔드 심부름 데이터를 ErrandLocation 형태로 변환
-  const convertApiErrandToErrandLocation = (apiErrand: {
-    _id?: string;
-    id?: string;
-    title: string;
-    description: string;
-    location: { coordinates: [number, number] };
-    reward: number;
-    status: string;
-    category: string;
-    deadline: string;
-    createdAt: string;
-    acceptedBy?: { _id: string } | string;
-  }): ErrandLocation => {
-    return {
-      id: apiErrand._id || apiErrand.id || '',
-      title: apiErrand.title,
-      description: apiErrand.description,
-      lat: apiErrand.location.coordinates[1], // latitude
-      lng: apiErrand.location.coordinates[0], // longitude
-      reward: apiErrand.reward,
-      status: apiErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
-      category: apiErrand.category,
-      deadline: apiErrand.deadline,
-      createdAt: apiErrand.createdAt,
-      acceptedBy: typeof apiErrand.acceptedBy === 'object' && apiErrand.acceptedBy ? apiErrand.acceptedBy._id : apiErrand.acceptedBy as string | undefined
-    }
-  }
 
   // 샘플 심부름 데이터를 ErrandLocation 형태로 변환 (폴백용)
   const convertSampleErrandToErrandLocation = (sampleErrand: {
@@ -164,7 +136,7 @@ export default function Home() {
       const response = await errandApi.getNearbyErrands(userLocation.lng, userLocation.lat, 10000, 'pending')
       
       if (response.success && response.data) {
-        let apiErrands = response.data.errands.map(convertApiErrandToErrandLocation)
+        let apiErrands = response.data.errands.map(convertErrandToErrandLocation)
         
         // 10km 내에 심부름이 없으면 30km로 확장하여 재시도
         if (apiErrands.length === 0) {
@@ -172,7 +144,7 @@ export default function Home() {
           const expandedResponse = await errandApi.getNearbyErrands(userLocation.lng, userLocation.lat, 30000, 'pending')
           
           if (expandedResponse.success && expandedResponse.data) {
-            apiErrands = expandedResponse.data.errands.map(convertApiErrandToErrandLocation)
+            apiErrands = expandedResponse.data.errands.map(convertErrandToErrandLocation)
             console.log(`현재 위치 30km 확장 조회에서 ${apiErrands.length}개 심부름 발견`)
           }
         }
@@ -190,10 +162,10 @@ export default function Home() {
       console.warn('현재 위치 기반 API 호출 실패, 샘플 데이터 사용:', error)
       
       // API 호출 실패시 샘플 데이터 사용
-      if (allErrands.length === 0) {
-        const sampleErrands = SAMPLE_ERRANDS.map(convertSampleErrandToErrandLocation)
-        setAllErrands(sampleErrands)
-      }
+      // if (allErrands.length === 0) {
+        // const sampleErrands = SAMPLE_ERRANDS.map(convertSampleErrandToErrandLocation)
+        // setAllErrands(sampleErrands)
+      // }
       
       // 사용자 위치 기준으로 샘플 데이터 필터링
       const processed = processErrands(allErrands, userLocation.lat, userLocation.lng, 30)
@@ -226,7 +198,7 @@ export default function Home() {
       if (response.success && response.data) {
         // JWT 토큰 저장
         localStorage.setItem('authToken', response.data.token)
-        setUser(convertApiUserToUser(response.data.user))
+        setUser(response.data.user)
         setShowAuthModal(false)
         console.log('로그인 성공:', response.data.user)
       } else {
@@ -247,11 +219,11 @@ export default function Home() {
         localStorage.setItem('authToken', response.data.token)
         
         // 프로필 이미지가 있으면 업데이트
-        let user = convertApiUserToUser(response.data.user)
+        let user = response.data.user
         if (profileImage) {
-          const updateResponse = await authApi.updateProfile({ profileImage })
+          const updateResponse = await authApi.updateProfile({ avatar: profileImage })
           if (updateResponse.success && updateResponse.data) {
-            user = convertApiUserToUser(updateResponse.data.user)
+            user = updateResponse.data.user
           }
         }
         
@@ -276,7 +248,7 @@ export default function Home() {
         const response = await authApi.updateProfile(updatedUser)
         
         if (response.success && response.data) {
-          setUser(convertApiUserToUser(response.data.user))
+          setUser(response.data.user)
           console.log('프로필 업데이트 성공:', response.data.user)
         } else {
           alert(response.error || '프로필 업데이트에 실패했습니다.')
@@ -457,7 +429,7 @@ export default function Home() {
                     >
                       <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 relative">
                         <Image
-                          src={user.profileImage || (typeof window !== 'undefined' ? getDefaultProfileImage(user.name) : '')}
+                          src={user.avatar || (typeof window !== 'undefined' ? getDefaultProfileImage(user.name) : '')}
                           alt={`${user.name} 프로필`}
                           fill
                           className="object-cover"

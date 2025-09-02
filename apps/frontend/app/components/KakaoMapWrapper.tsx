@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-declare global {
-  interface Window {
-    kakao: any
-  }
-}
+// 카카오 타입은 이미 kakao.d.ts에서 정의됨
 
 interface KakaoMapWrapperProps {
   children: React.ReactNode

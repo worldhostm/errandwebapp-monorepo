@@ -2,7 +2,7 @@ export interface ClusterMarker {
   lat: number
   lng: number
   count: number
-  items: any[]
+  items: ClusterableItem[]
   id: string
 }
 
@@ -10,10 +10,10 @@ export interface ClusterableItem {
   id: string
   lat: number
   lng: number
-  [key: string]: any
+  [key: string]: unknown
 }
 
-const CLUSTER_DISTANCE = 60 // 픽셀 단위 클러스터링 거리
+// const CLUSTER_DISTANCE = 60 // 픽셀 단위 클러스터링 거리 (reserved for future use)
 const MIN_ZOOM_FOR_CLUSTERING = 5 // 줌 레벨 5 이상에서만 클러스터링
 
 export function shouldCluster(zoomLevel: number): boolean {

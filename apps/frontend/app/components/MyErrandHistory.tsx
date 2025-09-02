@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { errandApi } from '../lib/api'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { getDefaultProfileImage } from '../lib/imageUtils'
-import type { User, ErrandLocation } from '../lib/types'
+import type { User, ErrandLocation, ErrandStatus } from '../lib/types'
 import ChatModal from './ChatModal'
 
 interface MyErrandHistoryProps {
@@ -120,7 +120,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   // 심부름 상태 업데이트
   const handleStatusUpdate = async (errandId: string, newStatus: string) => {
     try {
-      const response = await errandApi.updateErrandStatus(errandId, newStatus)
+      const response = await errandApi.updateErrandStatus(errandId, newStatus as ErrandStatus)
       
       if (response.success) {
         alert(`심부름 상태가 ${newStatus === 'completed' ? '완료' : newStatus}로 변경되었습니다.`)

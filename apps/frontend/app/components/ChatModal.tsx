@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import type { Message } from '../lib/types'
+import type { LocalMessage } from '../lib/types'
 
 interface ChatModalProps {
   isOpen: boolean
@@ -21,7 +21,7 @@ export default function ChatModal({
   otherUser, 
   currentUserId 
 }: ChatModalProps) {
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<LocalMessage[]>([
     {
       id: '1',
       senderId: otherUser.id,
@@ -54,7 +54,7 @@ export default function ChatModal({
     e.preventDefault()
     if (!newMessage.trim()) return
 
-    const message: Message = {
+    const message: LocalMessage = {
       id: Date.now().toString(),
       senderId: currentUserId,
       senderName: '나',

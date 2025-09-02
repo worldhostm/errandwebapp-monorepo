@@ -1,10 +1,6 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'
+import { ApiResponse, User, Errand, ErrandStatus } from '@errandwebapp/shared'
 
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-}
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 
 // API 요청 공통 함수
 async function apiRequest<T>(
@@ -49,25 +45,25 @@ async function apiRequest<T>(
 // 인증 관련 API
 export const authApi = {
   async login(email: string, password: string) {
-    return apiRequest<{ token: string; user: import('./types').ApiUser }>('/auth/login', {
+    return apiRequest<{ token: string; user: User }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
   },
 
   async register(email: string, password: string, name: string) {
-    return apiRequest<{ token: string; user: import('./types').ApiUser }>('/auth/register', {
+    return apiRequest<{ token: string; user: User }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     })
   },
 
   async getProfile() {
-    return apiRequest<{ user: import('./types').ApiUser }>('/auth/profile')
+    return apiRequest<{ user: User }>('/auth/profile')
   },
 
-  async updateProfile(userData: Partial<import('./types').ApiUser>) {
-    return apiRequest<{ user: import('./types').ApiUser }>('/auth/profile', {
+  async updateProfile(userData: Partial<User>) {
+    return apiRequest<{ user: User }>('/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(userData),
     })
@@ -76,7 +72,7 @@ export const authApi = {
 
 // 심부름 관련 API
 export const errandApi = {
-  async getNearbyErrands(lng: number, lat: number, radius?: number, status?: string) {
+  async getNearbyErrands(lng: number, lat: number, radius?: number, status?: ErrandStatus, signal?: AbortSignal) {
     const params = new URLSearchParams({
       lng: lng.toString(),
       lat: lat.toString(),
@@ -84,11 +80,13 @@ export const errandApi = {
       ...(status && { status }),
     })
     
-    return apiRequest<import('./types').ErrandsResponse>(`/errands/nearby?${params}`)
+    return apiRequest<{ errands: Errand[] }>(`/errands/nearby?${params}`, {
+      signal
+    })
   },
 
   async getErrandById(id: string) {
-    return apiRequest<{ errand: import('./types').ApiErrand }>(`/errands/${id}`)
+    return apiRequest<{ errand: Errand }>(`/errands/${id}`)
   },
 
   async createErrand(errandData: {
@@ -97,38 +95,38 @@ export const errandApi = {
     location: {
       type: 'Point'
       coordinates: [number, number]
-      address?: string
+      address: string
     }
     reward: number
     category: string
-    deadline: string
+    deadline?: Date | string
   }) {
-    return apiRequest<{ errand: import('./types').ApiErrand }>('/errands', {
+    return apiRequest<{ errand: Errand }>('/errands', {
       method: 'POST',
       body: JSON.stringify(errandData),
     })
   },
 
   async acceptErrand(id: string) {
-    return apiRequest<{ errand: import('./types').ApiErrand }>(`/errands/${id}/accept`, {
+    return apiRequest<{ errand: Errand }>(`/errands/${id}/accept`, {
       method: 'POST',
     })
   },
 
-  async updateErrandStatus(id: string, status: string) {
-    return apiRequest<{ errand: import('./types').ApiErrand }>(`/errands/${id}/status`, {
+  async updateErrandStatus(id: string, status: ErrandStatus) {
+    return apiRequest<{ errand: Errand }>(`/errands/${id}/status`, {
       method: 'PUT',
       body: JSON.stringify({ status }),
     })
   },
 
-  async getUserErrands(type?: 'requested' | 'accepted', status?: string) {
+  async getUserErrands(type?: 'requested' | 'accepted', status?: ErrandStatus) {
     const params = new URLSearchParams({
       ...(type && { type }),
       ...(status && { status }),
     })
     
-    return apiRequest<import('./types').ErrandsResponse>(`/errands/user?${params}`)
+    return apiRequest<{ errands: Errand[] }>(`/errands/user?${params}`)
   },
 
   async cancelErrand(id: string) {
@@ -139,7 +137,7 @@ export const errandApi = {
 
   // 내가 등록한 심부름 목록 조회
   async getMyErrands() {
-    return apiRequest<import('./types').ErrandsResponse>('/errands/my')
+    return apiRequest<{ errands: Errand[] }>('/errands/my')
   },
 
   // 심부름 삭제

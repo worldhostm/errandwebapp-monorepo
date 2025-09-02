@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { handleImageUpload, getDefaultProfileImage } from '../lib/imageUtils'
 import type { User } from '../lib/types'
 
@@ -16,12 +17,12 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
     name: user.name,
     email: user.email
   })
-  const [profileImage, setProfileImage] = useState<string | null>(user.profileImage || null)
+  const [profileImage, setProfileImage] = useState<string | null>(user.avatar || null)
   const [imageUploading, setImageUploading] = useState(false)
 
   useEffect(() => {
     setFormData({ name: user.name, email: user.email })
-    setProfileImage(user.profileImage || null)
+    setProfileImage(user.avatar || null)
   }, [user])
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,7 +31,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
       ...user,
       name: formData.name,
       email: formData.email,
-      profileImage: profileImage || undefined
+      avatar: profileImage || undefined
     }
     onUpdateProfile(updatedUser)
     onClose()
@@ -85,9 +86,11 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
             </label>
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 border border-gray-300 rounded-full flex items-center justify-center overflow-hidden bg-gray-50">
-                <img
+                <Image
                   src={getCurrentProfileImage()}
                   alt="현재 프로필"
+                  width={80}
+                  height={80}
                   className="w-full h-full object-cover"
                 />
               </div>

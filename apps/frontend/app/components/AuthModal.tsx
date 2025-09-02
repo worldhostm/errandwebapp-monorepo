@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { handleImageUpload } from '../lib/imageUtils'
 
 interface AuthModalProps {
@@ -284,9 +285,11 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-24 h-24 border-2 border-gray-300 rounded-full flex items-center justify-center overflow-hidden bg-gray-50">
                     {profileImage ? (
-                      <img
+                      <Image
                         src={profileImage}
                         alt="프로필 미리보기"
+                        width={96}
+                        height={96}
                         className="w-full h-full object-cover"
                       />
                     ) : (

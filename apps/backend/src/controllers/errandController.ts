@@ -18,7 +18,7 @@ export const createErrand = async (req: AuthRequest, res: Response) => {
 
     const errand = new Errand(errandData);
     await errand.save();
-    await errand.populate('requestedBy', 'name email rating');
+    await errand.populate('requestedBy', 'name email rating avatar');
 
     res.status(201).json({
       success: true,
@@ -30,8 +30,9 @@ export const createErrand = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const getNearbyErrands = async (req: Request, res: Response) => {
+export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
   try {
+    const user = req.user;
     const { lng, lat, radius = 5000, status = 'pending', limit = 20, page = 1 } = req.query;
 
     if (!lng || !lat) {
@@ -44,7 +45,7 @@ export const getNearbyErrands = async (req: Request, res: Response) => {
     const limitNum = parseInt(limit as string);
     const skip = (parseInt(page as string) - 1) * limitNum;
 
-    const errands = await Errand.find({
+    const query: any = {
       status,
       location: {
         $near: {
@@ -55,8 +56,15 @@ export const getNearbyErrands = async (req: Request, res: Response) => {
           $maxDistance: radiusInMeters
         }
       }
-    })
-    .populate('requestedBy', 'name rating totalErrands')
+    };
+
+    // 자신의 심부름 제외 (로그인한 경우에만)
+    if (user) {
+      query.requestedBy = { $ne: user._id };
+    }
+
+    const errands = await Errand.find(query)
+    .populate('requestedBy', 'name rating totalErrands avatar')
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limitNum);
@@ -81,8 +89,8 @@ export const getErrandById = async (req: Request, res: Response) => {
     const { id } = req.params;
     
     const errand = await Errand.findById(id)
-      .populate('requestedBy', 'name email rating totalErrands')
-      .populate('acceptedBy', 'name email rating totalErrands');
+      .populate('requestedBy', 'name email rating totalErrands avatar')
+      .populate('acceptedBy', 'name email rating totalErrands avatar');
     
     if (!errand) {
       return res.status(404).json({ error: 'Errand not found' });
@@ -132,8 +140,8 @@ export const acceptErrand = async (req: AuthRequest, res: Response) => {
     });
     await chat.save();
 
-    await errand.populate('requestedBy', 'name email rating');
-    await errand.populate('acceptedBy', 'name email rating');
+    await errand.populate('requestedBy', 'name email rating avatar');
+    await errand.populate('acceptedBy', 'name email rating avatar');
 
     res.json({
       success: true,
@@ -171,8 +179,8 @@ export const updateErrandStatus = async (req: AuthRequest, res: Response) => {
 
     errand.status = status;
     await errand.save();
-    await errand.populate('requestedBy', 'name email rating');
-    await errand.populate('acceptedBy', 'name email rating');
+    await errand.populate('requestedBy', 'name email rating avatar');
+    await errand.populate('acceptedBy', 'name email rating avatar');
 
     res.json({
       success: true,
@@ -213,8 +221,8 @@ export const getUserErrands = async (req: AuthRequest, res: Response) => {
     }
 
     const errands = await Errand.find(query)
-      .populate('requestedBy', 'name email rating')
-      .populate('acceptedBy', 'name email rating')
+      .populate('requestedBy', 'name email rating avatar')
+      .populate('acceptedBy', 'name email rating avatar')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNum);
@@ -270,5 +278,23 @@ export const cancelErrand = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error('Cancel errand error:', error);
     res.status(500).json({ error: 'Server error while cancelling errand' });
+  }
+};
+
+// Debug API to check all errands in database
+export const debugAllErrands = async (req: Request, res: Response) => {
+  try {
+    const errands = await Errand.find({})
+      .populate('requestedBy', 'name email')
+      .sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      count: errands.length,
+      errands
+    });
+  } catch (error) {
+    console.error('Debug errands error:', error);
+    res.status(500).json({ error: 'Server error while fetching errands' });
   }
 };

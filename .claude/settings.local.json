@@ -22,7 +22,10 @@
       "Bash(grep:*)",
       "Bash(npm run health:*)",
       "Bash(cmd /c:*)",
-      "Bash(npx kill-port:*)"
+      "Bash(npx kill-port:*)",
+      "Bash(curl:*)",
+      "Bash(PORT=8080 npm run dev)",
+      "Bash(PORT=3001 npm run dev)"
     ],
     "deny": [],
     "ask": []

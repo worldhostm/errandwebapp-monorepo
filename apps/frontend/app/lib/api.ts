@@ -1,6 +1,6 @@
 import { ApiResponse, User, Errand, ErrandStatus } from '@errandwebapp/shared'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'
 
 // API 요청 공통 함수
 async function apiRequest<T>(
@@ -19,13 +19,21 @@ async function apiRequest<T>(
   }
 
   try {
+    console.log(`API 요청: ${config.method || 'GET'} ${API_BASE_URL}/api${endpoint}`)
+    console.log('요청 설정:', config)
+    
     const response = await fetch(`${API_BASE_URL}/api${endpoint}`, config)
     const data = await response.json()
+    
+    console.log(`API 응답 상태: ${response.status}`)
+    console.log('응답 데이터:', data)
 
     if (!response.ok) {
+      console.error(`API 요청 실패: ${response.status} ${response.statusText}`)
+      console.error('에러 데이터:', data)
       return {
         success: false,
-        error: data.error || 'API 요청에 실패했습니다.'
+        error: data.error || data.errors || 'API 요청에 실패했습니다.'
       }
     }
 

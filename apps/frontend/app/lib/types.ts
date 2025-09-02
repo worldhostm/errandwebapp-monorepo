@@ -122,9 +122,23 @@ export const convertApiErrandToErrandLocation = (apiErrand: ApiErrand): ErrandLo
 }
 
 // Shared Errand 타입을 ErrandLocation으로 변환
-export const convertErrandToErrandLocation = (errand: Errand): ErrandLocation => {
+export const convertErrandToErrandLocation = (errand: any): ErrandLocation => {
+  // MongoDB의 _id 또는 id 필드를 사용하여 안전한 ID 추출
+  let safeId = errand.id || errand._id;
+  
+  // ObjectId인 경우 문자열로 변환
+  if (safeId && typeof safeId === 'object' && safeId.toString) {
+    safeId = safeId.toString();
+  }
+  
+  if (!safeId || safeId === 'undefined') {
+    console.error('Errand ID가 없거나 undefined입니다:', errand);
+    console.error('Available keys:', Object.keys(errand));
+    throw new Error('Invalid errand: missing or invalid id');
+  }
+  
   return {
-    id: errand.id,
+    id: safeId,
     title: errand.title,
     description: errand.description,
     lat: errand.location.coordinates[1], // latitude
@@ -132,8 +146,8 @@ export const convertErrandToErrandLocation = (errand: Errand): ErrandLocation =>
     reward: errand.reward,
     status: errand.status,
     category: errand.category,
-    deadline: errand.deadline ? errand.deadline.toISOString() : new Date().toISOString(),
-    createdAt: errand.createdAt.toISOString(),
+    deadline: errand.deadline ? (typeof errand.deadline === 'string' ? errand.deadline : errand.deadline.toISOString()) : new Date().toISOString(),
+    createdAt: typeof errand.createdAt === 'string' ? errand.createdAt : errand.createdAt.toISOString(),
     acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : (errand.acceptedBy as User)?.id
   }
 }

@@ -29,25 +29,11 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<AcceptedErrand | null>(null)
 
   // 백엔드 API 응답을 AcceptedErrand로 변환
-  const convertApiErrandToAcceptedErrand = (apiErrand: {
-    _id: string
-    title: string
-    description: string
-    location: { coordinates: [number, number] }
-    reward: number
-    status: string
-    category: string
-    deadline: string
-    createdAt: string
-    createdBy: {
-      _id: string
-      name: string
-      profileImage?: string
-    }
-    acceptedBy?: string
-  }): AcceptedErrand => {
-    return {
-      id: apiErrand._id,
+  const convertApiErrandToAcceptedErrand = (apiErrand: any): AcceptedErrand => {
+    console.log('🔄 변환할 API 심부름 데이터:', apiErrand)
+    
+    const result = {
+      id: apiErrand._id || apiErrand.id,
       title: apiErrand.title,
       description: apiErrand.description,
       lat: apiErrand.location.coordinates[1],
@@ -57,40 +43,51 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
       category: apiErrand.category,
       deadline: apiErrand.deadline,
       createdAt: apiErrand.createdAt,
-      createdBy: apiErrand.createdBy._id,
-      acceptedBy: apiErrand.acceptedBy,
-      requesterUser: apiErrand.createdBy
+      createdBy: apiErrand.requestedBy?._id || apiErrand.requestedBy,
+      acceptedBy: apiErrand.acceptedBy?._id || apiErrand.acceptedBy,
+      requesterUser: apiErrand.requestedBy ? {
+        _id: apiErrand.requestedBy._id,
+        name: apiErrand.requestedBy.name,
+        profileImage: apiErrand.requestedBy.avatar
+      } : null
     }
+    
+    console.log('✅ 변환된 심부름:', result)
+    return result
   }
 
   // 내가 수락한 심부름 목록 조회
   const fetchMyAcceptedErrands = useCallback(async () => {
+    console.log('🔍 내가 수락한 심부름 조회 시작')
     setIsLoading(true)
     
     try {
       const response = await errandApi.getUserErrands('accepted')
+      console.log('📡 API 응답:', response)
       
       if (response.success && response.data) {
+        console.log('📦 원시 API 데이터:', response.data.errands)
+        
         const convertedErrands = response.data.errands.map(convertApiErrandToAcceptedErrand)
         setAcceptedErrands(convertedErrands)
-        console.log(`내가 수락한 심부름 ${convertedErrands.length}개 조회됨`)
+        console.log(`✅ 내가 수락한 심부름 ${convertedErrands.length}개 조회됨:`, convertedErrands)
       } else {
-        console.error('내가 수락한 심부름 조회 실패:', response.error)
+        console.error('❌ 내가 수락한 심부름 조회 실패:', response.error)
         setAcceptedErrands([])
       }
     } catch (error) {
-      console.error('내가 수락한 심부름 조회 오류:', error)
+      console.error('❌ 내가 수락한 심부름 조회 오류:', error)
       setAcceptedErrands([])
     }
     
     setIsLoading(false)
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (user) {
       fetchMyAcceptedErrands()
     }
-  }, [user, fetchMyAcceptedErrands])
+  }, [fetchMyAcceptedErrands])
 
   // 상태별 필터링
   const filteredErrands = acceptedErrands.filter(errand => {

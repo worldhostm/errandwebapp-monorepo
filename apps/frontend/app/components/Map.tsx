@@ -11,6 +11,7 @@ import { createClusters, createClusterMarkerImage, type ClusterMarker } from '..
 import { debounceLocationQuery } from '../lib/throttle'
 import { errandApi } from '../lib/api'
 import KakaoMapWrapper from './KakaoMapWrapper'
+import ClusterModal from './ClusterModal'
 
 interface MapComponentProps {
   onLocationSelect?: (lat: number, lng: number) => void
@@ -22,6 +23,7 @@ interface MapComponentProps {
   selectedErrandId?: string | null
   onMapMove?: (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => void
   onErrandUpdate?: () => void
+  onErrandClick?: (errand: ErrandLocation) => void
 }
 
 export default function MapComponent({ 
@@ -33,10 +35,11 @@ export default function MapComponent({
   centerLocation,
   selectedErrandId,
   onMapMove,
-  onErrandUpdate
+  onErrandUpdate,
+  onErrandClick
 }: MapComponentProps) {
+  
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(propUserLocation || null)
-  const [selectedErrand, setSelectedErrand] = useState<ErrandLocation | null>(null)
   const [userMarkerImage, setUserMarkerImage] = useState<string | null>(null)
   const [currentZoom, setCurrentZoom] = useState(3)
   const [defaultMarkers, setDefaultMarkers] = useState<Record<string, string>>({})
@@ -47,7 +50,6 @@ export default function MapComponent({
   const [currentLocationPulse, setCurrentLocationPulse] = useState(0)
   const [errandLocationPulse, setErrandLocationPulse] = useState(0)
   const [pulsingErrandId, setPulsingErrandId] = useState<string | null>(null)
-  const [acceptingErrand, setAcceptingErrand] = useState<string | null>(null)
   const [currentMapCenter, setCurrentMapCenter] = useState<{ lat: number; lng: number } | null>(null)
   const [isAutoSearching, setIsAutoSearching] = useState(false)
   const [userHasDragged, setUserHasDragged] = useState(false)
@@ -56,6 +58,8 @@ export default function MapComponent({
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const lastCallTimeRef = useRef<number>(0)
   const isSearchingRef = useRef<boolean>(false)
+  const [showClusterModal, setShowClusterModal] = useState(false)
+  const [selectedCluster, setSelectedCluster] = useState<ClusterMarker | null>(null)
 
   // 두 지점 간의 거리 계산 (km)
   const getDistance = (pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }) => {
@@ -102,34 +106,18 @@ export default function MapComponent({
     try {
       console.log(`🔍 지도 중심 변경: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)} - 자동 검색 시작`)
       
-      // 4. API 호출 (AbortController와 함께)
-      const response = await errandApi.getNearbyErrands(center.lng, center.lat, 10000, 'pending', controller.signal)
-      
-      // 5. 요청이 취소되지 않았다면 결과 처리
-      if (!controller.signal.aborted) {
-        if (response.success && response.data && onMapMove) {
-          // 마지막 검색 좌표 업데이트
-          setLastSearchCenter(center)
-          
-          // 부모 컴포넌트에 새로운 심부름 데이터 전달
-          onMapMove(center, bounds)
-          console.log(`✅ ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)} 위치에서 ${response.data.errands.length}개의 심부름을 찾았습니다.`)
-        }
+      // 부모 컴포넌트의 handleMapMove 바로 호출 (API는 부모에서 처리)
+      if (onMapMove) {
+        console.log('🚀 부모 onMapMove 호출')
+        onMapMove(center, bounds)
+        setLastSearchCenter(center)
       } else {
-        console.log('🚫 검색 요청이 취소되었습니다.')
+        console.log('❌ onMapMove가 없음')
       }
     } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('🚫 검색 요청이 취소되었습니다.')
-      } else {
-        console.error('❌ 자동 검색 오류:', error)
-        // 에러 발생 시에도 기존 방식으로 폴백 (요청이 취소되지 않은 경우에만)
-        if (!controller.signal.aborted && onMapMove) {
-          onMapMove(center, bounds)
-        }
-      }
+      console.error('❌ 지도 이동 처리 오류:', error)
     } finally {
-      // 6. 검색 완료 후 상태 정리
+      // 검색 완료 후 상태 정리
       if (!controller.signal.aborted) {
         setIsAutoSearching(false)
         setSearchAbortController(null)
@@ -177,9 +165,9 @@ export default function MapComponent({
       })
       
       debounceTimerRef.current = null
-    }, 2000) // 2초 디바운스로 강화
+    }, 800) // 0.8초 디바운스로 변경
     
-    console.log('⏳ 쓰로틀링+디바운스 타이머 시작 (2초)')
+    console.log('⏳ 쓰로틀링+디바운스 타이머 시작 (0.8초)')
   }, [performSearch])
 
   // 컴포넌트 언마운트 시 진행 중인 검색 요청 및 타이머 취소
@@ -236,19 +224,22 @@ export default function MapComponent({
   useEffect(() => {
     if (currentUser && typeof window !== 'undefined') {
       const profileImageSrc = currentUser.avatar || getDefaultProfileImage(currentUser.name)
+      
       createProfileMarkerImage(profileImageSrc)
-        .then(markerImage => setUserMarkerImage(markerImage))
+        .then(markerImage => {
+          setUserMarkerImage(markerImage)
+        })
         .catch(error => {
           console.error('프로필 마커 생성 실패:', error)
           setUserMarkerImage(null)
         })
     }
-  }, [currentUser])
+  }, [currentUser, propUserLocation])
 
   // 클러스터링 처리
   useEffect(() => {
-    // 클러스터링 조건: 심부름이 5개 이상이고, 브라우저 환경일 때만
-    if (typeof window !== 'undefined' && errands.length >= 5) {
+    // 클러스터링 조건: 심부름이 2개 이상이고, 브라우저 환경일 때만
+    if (typeof window !== 'undefined' && errands.length >= 2) {
       try {
         const { clusters: newClusters, unclustered } = createClusters(errands, currentZoom)
         setClusters(newClusters)
@@ -386,35 +377,6 @@ export default function MapComponent({
     }
   }, [pulsingErrandId])
 
-  // 심부름 수락 함수
-  const handleAcceptErrand = async (errandId: string) => {
-    if (!currentUser || acceptingErrand) return
-    
-    setAcceptingErrand(errandId)
-    try {
-      const response = await errandApi.acceptErrand(errandId)
-      
-      if (response.success) {
-        // 성공 메시지 표시
-        alert('심부름을 성공적으로 수락했습니다!')
-        
-        // 선택된 심부름 닫기
-        setSelectedErrand(null)
-        
-        // 부모 컴포넌트에 업데이트 알림
-        if (onErrandUpdate) {
-          onErrandUpdate()
-        }
-      } else {
-        alert(response.error || '심부름 수락에 실패했습니다.')
-      }
-    } catch (error) {
-      console.error('심부름 수락 오류:', error)
-      alert('네트워크 오류가 발생했습니다.')
-    } finally {
-      setAcceptingErrand(null)
-    }
-  }
 
 
   const handleMapClick = (_target: unknown, mouseEvent: { latLng: { getLat: () => number; getLng: () => number } }) => {
@@ -531,34 +493,50 @@ export default function MapComponent({
               }}
               clickable={true}
               onClick={() => {
-                // 클러스터를 클릭하면 줌인하여 개별 마커들을 보여줌
-                if (currentZoom > 1) {
-                  setCurrentZoom(currentZoom - 2)
-                  setMapCenter({ lat: cluster.lat, lng: cluster.lng })
-                  setUserHasDragged(false) // 프로그래밍적 이동이므로 드래그 아님
-                }
+                // 클러스터를 클릭하면 모달로 심부름 목록 표시
+                setSelectedCluster(cluster)
+                setShowClusterModal(true)
               }}
             />
           ))}
 
-          {/* 클러스터되지 않은 개별 심부름 마커들 */}
-          {unclusteredErrands.map((errand) => (
-            <MapMarker
-              key={errand.id}
-              position={{ lat: errand.lat, lng: errand.lng }}
-              image={{
-                src: getMarkerImage(errand),
-                size: { width: 35, height: 35 },
-              }}
-              clickable={true}
-              onClick={() => {
-                setSelectedErrand(errand)
-                setPulsingErrandId(errand.id)
-                setMapCenter({ lat: errand.lat, lng: errand.lng })
-                setUserHasDragged(false) // 프로그래밍적 이동이므로 드래그 아님
-              }}
-            />
-          ))}
+          {/* 클러스터되지 않은 심부름 마커들 - 다양한 색상으로 표시 */}
+          {unclusteredErrands.map((errand, index) => {
+            const colors = ['/marker-red.svg', '/marker-blue.svg', '/marker-green.svg', '/marker-orange.svg', '/marker-purple.svg']
+            const markerColor = colors[index % colors.length]
+            
+            return (
+              <MapMarker
+                key={errand.id}
+                position={{ lat: errand.lat, lng: errand.lng }}
+                image={{
+                  src: markerColor,
+                  size: { width: 24, height: 35 },
+                }}
+                clickable={true}
+                title={errand.title}
+                onClick={() => {
+                  console.log('🎯 마커 클릭됨:', errand.title)
+                  if (onErrandClick) {
+                    console.log('🚀 onErrandClick 호출 시작')
+                    onErrandClick(errand)
+                    console.log('✅ onErrandClick 호출 완료')
+                  } else {
+                    console.log('❌ onErrandClick이 없음')
+                  }
+                  setPulsingErrandId(errand.id)
+                  setMapCenter({ lat: errand.lat, lng: errand.lng })
+                  setUserHasDragged(false)
+                }}
+              />
+            )
+          })}
+          
+          {/* 테스트 마커 - 청계동 위치 */}
+          <MapMarker
+            position={{ lat: 37.1982115590239, lng: 127.118473726893 }}
+            title="테스트 마커 - 청계동"
+          />
           
           {currentUser && userMarkerImage && propUserLocation && (
             <>
@@ -587,10 +565,6 @@ export default function MapComponent({
           {selectedLocation && onLocationSelect && (
             <MapMarker
               position={selectedLocation}
-              image={{
-                src: 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
-                size: { width: 24, height: 35 },
-              }}
               title="선택된 위치"
             />
           )}
@@ -614,63 +588,6 @@ export default function MapComponent({
         </Map>
         
 
-        {selectedErrand && (
-          <div className="absolute top-4 left-4 bg-white p-4 rounded-lg shadow-lg max-w-sm z-10">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-bold text-lg">{selectedErrand.title}</h3>
-              <button
-                onClick={() => setSelectedErrand(null)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ✕
-              </button>
-            </div>
-            <p className="text-gray-600 mb-2">{selectedErrand.description}</p>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-green-600">
-                ₩{selectedErrand.reward.toLocaleString()}
-              </span>
-              <span className={`px-2 py-1 rounded text-xs ${
-                selectedErrand.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                selectedErrand.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                'bg-green-100 text-green-800'
-              }`}>
-                {selectedErrand.status === 'pending' ? '대기중' :
-                 selectedErrand.status === 'in_progress' ? '진행중' : '완료'}
-              </span>
-            </div>
-            {selectedErrand.status === 'pending' && (
-              <button 
-                onClick={() => handleAcceptErrand(selectedErrand.id)}
-                disabled={acceptingErrand === selectedErrand.id || !currentUser}
-                className={`w-full mt-3 py-2 rounded transition-colors ${
-                  acceptingErrand === selectedErrand.id 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : !currentUser 
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                } text-white`}
-              >
-                {acceptingErrand === selectedErrand.id ? '수락 중...' : '심부름 수락하기'}
-              </button>
-            )}
-            {selectedErrand.status === 'accepted' && (
-              <div className="w-full mt-3 py-2 text-center bg-blue-100 text-blue-800 rounded">
-                수락된 심부름입니다
-              </div>
-            )}
-            {selectedErrand.status === 'in_progress' && (
-              <div className="w-full mt-3 py-2 text-center bg-orange-100 text-orange-800 rounded">
-                진행 중인 심부름입니다
-              </div>
-            )}
-            {selectedErrand.status === 'completed' && (
-              <div className="w-full mt-3 py-2 text-center bg-green-100 text-green-800 rounded">
-                완료된 심부름입니다
-              </div>
-            )}
-          </div>
-        )}
         
         {/* 자동 검색 로딩 표시 */}
         {isAutoSearching && (
@@ -682,6 +599,25 @@ export default function MapComponent({
           </div>
         )}
       </div>
+      
+      {/* 클러스터 모달 */}
+      <ClusterModal
+        isOpen={showClusterModal}
+        onClose={() => {
+          setShowClusterModal(false)
+          setSelectedCluster(null)
+        }}
+        errands={selectedCluster?.items || []}
+        position={selectedCluster ? { lat: selectedCluster.lat, lng: selectedCluster.lng } : null}
+        onErrandSelect={(errand) => {
+          if (onErrandClick) {
+            onErrandClick(errand)
+          }
+          setPulsingErrandId(errand.id)
+          setMapCenter({ lat: errand.lat, lng: errand.lng })
+          setUserHasDragged(false)
+        }}
+      />
     </KakaoMapWrapper>
   )
 }

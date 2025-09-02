@@ -6,18 +6,18 @@ import {
   acceptErrand, 
   updateErrandStatus,
   getUserErrands,
-  cancelErrand
+  cancelErrand,
+  debugAllErrands
 } from '../controllers/errandController';
-import { auth } from '../middleware/auth';
-import { validateErrand } from '../middleware/validation';
+import { auth, optionalAuth } from '../middleware/auth';
 
 const router = express.Router();
 
 // POST /api/errands - Create new errand
-router.post('/', auth, validateErrand, createErrand);
+router.post('/', auth, createErrand);
 
 // GET /api/errands/nearby - Get nearby errands
-router.get('/nearby', getNearbyErrands);
+router.get('/nearby', optionalAuth, getNearbyErrands);
 
 // GET /api/errands/user - Get user's errands
 router.get('/user', auth, getUserErrands);
@@ -33,5 +33,8 @@ router.put('/:id/status', auth, updateErrandStatus);
 
 // DELETE /api/errands/:id - Cancel errand
 router.delete('/:id', auth, cancelErrand);
+
+// Debug route to see all errands
+router.get('/debug/all', debugAllErrands);
 
 export default router;

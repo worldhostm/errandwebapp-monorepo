@@ -7,6 +7,7 @@ import AuthModal from './components/AuthModal'
 import ErrandForm from './components/ErrandForm'
 import ChatModal from './components/ChatModal'
 import ProfileModal from './components/ProfileModal'
+import ErrandDetailModal from './components/ErrandDetailModal'
 import UserTypeTabs, { UserType } from './components/UserTypeTabs'
 import MyErrandHistory from './components/MyErrandHistory'
 import MyAcceptedErrands from './components/MyAcceptedErrands'
@@ -54,6 +55,8 @@ export default function Home() {
   const [showErrandForm, setShowErrandForm] = useState(false)
   const [showChat, setShowChat] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
+  const [showErrandDetail, setShowErrandDetail] = useState(false)
+  const [selectedErrandForDetail, setSelectedErrandForDetail] = useState<ErrandLocation | null>(null)
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<ErrandLocation | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [mapRadius, setMapRadius] = useState(10) // 기본 10km 반경
@@ -65,32 +68,32 @@ export default function Home() {
   
 
   // 샘플 심부름 데이터를 ErrandLocation 형태로 변환 (폴백용)
-  const convertSampleErrandToErrandLocation = (sampleErrand: {
-    id: string;
-    title: string;
-    description: string;
-    location: { coordinates: [number, number] };
-    reward: number;
-    status: string;
-    category: string;
-    deadline?: Date;
-    createdAt?: Date;
-    acceptedBy?: string | { id: string };
-  }): ErrandLocation => {
-    return {
-      id: sampleErrand.id,
-      title: sampleErrand.title,
-      description: sampleErrand.description,
-      lat: sampleErrand.location.coordinates[1], // latitude
-      lng: sampleErrand.location.coordinates[0], // longitude
-      reward: sampleErrand.reward,
-      status: sampleErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
-      category: sampleErrand.category,
-      deadline: sampleErrand.deadline?.toISOString() || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      createdAt: sampleErrand.createdAt?.toISOString() || new Date().toISOString(),
-      acceptedBy: typeof sampleErrand.acceptedBy === 'object' ? sampleErrand.acceptedBy.id : sampleErrand.acceptedBy
-    }
-  }
+  // const convertSampleErrandToErrandLocation = (sampleErrand: {
+  //   id: string;
+  //   title: string;
+  //   description: string;
+  //   location: { coordinates: [number, number] };
+  //   reward: number;
+  //   status: string;
+  //   category: string;
+  //   deadline?: Date;
+  //   createdAt?: Date;
+  //   acceptedBy?: string | { id: string };
+  // }): ErrandLocation => {
+  //   return {
+  //     id: sampleErrand.id,
+  //     title: sampleErrand.title,
+  //     description: sampleErrand.description,
+  //     lat: sampleErrand.location.coordinates[1], // latitude
+  //     lng: sampleErrand.location.coordinates[0], // longitude
+  //     reward: sampleErrand.reward,
+  //     status: sampleErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
+  //     category: sampleErrand.category,
+  //     deadline: sampleErrand.deadline?.toISOString() || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  //     createdAt: sampleErrand.createdAt?.toISOString() || new Date().toISOString(),
+  //     acceptedBy: typeof sampleErrand.acceptedBy === 'object' ? sampleErrand.acceptedBy.id : sampleErrand.acceptedBy
+  //   }
+  // }
 
   const [allErrands, setAllErrands] = useState<ErrandLocation[]>([])
   const [isUsingApi, setIsUsingApi] = useState(false)
@@ -106,16 +109,16 @@ export default function Home() {
       if (result.success && result.location) {
         setUserLocation(result.location)
       } else {
-        console.warn('위치 가져오기 실패, 기본 위치(서울시청)로 설정합니다.')
-        setUserLocation({ lat: 37.5665, lng: 126.9780 })
+        console.warn('위치 가져오기 실패, 기본 위치(청계동 근처)로 설정합니다.')
+        setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
       }
     } else if (permission === 'prompt' || permission === 'denied') {
       // 권한이 필요하면 팝업 표시
       setShowLocationPermissionModal(true)
     } else {
       // 위치 서비스 미지원
-      console.warn('이 브라우저는 위치 서비스를 지원하지 않습니다. 기본 위치(서울시청)로 설정합니다.')
-      setUserLocation({ lat: 37.5665, lng: 126.9780 })
+      console.warn('이 브라우저는 위치 서비스를 지원하지 않습니다. 기본 위치(청계동 근처)로 설정합니다.')
+      setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
     }
   }
 
@@ -125,64 +128,128 @@ export default function Home() {
   }, [])
 
 
-  // 현재 위치 기반 심부름 조회 함수
-  const fetchErrandsAroundUserLocation = useCallback(async () => {
-    if (!userLocation) return
-    
+  // 통합된 심부름 조회 함수
+  const fetchErrandsAtLocation = useCallback(async (lat: number, lng: number, description = '위치') => {
+    console.log(`🔍 ${description} 기준 심부름 조회 시작:`, { lat, lng })
     setIsLoadingErrands(true)
     
     try {
-      // 현재 위치 중심으로 10km 범위에서 조회
-      const response = await errandApi.getNearbyErrands(userLocation.lng, userLocation.lat, 10000, 'pending')
+      // 먼저 10km 반경으로 조회
+      console.log(`📡 API 호출: errandApi.getNearbyErrands(${lng}, ${lat}, 10000, 'pending')`)
+      const response = await errandApi.getNearbyErrands(lng, lat, 10000, 'pending')
+      console.log(`📡 API 응답:`, response)
       
       if (response.success && response.data) {
         let apiErrands = response.data.errands.map(convertErrandToErrandLocation)
+        console.log(`📍 ${description} 10km 조회 결과:`, apiErrands.length, '개', apiErrands)
         
-        // 10km 내에 심부름이 없으면 30km로 확장하여 재시도
+        // 10km 내에 심부름이 없으면 50km로 확장하여 재시도
         if (apiErrands.length === 0) {
-          console.log('현재 위치 10km 내에 심부름이 없어 30km로 확장하여 재조회합니다.')
-          const expandedResponse = await errandApi.getNearbyErrands(userLocation.lng, userLocation.lat, 30000, 'pending')
+          console.log(`📡 ${description} 10km 내에 심부름이 없어 50km로 확장하여 재조회합니다.`)
+          console.log(`📡 확장 API 호출: errandApi.getNearbyErrands(${lng}, ${lat}, 50000, 'pending')`)
+          const expandedResponse = await errandApi.getNearbyErrands(lng, lat, 50000, 'pending')
+          console.log(`📡 확장 API 응답:`, expandedResponse)
           
           if (expandedResponse.success && expandedResponse.data) {
             apiErrands = expandedResponse.data.errands.map(convertErrandToErrandLocation)
-            console.log(`현재 위치 30km 확장 조회에서 ${apiErrands.length}개 심부름 발견`)
+            console.log(`📍 ${description} 50km 확장 조회 결과:`, apiErrands.length, '개', apiErrands)
           }
         }
         
         // 거리별로 정렬
-        const processed = processErrands(apiErrands, userLocation.lat, userLocation.lng, 30)
-        setFilteredErrands(processed)
+        const processed = processErrands(apiErrands, lat, lng, 50)
+        console.log(`🔄 processErrands 결과:`, processed.length, '개', processed)
+        
+        // 현재 지도 bounds가 있으면 해당 범위 내의 심부름만 표시
+        let finalErrands = processed
+        if (currentMapBounds) {
+          finalErrands = processed.filter(errand => {
+            return errand.lat >= currentMapBounds.sw.lat && errand.lat <= currentMapBounds.ne.lat &&
+                   errand.lng >= currentMapBounds.sw.lng && errand.lng <= currentMapBounds.ne.lng
+          })
+          console.log(`📍 bounds 필터링 (fetchErrandsAtLocation): ${processed.length}개 → ${finalErrands.length}개`)
+        }
+        
+        setFilteredErrands(finalErrands)
         
         setIsUsingApi(true)
-        console.log(`현재 위치 기준 API에서 총 ${apiErrands.length}개 심부름 조회됨`)
+        console.log(`✅ ${description} 기준 총 ${apiErrands.length}개 심부름 조회 완료`)
       } else {
+        console.error(`❌ API 응답 실패:`, response)
         throw new Error(response.error || 'API 호출 실패')
       }
     } catch (error) {
-      console.warn('현재 위치 기반 API 호출 실패, 샘플 데이터 사용:', error)
-      
-      // API 호출 실패시 샘플 데이터 사용
-      // if (allErrands.length === 0) {
-        // const sampleErrands = SAMPLE_ERRANDS.map(convertSampleErrandToErrandLocation)
-        // setAllErrands(sampleErrands)
-      // }
-      
-      // 사용자 위치 기준으로 샘플 데이터 필터링
-      const processed = processErrands(allErrands, userLocation.lat, userLocation.lng, 30)
-      setFilteredErrands(processed)
-      
+      console.error(`❌ ${description} 기반 API 호출 실패:`, error)
       setIsUsingApi(false)
-      console.log(`현재 위치 기준 샘플 데이터에서 ${processed.length}개 심부름 조회됨`)
+      // API 실패 시 빈 배열로 설정
+      setFilteredErrands([])
     }
     
     setIsLoadingErrands(false)
-  }, [userLocation, allErrands])
+  }, [])
 
-  // 지도 이동 시 호출되는 핸들러 (현재 위치 기준으로만 조회하므로 지도 이동으로는 심부름 조회하지 않음)
-  const handleMapMove = (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+  // 지도 이동 시 호출되는 핸들러 - 새 위치 기준으로 심부름 조회
+  const handleMapMove = async (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+    console.log('🗺️ handleMapMove 호출됨 - 중심:', center)
     setCurrentMapBounds(bounds)
-    // 지도 이동으로는 심부름을 새로 조회하지 않음
+    
+    // 새 위치를 기준으로 심부름 조회
+    setIsLoadingErrands(true)
+    
+    try {
+      console.log('🔍 지도 이동 - 새 위치 기준 심부름 조회:', center)
+      
+      // 먼저 10km 반경으로 조회
+      const response = await errandApi.getNearbyErrands(center.lng, center.lat, 10000, 'pending')
+      
+      if (response.success && response.data) {
+        let apiErrands = response.data.errands.map(convertErrandToErrandLocation)
+        console.log('📍 10km 조회 결과:', apiErrands.length, '개')
+        
+        // 10km 내에 심부름이 없으면 50km로 확장하여 재시도
+        if (apiErrands.length === 0) {
+          console.log('📡 지도 이동 위치 10km 내에 심부름이 없어 50km로 확장하여 재조회합니다.')
+          const expandedResponse = await errandApi.getNearbyErrands(center.lng, center.lat, 50000, 'pending')
+          
+          if (expandedResponse.success && expandedResponse.data) {
+            apiErrands = expandedResponse.data.errands.map(convertErrandToErrandLocation)
+            console.log('📍 50km 확장 조회 결과:', apiErrands.length, '개')
+          }
+        }
+        
+        // 거리별로 정렬
+        const processed = processErrands(apiErrands, center.lat, center.lng, 50)
+        
+        // 지도 bounds 내에 있는 심부름만 필터링
+        const boundsFiltered = processed.filter(errand => {
+          if (!bounds) return true // bounds가 없으면 모든 심부름 표시
+          return errand.lat >= bounds.sw.lat && errand.lat <= bounds.ne.lat &&
+                 errand.lng >= bounds.sw.lng && errand.lng <= bounds.ne.lng
+        })
+        
+        console.log(`📍 bounds 필터링: ${processed.length}개 → ${boundsFiltered.length}개`)
+        console.log('🗺️ 현재 지도 bounds:', bounds)
+        setFilteredErrands(boundsFiltered)
+        
+        console.log(`✅ 지도 이동 위치 기준 ${apiErrands.length}개 심부름 조회 완료`)
+      } else {
+        console.error('❌ API 응답 실패:', response.error)
+        throw new Error(response.error || '지도 이동 API 호출 실패')
+      }
+    } catch (error) {
+      console.warn('❌ 지도 이동 위치 기반 API 호출 실패:', error)
+      // API 실패 시 기존 데이터 유지
+    }
+    
+    setIsLoadingErrands(false)
+    console.log('🏁 handleMapMove 완료')
   }
+
+  // 사용자 위치 기준 심부름 조회 함수
+  const fetchErrandsAroundUserLocation = useCallback(() => {
+    if (!userLocation) return
+    fetchErrandsAtLocation(userLocation.lat, userLocation.lng, '사용자 위치')
+  }, [userLocation, fetchErrandsAtLocation])
 
   // 사용자 위치 변경 시 심부름 조회
   useEffect(() => {
@@ -297,7 +364,7 @@ export default function Home() {
         },
         reward: formData.reward,
         category: formData.category,
-        deadline: formData.deadline
+        deadline: formData.deadline ? new Date(formData.deadline) : undefined
       }
       
       console.log('API 전송할 errandData:', errandData)
@@ -318,17 +385,25 @@ export default function Home() {
         
         console.log('새 심부름 등록 성공:', response.data.errand)
       } else {
+        console.error('심부름 등록 실패 응답:', response)
         alert(response.error || '심부름 등록에 실패했습니다.')
       }
     } catch (error) {
       console.error('심부름 등록 오류:', error)
-      alert('심부름 등록 중 오류가 발생했습니다.')
+      alert('심부름 등록 중 오류가 발생했습니다: ' + (error as Error).message)
     }
   }
 
   const handleChatOpen = (errand: ErrandLocation) => {
     setSelectedErrandForChat(errand)
     setShowChat(true)
+  }
+
+  const handleErrandDetailOpen = (errand: ErrandLocation) => {
+    console.log('handleErrandDetailOpen 호출됨:', errand.title)
+    setSelectedErrandForDetail(errand)
+    setShowErrandDetail(true)
+    console.log('모달 상태 설정 완료')
   }
 
   const handleErrandAccept = async (errandId: string) => {
@@ -346,8 +421,10 @@ export default function Home() {
         // 심부름 리스트 새로고침
         fetchErrandsAroundUserLocation()
         
-        // 내 수행 심부름 탭으로 자동 이동
-        setActiveTab('performer')
+        // 잠시 후 내 수행 심부름 탭으로 자동 이동 (백엔드 업데이트 시간 확보)
+        setTimeout(() => {
+          setActiveTab('performer')
+        }, 500)
         
         console.log(`심부름 ${errandId} 수락 성공:`, response.data.errand)
       } else {
@@ -532,6 +609,7 @@ export default function Home() {
                 centerLocation={mapCenter}
                 selectedErrandId={selectedErrandId}
                 onMapMove={handleMapMove}
+                onErrandClick={handleErrandDetailOpen}
               />
             </div>
 
@@ -665,7 +743,7 @@ export default function Home() {
               {filteredErrands.length === 0 && !isLoadingErrands && (
                 <div className="text-center py-12 text-gray-500">
                   <p>
-                    현재 위치 주변 30km 내에 심부름이 없습니다.
+                    현재 위치 주변 50km 내에 심부름이 없습니다.
                   </p>
                   <p className="text-sm mt-1">잠시 후 다시 확인해보시거나 심부름을 새로 등록해보세요.</p>
                 </div>
@@ -681,10 +759,10 @@ export default function Home() {
           </>
         ) : activeTab === 'performer' ? (
           // 내가 수행하는 심부름 탭
-          <MyAcceptedErrands user={user} />
+          <MyAcceptedErrands key={`performer-${activeTab}`} user={user} />
         ) : (
           // 심부름 시키는 사람 탭 (내 심부름 이력)
-          <MyErrandHistory user={user} />
+          <MyErrandHistory key={`requester-${activeTab}`} user={user} />
         )}
       </main>
 
@@ -721,6 +799,19 @@ export default function Home() {
         />
       )}
 
+      <ErrandDetailModal
+        isOpen={showErrandDetail}
+        onClose={() => {
+          console.log('🔒 모달 닫기 클릭')
+          setShowErrandDetail(false)
+          setSelectedErrandForDetail(null)
+        }}
+        errand={selectedErrandForDetail}
+        currentUser={user}
+        onAcceptErrand={handleErrandAccept}
+        onChatOpen={handleChatOpen}
+      />
+      
       {/* 위치 권한 확인 모달 */}
       {showLocationPermissionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -749,8 +840,8 @@ export default function Home() {
               <button
                 onClick={() => {
                   setShowLocationPermissionModal(false)
-                  console.log('사용자가 위치 권한을 거부했습니다. 기본 위치(서울시청)로 설정합니다.')
-                  setUserLocation({ lat: 37.5665, lng: 126.9780 })
+                  console.log('사용자가 위치 권한을 거부했습니다. 기본 위치(청계동 근처)로 설정합니다.')
+                  setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
                 }}
                 className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
               >

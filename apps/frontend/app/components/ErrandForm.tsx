@@ -184,6 +184,27 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     }
   }
 
+  // 위치 선택 핸들러
+  const handleLocationSelect = useCallback(async (lat: number, lng: number) => {
+    console.log('위치 선택됨:', { lat, lng })
+    setFormData(prev => ({ ...prev, lat, lng }))
+    
+    // 주소 정보 가져오기
+    try {
+      const address = await getAddressFromCoords(lat, lng)
+      setBaseAddress(address)
+      const fullAddress = detailAddress ? `${address} ${detailAddress}` : address
+      setSelectedAddress(fullAddress)
+      setFormData(prev => ({ ...prev, address: fullAddress }))
+      console.log('선택된 주소:', fullAddress)
+      console.log('formData 업데이트:', { lat, lng, address: fullAddress })
+    } catch (error) {
+      console.error('주소 가져오기 실패:', error)
+      setSelectedAddress('주소를 가져올 수 없습니다.')
+      setFormData(prev => ({ ...prev, address: '주소를 가져올 수 없습니다.' }))
+    }
+  }, [detailAddress, getAddressFromCoords])
+
   // 실제 위치 요청 함수
   const getLocationWithPermission = useCallback(async (autoSelect = false) => {
     setIsGettingLocation(true)
@@ -264,26 +285,6 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     console.log('formData 업데이트:', { lat, lng, address: fullAddress })
   }
 
-  const handleLocationSelect = useCallback(async (lat: number, lng: number) => {
-    console.log('위치 선택됨:', { lat, lng })
-    setFormData(prev => ({ ...prev, lat, lng }))
-    
-    // 주소 정보 가져오기
-    try {
-      const address = await getAddressFromCoords(lat, lng)
-      setBaseAddress(address)
-      const fullAddress = detailAddress ? `${address} ${detailAddress}` : address
-      setSelectedAddress(fullAddress)
-      setFormData(prev => ({ ...prev, address: fullAddress }))
-      console.log('선택된 주소:', fullAddress)
-      console.log('formData 업데이트:', { lat, lng, address: fullAddress })
-    } catch (error) {
-      console.error('주소 가져오기 실패:', error)
-      setSelectedAddress('주소를 가져올 수 없습니다.')
-      setFormData(prev => ({ ...prev, address: '주소를 가져올 수 없습니다.' }))
-    }
-  }, [detailAddress, getAddressFromCoords])
-
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setIsTransitioning(true)
@@ -306,9 +307,9 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
 
   const canProceedToNext = () => {
     switch (currentStep) {
-      case 1: return formData.title.trim() !== ''
+      case 1: return formData.title.trim().length >= 5 && formData.title.trim().length <= 100
       case 2: return formData.category !== ''
-      case 3: return formData.description.trim() !== ''
+      case 3: return formData.description.trim().length >= 10 && formData.description.trim().length <= 1000
       case 4: return formData.lat !== null && formData.lng !== null
       case 5: return formData.reward > 0 && formData.deadline !== ''
       default: return false
@@ -376,7 +377,8 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
               <div className="space-y-6">
                 <div className="text-center mb-8">
                   <h3 className="text-xl font-semibold mb-2 text-black">어떤 심부름인가요?</h3>
-                  <p className="text-black text-sm">심부름의 제목을 간단하게 적어주세요</p>
+                  <p className="text-black text-sm">심부름의 제목을 간단하게 적어주세요 (5~100자)</p>
+                  <p className="text-right text-xs text-gray-500 mt-1">{formData.title.length}/100</p>
                 </div>
                 <div>
                   <input
@@ -421,7 +423,8 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
               <div className="space-y-6">
                 <div className="text-center mb-8">
                   <h3 className="text-xl font-semibold mb-2 text-black">자세한 내용을 알려주세요</h3>
-                  <p className="text-black text-sm">구체적인 요청사항을 적어주세요</p>
+                  <p className="text-black text-sm">구체적인 요청사항을 적어주세요 (10~1000자)</p>
+                  <p className="text-right text-xs text-gray-500 mt-1">{formData.description.length}/1000</p>
                 </div>
                 <div>
                   <textarea

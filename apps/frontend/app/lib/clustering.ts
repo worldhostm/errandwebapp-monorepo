@@ -119,10 +119,8 @@ export function createClusters<T extends ClusterableItem>(
 }
 
 function getClusterDistanceByZoom(zoomLevel: number): number {
-  // 줌 레벨이 높을수록 (가까이 볼수록) 클러스터링 거리를 줄임
-  const baseDistance = 1000 // 1km
-  const zoomFactor = Math.pow(2, 8 - zoomLevel) // 줌 레벨에 따른 배율
-  return baseDistance * zoomFactor
+  // 클러스터링 거리를 100미터로 고정
+  return 100 // 100미터
 }
 
 export function createClusterMarkerImage(count: number): string {

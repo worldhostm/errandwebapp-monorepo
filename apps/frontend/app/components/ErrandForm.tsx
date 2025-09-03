@@ -35,7 +35,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     reward: 0,
     lat: null,
     lng: null,
-    deadline: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().slice(0, 16), // 현재 시간 + 2시간
+    deadline: new Date(Date.now() + 9 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString().slice(0, 16), // 한국 시간(UTC+9) + 2시간
     category: categories[0],
     address: ''
   })
@@ -355,7 +355,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
             </div>
             <button
               onClick={onCancel}
-              className="text-gray-500 hover:text-gray-700 text-xl"
+              className="text-black hover:text-gray-700 text-xl"
             >
               ✕
             </button>
@@ -378,7 +378,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 <div className="text-center mb-8">
                   <h3 className="text-xl font-semibold mb-2 text-black">어떤 심부름인가요?</h3>
                   <p className="text-black text-sm">심부름의 제목을 간단하게 적어주세요 (5~100자)</p>
-                  <p className="text-right text-xs text-gray-500 mt-1">{formData.title.length}/100</p>
+                  <p className="text-right text-xs text-black mt-1">{formData.title.length}/100</p>
                 </div>
                 <div>
                   <input
@@ -424,7 +424,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 <div className="text-center mb-8">
                   <h3 className="text-xl font-semibold mb-2 text-black">자세한 내용을 알려주세요</h3>
                   <p className="text-black text-sm">구체적인 요청사항을 적어주세요 (10~1000자)</p>
-                  <p className="text-right text-xs text-gray-500 mt-1">{formData.description.length}/1000</p>
+                  <p className="text-right text-xs text-black mt-1">{formData.description.length}/1000</p>
                 </div>
                 <div>
                   <textarea
@@ -583,7 +583,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
               <button
                 type="button"
                 onClick={prevStep}
-                className="flex-1 py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 py-3 px-6 border border-gray-300 text-black rounded-lg hover:bg-gray-50 transition-colors"
               >
                 이전
               </button>
@@ -645,7 +645,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   setLocationPermissionDenied(true)
                   setUserLocation({ lat: 37.5665, lng: 126.9780 })
                 }}
-                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                className="flex-1 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
               >
                 거부
               </button>

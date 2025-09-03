@@ -193,55 +193,9 @@ export default function Home() {
     console.log('🗺️ handleMapMove 호출됨 - 중심:', center)
     setCurrentMapBounds(bounds)
     
-    // 새 위치를 기준으로 심부름 조회
-    setIsLoadingErrands(true)
+    // fetchErrandsAtLocation 함수를 재사용하여 중복 제거
+    await fetchErrandsAtLocation(center.lat, center.lng, '지도 이동')
     
-    try {
-      console.log('🔍 지도 이동 - 새 위치 기준 심부름 조회:', center)
-      
-      // 먼저 10km 반경으로 조회
-      const response = await errandApi.getNearbyErrands(center.lng, center.lat, 10000, 'pending')
-      
-      if (response.success && response.data) {
-        let apiErrands = response.data.errands.map(convertErrandToErrandLocation)
-        console.log('📍 10km 조회 결과:', apiErrands.length, '개')
-        
-        // 10km 내에 심부름이 없으면 50km로 확장하여 재시도
-        if (apiErrands.length === 0) {
-          console.log('📡 지도 이동 위치 10km 내에 심부름이 없어 50km로 확장하여 재조회합니다.')
-          const expandedResponse = await errandApi.getNearbyErrands(center.lng, center.lat, 50000, 'pending')
-          
-          if (expandedResponse.success && expandedResponse.data) {
-            apiErrands = expandedResponse.data.errands.map(convertErrandToErrandLocation)
-            console.log('📍 50km 확장 조회 결과:', apiErrands.length, '개')
-          }
-        }
-        
-        // 거리별로 정렬
-        const processed = processErrands(apiErrands, center.lat, center.lng, 50)
-        
-        // 지도 bounds 내에 있는 심부름만 필터링
-        const boundsFiltered = processed.filter(errand => {
-          if (!bounds) return true // bounds가 없으면 모든 심부름 표시
-          return errand.lat >= bounds.sw.lat && errand.lat <= bounds.ne.lat &&
-                 errand.lng >= bounds.sw.lng && errand.lng <= bounds.ne.lng
-        })
-        
-        console.log(`📍 bounds 필터링: ${processed.length}개 → ${boundsFiltered.length}개`)
-        console.log('🗺️ 현재 지도 bounds:', bounds)
-        setFilteredErrands(boundsFiltered)
-        
-        console.log(`✅ 지도 이동 위치 기준 ${apiErrands.length}개 심부름 조회 완료`)
-      } else {
-        console.error('❌ API 응답 실패:', response.error)
-        throw new Error(response.error || '지도 이동 API 호출 실패')
-      }
-    } catch (error) {
-      console.warn('❌ 지도 이동 위치 기반 API 호출 실패:', error)
-      // API 실패 시 기존 데이터 유지
-    }
-    
-    setIsLoadingErrands(false)
     console.log('🏁 handleMapMove 완료')
   }
 

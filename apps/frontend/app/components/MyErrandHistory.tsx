@@ -6,6 +6,7 @@ import { errandApi } from '../lib/api'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { getDefaultProfileImage } from '../lib/imageUtils'
 import type { User, ErrandLocation, ErrandStatus } from '../lib/types'
+import type { Errand } from '@errandwebapp/shared'
 import ChatModal from './ChatModal'
 
 interface MyErrandHistoryProps {
@@ -28,40 +29,28 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   const [showChat, setShowChat] = useState(false)
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<MyErrand | null>(null)
 
-  // 백엔드 API 응답을 MyErrand로 변환
-  const convertApiErrandToMyErrand = (apiErrand: {
-    _id: string
-    title: string
-    description: string
-    location: { coordinates: [number, number] }
-    reward: number
-    status: string
-    category: string
-    deadline: string
-    createdAt: string
-    createdBy: string
-    acceptedBy?: {
-      _id: string
-      name: string
-      profileImage?: string
-    } | null
-  }): MyErrand => {
+  // Shared Errand 타입을 MyErrand로 변환
+  const convertErrandToMyErrand = useCallback((errand: Errand): MyErrand => {
     return {
-      id: apiErrand._id,
-      title: apiErrand.title,
-      description: apiErrand.description,
-      lat: apiErrand.location.coordinates[1],
-      lng: apiErrand.location.coordinates[0],
-      reward: apiErrand.reward,
-      status: apiErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
-      category: apiErrand.category,
-      deadline: apiErrand.deadline,
-      createdAt: apiErrand.createdAt,
-      createdBy: apiErrand.createdBy,
-      acceptedBy: apiErrand.acceptedBy?._id,
-      acceptedByUser: apiErrand.acceptedBy
+      id: errand.id,
+      title: errand.title,
+      description: errand.description,
+      lat: errand.location.coordinates[1], // latitude
+      lng: errand.location.coordinates[0], // longitude
+      reward: errand.reward,
+      status: errand.status,
+      category: errand.category,
+      deadline: errand.deadline ? errand.deadline.toISOString() : new Date().toISOString(),
+      createdAt: errand.createdAt.toISOString(),
+      createdBy: typeof errand.requestedBy === 'string' ? errand.requestedBy : errand.requestedBy.id,
+      acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : errand.acceptedBy?.id,
+      acceptedByUser: typeof errand.acceptedBy === 'object' ? {
+        _id: errand.acceptedBy.id,
+        name: errand.acceptedBy.name,
+        profileImage: errand.acceptedBy.avatar
+      } : null
     }
-  }
+  }, [])
 
   // 내가 등록한 심부름 목록 조회
   const fetchMyErrands = useCallback(async () => {
@@ -71,7 +60,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       const response = await errandApi.getMyErrands()
       
       if (response.success && response.data) {
-        const convertedErrands = response.data.errands.map(convertApiErrandToMyErrand)
+        const convertedErrands = response.data.errands.map(convertErrandToMyErrand)
         setMyErrands(convertedErrands)
         console.log(`내가 등록한 심부름 ${convertedErrands.length}개 조회됨`)
       } else {

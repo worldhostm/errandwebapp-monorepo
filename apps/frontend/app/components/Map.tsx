@@ -104,15 +104,15 @@ export default function MapComponent({
     setIsAutoSearching(true)
     
     try {
-      console.log(`🔍 지도 중심 변경: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)} - 자동 검색 시작`)
+      console.log(`🔍 지도 중심 변경: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)} - 검색 시작`)
       
-      // 부모 컴포넌트의 handleMapMove 바로 호출 (API는 부모에서 처리)
+      // 부모 컴포넌트의 handleMapMove 호출 (실제 API 처리는 부모에서)
       if (onMapMove) {
         console.log('🚀 부모 onMapMove 호출')
         onMapMove(center, bounds)
         setLastSearchCenter(center)
       } else {
-        console.log('❌ onMapMove가 없음')
+        console.log('❌ onMapMove가 정의되지 않음 - 검색을 수행할 수 없습니다')
       }
     } catch (error: any) {
       console.error('❌ 지도 이동 처리 오류:', error)
@@ -532,11 +532,6 @@ export default function MapComponent({
             )
           })}
           
-          {/* 테스트 마커 - 청계동 위치 */}
-          <MapMarker
-            position={{ lat: 37.1982115590239, lng: 127.118473726893 }}
-            title="테스트 마커 - 청계동"
-          />
           
           {currentUser && userMarkerImage && propUserLocation && (
             <>

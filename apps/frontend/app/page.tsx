@@ -17,9 +17,9 @@ import { getCategoryInfo } from './lib/categoryUtils'
 import { authApi, errandApi } from './lib/api'
 import { checkLocationPermission, requestLocationWithPermission } from './lib/locationUtils'
 // 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
-import { SAMPLE_ERRANDS } from '../../../packages/shared/src/data/sampleData'
 import type { ErrandLocation, ErrandFormData } from './lib/types'
-import { convertApiUserToUser, convertErrandToErrandLocation, User } from './lib/types'
+import { convertErrandToErrandLocation, User } from './lib/types'
+import { errandCache } from './lib/errandCache'
 
 const MapComponent = dynamic(() => import('./components/Map'), {
   ssr: false,
@@ -96,6 +96,7 @@ export default function Home() {
   // }
 
   const [allErrands, setAllErrands] = useState<ErrandLocation[]>([])
+  console.log('All errands state:', allErrands) // 사용하지 않는 변수 경고 해결용
   const [isUsingApi, setIsUsingApi] = useState(false)
   const [filteredErrands, setFilteredErrands] = useState<ErrandLocation[]>([])
 
@@ -128,55 +129,100 @@ export default function Home() {
   }, [])
 
 
-  // 통합된 심부름 조회 함수
-  const fetchErrandsAtLocation = useCallback(async (lat: number, lng: number, description = '위치') => {
+  // 통합된 심부름 조회 함수 (bounds 직접 전달 옵션 추가)
+  const fetchErrandsAtLocation = useCallback(async (
+    lat: number, 
+    lng: number, 
+    description = '위치',
+    overrideBounds?: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } | null
+  ) => {
     console.log(`🔍 ${description} 기준 심부름 조회 시작:`, { lat, lng })
     setIsLoadingErrands(true)
     
     try {
-      // 먼저 10km 반경으로 조회
-      console.log(`📡 API 호출: errandApi.getNearbyErrands(${lng}, ${lat}, 10000, 'pending')`)
-      const response = await errandApi.getNearbyErrands(lng, lat, 10000, 'pending')
+      const center = { lat, lng }
+      // overrideBounds가 있으면 우선 사용, 없으면 currentMapBounds 사용
+      const bounds = overrideBounds !== undefined ? overrideBounds : currentMapBounds
+      
+      console.log(`🔍 fetchErrandsAtLocation - currentMapBounds:`, currentMapBounds)
+      console.log(`🔍 fetchErrandsAtLocation - overrideBounds:`, overrideBounds)
+      console.log(`🔍 fetchErrandsAtLocation - 최종 bounds:`, bounds)
+      
+      // 캐시에서 먼저 확인 (bounds가 있을 때만)
+      if (bounds) {
+        const cachedData = errandCache.get(center, bounds, 100000)
+        if (cachedData) {
+          console.log(`🎯 캐시에서 ${cachedData.length}개 심부름 조회`)
+          setFilteredErrands(cachedData)
+          setIsUsingApi(true)
+          setIsLoadingErrands(false)
+          return
+        }
+      }
+
+      // 캐시 미스 시 API 호출 - bounds 우선 사용
+      let apiCall
+      if (bounds) {
+        console.log(`📡 Bounds API 호출 (반경 제한 없음): errandApi.getNearbyErrands with bounds`)
+        // bounds가 있으면 반경을 크게 잡아서 bounds 내의 모든 심부름을 가져옴
+        apiCall = errandApi.getNearbyErrands(lng, lat, 100000, 'pending', undefined, bounds)
+      } else {
+        console.log(`📡 반경 API 호출: errandApi.getNearbyErrands(${lng}, ${lat}, 10000, 'pending')`)
+        apiCall = errandApi.getNearbyErrands(lng, lat, 10000, 'pending')
+      }
+      
+      const response = await apiCall
       console.log(`📡 API 응답:`, response)
       
       if (response.success && response.data) {
-        let apiErrands = response.data.errands.map(convertErrandToErrandLocation)
-        console.log(`📍 ${description} 10km 조회 결과:`, apiErrands.length, '개', apiErrands)
+        const apiErrands = response.data.errands.map((errand) => convertErrandToErrandLocation(errand as unknown as Record<string, unknown>))
+        console.log(`📍 ${description} 조회 결과:`, apiErrands.length, '개', apiErrands)
         
-        // 10km 내에 심부름이 없으면 50km로 확장하여 재시도
-        if (apiErrands.length === 0) {
-          console.log(`📡 ${description} 10km 내에 심부름이 없어 50km로 확장하여 재조회합니다.`)
-          console.log(`📡 확장 API 호출: errandApi.getNearbyErrands(${lng}, ${lat}, 50000, 'pending')`)
-          const expandedResponse = await errandApi.getNearbyErrands(lng, lat, 50000, 'pending')
-          console.log(`📡 확장 API 응답:`, expandedResponse)
-          
-          if (expandedResponse.success && expandedResponse.data) {
-            apiErrands = expandedResponse.data.errands.map(convertErrandToErrandLocation)
-            console.log(`📍 ${description} 50km 확장 조회 결과:`, apiErrands.length, '개', apiErrands)
-          }
-        }
-        
-        // 거리별로 정렬
-        const processed = processErrands(apiErrands, lat, lng, 50)
+        // 거리별로 정렬 (반경 제한 없이)
+        const processed = processErrands(apiErrands, lat, lng, 1000) // 충분히 큰 값으로 설정
         console.log(`🔄 processErrands 결과:`, processed.length, '개', processed)
-        
-        // 현재 지도 bounds가 있으면 해당 범위 내의 심부름만 표시
+                    
+        // bounds 기반 필터링 (API 서버 필터링이 실패했을 경우를 위한 이중 보안)
         let finalErrands = processed
-        if (currentMapBounds) {
+        const usedBounds = bounds || currentMapBounds
+        
+        console.log(`🔍 필터링 조건 체크:`)
+        console.log(`  - currentMapBounds:`, currentMapBounds)
+        console.log(`  - bounds:`, bounds)
+        console.log(`  - usedBounds:`, usedBounds)
+        
+        if (usedBounds) {
+          console.log(`📍 클라이언트 bounds 필터링 시작: ${processed.length}개 심부름`)
+          console.log(`📍 Bounds: SW(${usedBounds.sw.lat}, ${usedBounds.sw.lng}) - NE(${usedBounds.ne.lat}, ${usedBounds.ne.lng})`)
+          
           finalErrands = processed.filter(errand => {
-            return errand.lat >= currentMapBounds.sw.lat && errand.lat <= currentMapBounds.ne.lat &&
-                   errand.lng >= currentMapBounds.sw.lng && errand.lng <= currentMapBounds.ne.lng
+            const inBounds = errand.lat >= usedBounds.sw.lat && 
+                           errand.lat <= usedBounds.ne.lat &&
+                           errand.lng >= usedBounds.sw.lng && 
+                           errand.lng <= usedBounds.ne.lng
+                           
+            console.log(`📍 심부름 "${errand.title}" (${errand.lat}, ${errand.lng}): ${inBounds ? '✅ 포함' : '❌ 제외'}`)
+            return inBounds
           })
-          console.log(`📍 bounds 필터링 (fetchErrandsAtLocation): ${processed.length}개 → ${finalErrands.length}개`)
+          console.log(`📍 클라이언트 bounds 필터링: ${processed.length}개 → ${finalErrands.length}개`)
+        } else {
+          console.log(`📍 bounds가 없어 필터링 건너뜀`)
         }
         
-        setFilteredErrands(finalErrands)
+        // 캐시에 저장 (bounds가 있을 때만)
+        if (currentMapBounds) {
+          errandCache.set(center, currentMapBounds, 100000, finalErrands)
+        }
         
+        // 결과가 있든 없든 항상 설정 (빈 배열이어도 설정)
+        setFilteredErrands(finalErrands)
         setIsUsingApi(true)
-        console.log(`✅ ${description} 기준 총 ${apiErrands.length}개 심부름 조회 완료`)
+        console.log(`✅ ${description} 기준 총 ${finalErrands.length}개 심부름 조회 완료`)
       } else {
         console.error(`❌ API 응답 실패:`, response)
-        throw new Error(response.error || 'API 호출 실패')
+        // API 응답 실패 시에도 빈 배열로 초기화
+        setFilteredErrands([])
+        setIsUsingApi(false)
       }
     } catch (error) {
       console.error(`❌ ${description} 기반 API 호출 실패:`, error)
@@ -186,15 +232,16 @@ export default function Home() {
     }
     
     setIsLoadingErrands(false)
-  }, [])
+  }, [currentMapBounds])
 
   // 지도 이동 시 호출되는 핸들러 - 새 위치 기준으로 심부름 조회
   const handleMapMove = async (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
     console.log('🗺️ handleMapMove 호출됨 - 중심:', center)
+    console.log('🗺️ handleMapMove - bounds:', bounds)
     setCurrentMapBounds(bounds)
     
-    // fetchErrandsAtLocation 함수를 재사용하여 중복 제거
-    await fetchErrandsAtLocation(center.lat, center.lng, '지도 이동')
+    // fetchErrandsAtLocation 함수를 재사용하여 중복 제거 (bounds 직접 전달)
+    await fetchErrandsAtLocation(center.lat, center.lng, '지도 이동', bounds)
     
     console.log('🏁 handleMapMove 완료')
   }
@@ -335,6 +382,9 @@ export default function Home() {
         alert('심부름이 성공적으로 등록되었습니다!')
         
         // 새로 등록된 심부름을 보이기 위해 현재 위치 기준 조회 새로고침
+        // 캐시 무효화 (새 심부름 위치 주변 10km)
+        errandCache.invalidateRegion({ lat: formData.lat!, lng: formData.lng! }, 10)
+        
         fetchErrandsAroundUserLocation()
         
         console.log('새 심부름 등록 성공:', response.data.errand)
@@ -433,6 +483,21 @@ export default function Home() {
     setTimeout(() => {
       setSelectedErrandId(null)
     }, 2000)
+  }
+
+  const handleMoveToCurrentLocation = () => {
+    if (userLocation) {
+      console.log('🎯 현재 위치로 지도 이동:', userLocation)
+      setMapCenter({ lat: userLocation.lat, lng: userLocation.lng })
+      
+      // 스크롤을 지도 위치로 이동
+      const mapElement = document.querySelector('#map-container')
+      if (mapElement) {
+        mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    } else {
+      alert('현재 위치 정보를 찾을 수 없습니다.')
+    }
   }
 
   return (
@@ -564,6 +629,7 @@ export default function Home() {
                 selectedErrandId={selectedErrandId}
                 onMapMove={handleMapMove}
                 onErrandClick={handleErrandDetailOpen}
+                onMoveToCurrentLocation={handleMoveToCurrentLocation}
               />
             </div>
 

@@ -29,26 +29,30 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<AcceptedErrand | null>(null)
 
   // 백엔드 API 응답을 AcceptedErrand로 변환
-  const convertApiErrandToAcceptedErrand = (apiErrand: any): AcceptedErrand => {
+  const convertApiErrandToAcceptedErrand = (apiErrand: Record<string, unknown>): AcceptedErrand => {
     console.log('🔄 변환할 API 심부름 데이터:', apiErrand)
     
+    const location = apiErrand.location as { coordinates: [number, number] }
+    const requestedBy = apiErrand.requestedBy as { _id: string; name: string; avatar?: string } | undefined
+    const acceptedBy = apiErrand.acceptedBy as { _id: string } | string | undefined
+    
     const result = {
-      id: apiErrand._id || apiErrand.id,
-      title: apiErrand.title,
-      description: apiErrand.description,
-      lat: apiErrand.location.coordinates[1],
-      lng: apiErrand.location.coordinates[0],
-      reward: apiErrand.reward,
+      id: (apiErrand._id || apiErrand.id) as string,
+      title: apiErrand.title as string,
+      description: apiErrand.description as string,
+      lat: location.coordinates[1],
+      lng: location.coordinates[0],
+      reward: apiErrand.reward as number,
       status: apiErrand.status as 'pending' | 'accepted' | 'in_progress' | 'completed',
-      category: apiErrand.category,
-      deadline: apiErrand.deadline,
-      createdAt: apiErrand.createdAt,
-      createdBy: apiErrand.requestedBy?._id || apiErrand.requestedBy,
-      acceptedBy: apiErrand.acceptedBy?._id || apiErrand.acceptedBy,
-      requesterUser: apiErrand.requestedBy ? {
-        _id: apiErrand.requestedBy._id,
-        name: apiErrand.requestedBy.name,
-        profileImage: apiErrand.requestedBy.avatar
+      category: apiErrand.category as string,
+      deadline: apiErrand.deadline as string,
+      createdAt: apiErrand.createdAt as string,
+      createdBy: requestedBy?._id || (apiErrand.requestedBy as string),
+      acceptedBy: typeof acceptedBy === 'object' ? acceptedBy._id : (acceptedBy as string),
+      requesterUser: requestedBy ? {
+        _id: requestedBy._id,
+        name: requestedBy.name,
+        profileImage: requestedBy.avatar
       } : null
     }
     
@@ -68,7 +72,7 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
       if (response.success && response.data) {
         console.log('📦 원시 API 데이터:', response.data.errands)
         
-        const convertedErrands = response.data.errands.map(convertApiErrandToAcceptedErrand)
+        const convertedErrands = (response.data.errands as unknown as Record<string, unknown>[]).map(convertApiErrandToAcceptedErrand)
         setAcceptedErrands(convertedErrands)
         console.log(`✅ 내가 수락한 심부름 ${convertedErrands.length}개 조회됨:`, convertedErrands)
       } else {
@@ -81,13 +85,13 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
     }
     
     setIsLoading(false)
-  }, [user])
+  }, [])
 
   useEffect(() => {
     if (user) {
       fetchMyAcceptedErrands()
     }
-  }, [fetchMyAcceptedErrands])
+  }, [user, fetchMyAcceptedErrands])
 
   // 상태별 필터링
   const filteredErrands = acceptedErrands.filter(errand => {

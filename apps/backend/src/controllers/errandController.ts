@@ -30,10 +30,35 @@ export const createErrand = async (req: AuthRequest, res: Response) => {
   }
 };
 
+// Haversine 공식을 사용한 거리 계산 함수
+const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+  const R = 6371000; // 지구 반지름 (미터)
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+};
+
 export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
-    const { lng, lat, radius = 5000, status = 'pending', limit = 20, page = 1 } = req.query;
+    const { 
+      lng, 
+      lat, 
+      radius = 5000, 
+      status = 'pending', 
+      limit = 20, 
+      page = 1,
+      // 새로운 bounds 파라미터 추가
+      swLat,
+      swLng, 
+      neLat,
+      neLng
+    } = req.query;
 
     if (!lng || !lat) {
       return res.status(400).json({ error: 'Longitude and latitude are required' });
@@ -45,17 +70,8 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
     const limitNum = parseInt(limit as string);
     const skip = (parseInt(page as string) - 1) * limitNum;
 
-    const query: any = {
-      status,
-      location: {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude]
-          },
-          $maxDistance: radiusInMeters
-        }
-      }
+    let query: any = {
+      status
     };
 
     // 자신의 심부름 제외 (로그인한 경우에만)
@@ -63,11 +79,75 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
       query.requestedBy = { $ne: user._id };
     }
 
-    const errands = await Errand.find(query)
-    .populate('requestedBy', 'name rating totalErrands avatar')
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limitNum);
+    let errands;
+    let total;
+
+    // Bounds가 제공되면 bounds 기준으로 조회
+    if (swLat && swLng && neLat && neLng) {
+      const swLatNum = parseFloat(swLat as string);
+      const swLngNum = parseFloat(swLng as string);
+      const neLatNum = parseFloat(neLat as string);
+      const neLngNum = parseFloat(neLng as string);
+      
+      query.location = {
+        $geoWithin: {
+          $box: [
+            [swLngNum, swLatNum], // 남서쪽 좌표 [lng, lat]
+            [neLngNum, neLatNum]  // 북동쪽 좌표 [lng, lat]
+          ]
+        }
+      };
+      console.log(`📦 Bounds 기준 조회: SW(${swLatNum}, ${swLngNum}) - NE(${neLatNum}, ${neLngNum})`);
+
+      // Bounds 기준 조회 (정렬 없이)
+      errands = await Errand.find(query)
+        .populate('requestedBy', 'name rating totalErrands avatar')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum);
+
+      total = await Errand.countDocuments(query);
+
+    } else {
+      // 반경 기준 조회: $geoWithin으로 대체하여 populate 충돌 해결
+      const expansionFactor = 1.5; // 반경을 조금 더 크게 잡아서 정확도 향상
+      const expandedRadius = radiusInMeters * expansionFactor;
+      
+      // 대략적인 bounds 계산 (1도 ≈ 111km)
+      const latDelta = expandedRadius / 111000;
+      const lngDelta = expandedRadius / (111000 * Math.cos(latitude * Math.PI / 180));
+      
+      query.location = {
+        $geoWithin: {
+          $box: [
+            [longitude - lngDelta, latitude - latDelta], // 남서쪽
+            [longitude + lngDelta, latitude + latDelta]  // 북동쪽
+          ]
+        }
+      };
+      
+      console.log(`🎯 반경 기준 조회 (geoWithin 변환): 중심(${latitude}, ${longitude}), 반경 ${radiusInMeters}m`);
+
+      // 모든 결과를 가져온 후 정확한 거리 계산으로 필터링 및 정렬
+      const allErrands = await Errand.find(query)
+        .populate('requestedBy', 'name rating totalErrands avatar');
+
+      // 거리 계산 및 필터링
+      const errandsWithDistance = allErrands
+        .map(errand => {
+          const [errandLng, errandLat] = errand.location.coordinates;
+          const distance = calculateDistance(latitude, longitude, errandLat, errandLng);
+          return {
+            ...errand.toObject(),
+            distance
+          };
+        })
+        .filter(errand => errand.distance <= radiusInMeters)
+        .sort((a, b) => a.distance - b.distance);
+
+      total = errandsWithDistance.length;
+      errands = errandsWithDistance.slice(skip, skip + limitNum);
+    }
 
     res.json({
       success: true,
@@ -75,7 +155,8 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
       pagination: {
         page: parseInt(page as string),
         limit: limitNum,
-        total: errands.length
+        total,
+        pages: Math.ceil(total / limitNum)
       }
     });
   } catch (error) {

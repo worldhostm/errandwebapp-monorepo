@@ -1,8 +1,10 @@
+import type { ErrandLocation } from './types'
+
 export interface ClusterMarker {
   lat: number
   lng: number
   count: number
-  items: ClusterableItem[]
+  items: ErrandLocation[]
   id: string
 }
 
@@ -60,7 +62,7 @@ export function createClusters<T extends ClusterableItem>(
   }
 
   // 줌 레벨에 따른 클러스터링 거리 조정
-  const clusterDistance = getClusterDistanceByZoom(zoomLevel)
+  const clusterDistance = getClusterDistanceByZoom()
 
   for (let i = 0; i < visibleItems.length; i++) {
     const item = visibleItems[i]
@@ -118,7 +120,7 @@ export function createClusters<T extends ClusterableItem>(
   return { clusters, unclustered }
 }
 
-function getClusterDistanceByZoom(zoomLevel: number): number {
+function getClusterDistanceByZoom(): number {
   // 클러스터링 거리를 100미터로 고정
   return 100 // 100미터
 }

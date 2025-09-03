@@ -19,14 +19,9 @@ async function apiRequest<T>(
   }
 
   try {
-    console.log(`API 요청: ${config.method || 'GET'} ${API_BASE_URL}/api${endpoint}`)
-    console.log('요청 설정:', config)
     
     const response = await fetch(`${API_BASE_URL}/api${endpoint}`, config)
     const data = await response.json()
-    
-    console.log(`API 응답 상태: ${response.status}`)
-    console.log('응답 데이터:', data)
 
     if (!response.ok) {
       console.error(`API 요청 실패: ${response.status} ${response.statusText}`)
@@ -80,12 +75,29 @@ export const authApi = {
 
 // 심부름 관련 API
 export const errandApi = {
-  async getNearbyErrands(lng: number, lat: number, radius?: number, status?: ErrandStatus, signal?: AbortSignal) {
+  async getNearbyErrands(
+    lng: number, 
+    lat: number, 
+    radius?: number, 
+    status?: ErrandStatus, 
+    signal?: AbortSignal,
+    bounds?: {
+      sw: { lat: number; lng: number };
+      ne: { lat: number; lng: number };
+    }
+  ) {
     const params = new URLSearchParams({
       lng: lng.toString(),
       lat: lat.toString(),
       ...(radius && { radius: radius.toString() }),
       ...(status && { status }),
+      // bounds 파라미터 추가
+      ...(bounds && {
+        swLat: bounds.sw.lat.toString(),
+        swLng: bounds.sw.lng.toString(),
+        neLat: bounds.ne.lat.toString(),
+        neLng: bounds.ne.lng.toString(),
+      }),
     })
     
     return apiRequest<{ errands: Errand[] }>(`/errands/nearby?${params}`, {

@@ -73,7 +73,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
     }
     
     setIsLoading(false)
-  }, [])
+  }, [convertErrandToMyErrand])
 
   useEffect(() => {
     if (user) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { Map, MapMarker, Circle } from 'react-kakao-maps-sdk'
 import type { ErrandLocation, User } from '../lib/types'
 import { getDefaultProfileImage } from '../lib/imageUtils'
@@ -8,8 +8,7 @@ import { createProfileMarkerImage } from '../lib/profileMarker'
 import { getRadiusFromZoomLevel } from '../lib/mapUtils'
 import { getDefaultMarkerImages } from '../lib/categoryUtils'
 import { createClusters, createClusterMarkerImage, type ClusterMarker } from '../lib/clustering'
-import { debounceLocationQuery } from '../lib/throttle'
-import { errandApi } from '../lib/api'
+import { searchOptimizer, createSmartDebounce } from '../lib/searchOptimizer'
 import KakaoMapWrapper from './KakaoMapWrapper'
 import ClusterModal from './ClusterModal'
 
@@ -22,8 +21,8 @@ interface MapComponentProps {
   centerLocation?: { lat: number; lng: number } | null
   selectedErrandId?: string | null
   onMapMove?: (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => void
-  onErrandUpdate?: () => void
   onErrandClick?: (errand: ErrandLocation) => void
+  onMoveToCurrentLocation?: () => void
 }
 
 export default function MapComponent({ 
@@ -35,14 +34,14 @@ export default function MapComponent({
   centerLocation,
   selectedErrandId,
   onMapMove,
-  onErrandUpdate,
-  onErrandClick
+  onErrandClick,
+  onMoveToCurrentLocation
 }: MapComponentProps) {
   
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(propUserLocation || null)
   const [userMarkerImage, setUserMarkerImage] = useState<string | null>(null)
   const [currentZoom, setCurrentZoom] = useState(3)
-  const [defaultMarkers, setDefaultMarkers] = useState<Record<string, string>>({})
+  const [, setDefaultMarkers] = useState<Record<string, string>>({})
   const [clusters, setClusters] = useState<ClusterMarker[]>([])
   const [unclusteredErrands, setUnclusteredErrands] = useState<ErrandLocation[]>([])
   const [clusterImages, setClusterImages] = useState<Record<string, string>>({})
@@ -56,8 +55,6 @@ export default function MapComponent({
   const [lastSearchCenter, setLastSearchCenter] = useState<{ lat: number; lng: number } | null>(null)
   const [searchAbortController, setSearchAbortController] = useState<AbortController | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const lastCallTimeRef = useRef<number>(0)
-  const isSearchingRef = useRef<boolean>(false)
   const [showClusterModal, setShowClusterModal] = useState(false)
   const [selectedCluster, setSelectedCluster] = useState<ClusterMarker | null>(null)
 
@@ -114,8 +111,8 @@ export default function MapComponent({
       } else {
         console.log('❌ onMapMove가 정의되지 않음 - 검색을 수행할 수 없습니다')
       }
-    } catch (error: any) {
-      console.error('❌ 지도 이동 처리 오류:', error)
+    } catch (error: unknown) {
+      console.error('❌ 지도 이동 처리 오류:', error instanceof Error ? error.message : error)
     } finally {
       // 검색 완료 후 상태 정리
       if (!controller.signal.aborted) {
@@ -125,50 +122,43 @@ export default function MapComponent({
     }
   }, [lastSearchCenter, searchAbortController, onMapMove, getDistance])
 
-  // 강력한 쓰로틀링+디바운스 검색 함수
-  const debouncedOnMapMove = useCallback((center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
-    const now = Date.now()
-    const timeSinceLastCall = now - lastCallTimeRef.current
-    
-    // 1. 너무 빈번한 호출 차단 (500ms 이내 호출 무시)
-    if (timeSinceLastCall < 500) {
-      console.log(`🚫 너무 빈번한 호출 차단 (${timeSinceLastCall}ms 전에 호출됨)`)
-      return
-    }
-    
-    // 2. 이미 검색 중이면 무시
-    if (isSearchingRef.current) {
-      console.log('🚫 이미 검색 중이므로 호출 무시')
-      return
-    }
-    
-    // 3. 이전 타이머가 있으면 취소
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current)
-      console.log('⏰ 이전 디바운스 타이머를 취소했습니다.')
-    }
-    
-    lastCallTimeRef.current = now
-    
-    // 4. 새로운 타이머 설정
-    debounceTimerRef.current = setTimeout(() => {
-      if (isSearchingRef.current) {
-        console.log('🚫 검색 중이므로 디바운스 타이머 무시')
-        return
+  // 스마트 디바운스 함수 생성 (컴포넌트 레벨에서 한 번만 생성)
+  const smartDebouncedMapMove = useMemo(() => 
+    createSmartDebounce(
+      ((center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+        console.log('🚀 스마트 디바운스 검색 실행')
+        performSearch(center, bounds)
+      }) as (...args: unknown[]) => unknown, 
+      800, // 0.8초 디바운스
+      { 
+        maxWait: 2000 // 최대 2초 대기
       }
-      
-      console.log('🚀 디바운스 타이머 완료 - 검색 실행')
-      isSearchingRef.current = true
-      
-      performSearch(center, bounds).finally(() => {
-        isSearchingRef.current = false
-      })
-      
-      debounceTimerRef.current = null
-    }, 800) // 0.8초 디바운스로 변경
+    ), 
+    [performSearch]
+  )
+
+  // 최적화된 지도 이동 핸들러
+  const debouncedOnMapMove = useCallback(async (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+    const requestKey = `map_${center.lat.toFixed(4)}_${center.lng.toFixed(4)}`
     
-    console.log('⏳ 쓰로틀링+디바운스 타이머 시작 (0.8초)')
-  }, [performSearch])
+    try {
+      await searchOptimizer.optimizedRequest(
+        requestKey,
+        async () => {
+          // 실제 검색 로직은 smartDebouncedMapMove를 통해 실행
+          (smartDebouncedMapMove as unknown as (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => void)(center, bounds)
+          return true
+        },
+        {
+          center,
+          bounds,
+          minInterval: 300 // 최소 300ms 간격
+        }
+      )
+    } catch (error) {
+      console.error('❌ 최적화된 검색 요청 실패:', error)
+    }
+  }, [smartDebouncedMapMove])
 
   // 컴포넌트 언마운트 시 진행 중인 검색 요청 및 타이머 취소
   useEffect(() => {
@@ -181,20 +171,23 @@ export default function MapComponent({
         clearTimeout(debounceTimerRef.current)
         console.log('🧹 컴포넌트 언마운트로 디바운스 타이머를 취소했습니다.')
       }
+      // 스마트 디바운스와 검색 최적화기 정리
+      (smartDebouncedMapMove as unknown as { cancel: () => void })?.cancel()
+      searchOptimizer.cancelAll()
+      console.log('🧹 최적화 도구들 정리 완료')
     }
-  }, [searchAbortController])
+  }, [searchAbortController, smartDebouncedMapMove])
 
-  // centerLocation이 변경되면 지도 중심 이동 (사용자가 드래그하지 않은 경우에만)
+  // centerLocation이 변경되면 지도 중심 이동
   useEffect(() => {
-    // 사용자가 드래그한 경우 centerLocation 변경을 무시
-    if (userHasDragged) return
-    
     let newCenter = null
     if (centerLocation) {
       newCenter = centerLocation
-    } else if (propUserLocation) {
+      // centerLocation이 설정되면 드래그 상태 초기화 (현재 위치 버튼 등에 의한 이동)
+      setUserHasDragged(false)
+    } else if (propUserLocation && !userHasDragged) {
       newCenter = propUserLocation
-    } else if (errands.length > 0) {
+    } else if (errands.length > 0 && !userHasDragged) {
       // 심부름이 있으면 첫 번째 심부름 위치로
       newCenter = {
         lat: errands[0].lat,
@@ -243,7 +236,7 @@ export default function MapComponent({
       try {
         const { clusters: newClusters, unclustered } = createClusters(errands, currentZoom)
         setClusters(newClusters)
-        setUnclusteredErrands(unclustered)
+        setUnclusteredErrands(unclustered as ErrandLocation[])
 
         // 클러스터 마커 이미지 생성
         const newClusterImages: Record<string, string> = {}
@@ -272,7 +265,6 @@ export default function MapComponent({
     if (selectedErrandId && errands.length > 0) {
       const errand = errands.find(e => e.id === selectedErrandId)
       if (errand) {
-        setSelectedErrand(errand)
         setPulsingErrandId(errand.id)
         
         // 선택된 심부름으로 지도 중심 이동 (프로그래밍적 이동이므로 드래그 아님)
@@ -449,20 +441,6 @@ export default function MapComponent({
     )
   }
 
-  const getMarkerImage = (errand: ErrandLocation) => {
-    if (errand.status === 'pending' && errand.isUrgent) {
-      return defaultMarkers.urgent || '/marker-urgent.png'
-    }
-    
-    const statusMap: { [key: string]: string } = {
-      'pending': defaultMarkers.pending || '/marker-pending.png',
-      'accepted': defaultMarkers.accepted || '/marker-accepted.png', 
-      'in_progress': defaultMarkers.inProgress || '/marker-progress.png',
-      'completed': defaultMarkers.completed || '/marker-completed.png'
-    }
-    
-    return statusMap[errand.status] || defaultMarkers.pending || '/marker-pending.png'
-  }
 
   return (
     <KakaoMapWrapper>
@@ -591,6 +569,30 @@ export default function MapComponent({
               <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               새로운 지역 검색중...
             </div>
+          </div>
+        )}
+
+        {/* 현재위치 이동 버튼 */}
+        {propUserLocation && onMoveToCurrentLocation && (
+          <div className="absolute bottom-4 right-4 z-10">
+            <button
+              onClick={onMoveToCurrentLocation}
+              className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 shadow-lg transition-colors duration-200 flex items-center justify-center"
+              title="현재 위치로 이동"
+            >
+              <svg 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                className="text-gray-700"
+              >
+                <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor"/>
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/>
+                <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+            </button>
           </div>
         )}
       </div>

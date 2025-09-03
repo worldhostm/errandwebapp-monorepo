@@ -1,12 +1,13 @@
 // User 타입은 shared 패키지에서 가져옴
 import { User, Errand, ErrandStatus, Message as SharedMessage, ApiResponse } from '@errandwebapp/shared'
+import { ClusterableItem } from './clustering'
 
 // shared 타입들을 re-export
 export type { User, Errand, ErrandStatus, ApiResponse }
 export type { SharedMessage }
 
 // Errand 타입을 기반으로 한 내가 사용할 타입
-export interface ErrandLocation {
+export interface ErrandLocation extends ClusterableItem {
   id: string
   title: string
   description: string
@@ -122,7 +123,7 @@ export const convertApiErrandToErrandLocation = (apiErrand: ApiErrand): ErrandLo
 }
 
 // Shared Errand 타입을 ErrandLocation으로 변환
-export const convertErrandToErrandLocation = (errand: any): ErrandLocation => {
+export const convertErrandToErrandLocation = (errand: Record<string, unknown>): ErrandLocation => {
   // MongoDB의 _id 또는 id 필드를 사용하여 안전한 ID 추출
   let safeId = errand.id || errand._id;
   
@@ -138,16 +139,16 @@ export const convertErrandToErrandLocation = (errand: any): ErrandLocation => {
   }
   
   return {
-    id: safeId,
-    title: errand.title,
-    description: errand.description,
-    lat: errand.location.coordinates[1], // latitude
-    lng: errand.location.coordinates[0], // longitude
-    reward: errand.reward,
-    status: errand.status,
-    category: errand.category,
-    deadline: errand.deadline ? (typeof errand.deadline === 'string' ? errand.deadline : errand.deadline.toISOString()) : new Date().toISOString(),
-    createdAt: typeof errand.createdAt === 'string' ? errand.createdAt : errand.createdAt.toISOString(),
+    id: safeId as string,
+    title: errand.title as string,
+    description: errand.description as string,
+    lat: (errand.location as { coordinates: [number, number] }).coordinates[1], // latitude
+    lng: (errand.location as { coordinates: [number, number] }).coordinates[0], // longitude
+    reward: errand.reward as number,
+    status: errand.status as ErrandStatus,
+    category: errand.category as string,
+    deadline: errand.deadline ? (typeof errand.deadline === 'string' ? errand.deadline : (errand.deadline as { toISOString: () => string }).toISOString()) : new Date().toISOString(),
+    createdAt: typeof errand.createdAt === 'string' ? errand.createdAt : (errand.createdAt as { toISOString: () => string }).toISOString(),
     acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : (errand.acceptedBy as User)?.id
   }
 }

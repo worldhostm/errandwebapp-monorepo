@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Errand, { IErrand } from '../models/Errand';
 import Chat from '../models/Chat';
 import { AuthRequest } from '../middleware/auth';
+import { createNotification } from './notificationController';
 
 export const createErrand = async (req: AuthRequest, res: Response) => {
   try {
@@ -227,6 +228,23 @@ export const acceptErrand = async (req: AuthRequest, res: Response) => {
 
     const { id } = req.params;
     
+    // Check if user already has an active errand (accepted or in_progress)
+    const activeErrand = await Errand.findOne({
+      acceptedBy: user._id,
+      status: { $in: ['accepted', 'in_progress'] }
+    });
+
+    if (activeErrand) {
+      return res.status(400).json({ 
+        error: '이미 수행 중인 심부름이 있습니다. 현재 심부름을 완료한 후에 새로운 심부름을 수락할 수 있습니다.',
+        activeErrand: {
+          id: activeErrand._id,
+          title: activeErrand.title,
+          status: activeErrand.status
+        }
+      });
+    }
+    
     const errand = await Errand.findById(id);
     if (!errand) {
       return res.status(404).json({ error: 'Errand not found' });
@@ -255,6 +273,15 @@ export const acceptErrand = async (req: AuthRequest, res: Response) => {
     await errand.populate('requestedBy', 'name email rating avatar');
     await errand.populate('acceptedBy', 'name email rating avatar');
 
+    // 의뢰자에게 수락 알림 생성
+    await createNotification(
+      errand.requestedBy._id as mongoose.Types.ObjectId,
+      '심부름이 수락되었습니다',
+      `"${errand.title}" 심부름을 ${(errand.acceptedBy as any).name}님이 수락했습니다.`,
+      'errand_accepted',
+      errand._id as mongoose.Types.ObjectId
+    );
+
     res.json({
       success: true,
       errand
@@ -275,8 +302,8 @@ export const updateErrandStatus = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const { status } = req.body;
     
-    if (!['in_progress', 'completed'].includes(status)) {
-      return res.status(400).json({ error: 'Invalid status' });
+    if (!['in_progress'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status. Use /complete-verification for completion.' });
     }
 
     const errand = await Errand.findById(id);
@@ -390,6 +417,188 @@ export const cancelErrand = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error('Cancel errand error:', error);
     res.status(500).json({ error: 'Server error while cancelling errand' });
+  }
+};
+
+// Complete errand with verification
+export const completeErrandWithVerification = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const { id } = req.params;
+    const { image, message } = req.body;
+    
+    if (!image || !message) {
+      return res.status(400).json({ error: 'Image and message are required for completion verification' });
+    }
+
+    const errand = await Errand.findById(id);
+    if (!errand) {
+      return res.status(404).json({ error: 'Errand not found' });
+    }
+
+    // Only the person who accepted the errand can complete it
+    if (!errand.acceptedBy || errand.acceptedBy.toString() !== (user._id as mongoose.Types.ObjectId).toString()) {
+      return res.status(403).json({ error: 'Not authorized to complete this errand' });
+    }
+
+    if (errand.status !== 'in_progress') {
+      return res.status(400).json({ error: 'Errand must be in progress to complete' });
+    }
+
+    // Add completion verification
+    errand.completionVerification = {
+      image,
+      message: message.trim(),
+      submittedAt: new Date()
+    };
+    errand.status = 'completed';
+    
+    await errand.save();
+    await errand.populate('requestedBy', 'name email rating avatar');
+    await errand.populate('acceptedBy', 'name email rating avatar');
+
+    // 의뢰자에게 완료 알림 생성
+    await createNotification(
+      errand.requestedBy._id as mongoose.Types.ObjectId,
+      '심부름이 완료되었습니다',
+      `"${errand.title}" 심부름이 완료되었습니다. 완료 인증을 확인해주세요.`,
+      'errand_completed',
+      errand._id as mongoose.Types.ObjectId
+    );
+
+    res.json({
+      success: true,
+      errand
+    });
+  } catch (error) {
+    console.error('Complete errand with verification error:', error);
+    res.status(500).json({ error: 'Server error while completing errand' });
+  }
+};
+
+// Report dispute for completed errand
+export const reportDispute = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const { id } = req.params;
+    const { reason, description } = req.body;
+    
+    if (!reason || !description) {
+      return res.status(400).json({ error: 'Reason and description are required for dispute' });
+    }
+
+    const errand = await Errand.findById(id);
+    if (!errand) {
+      return res.status(404).json({ error: 'Errand not found' });
+    }
+
+    // Only the requester can report a dispute
+    if (errand.requestedBy.toString() !== (user._id as mongoose.Types.ObjectId).toString()) {
+      return res.status(403).json({ error: 'Only the errand requester can report disputes' });
+    }
+
+    if (errand.status !== 'completed') {
+      return res.status(400).json({ error: 'Can only dispute completed errands' });
+    }
+
+    if (errand.dispute) {
+      return res.status(400).json({ error: 'Dispute already exists for this errand' });
+    }
+
+    // Add dispute
+    errand.dispute = {
+      reportedBy: user._id as mongoose.Types.ObjectId,
+      reason,
+      description: description.trim(),
+      status: 'pending',
+      submittedAt: new Date()
+    };
+    errand.status = 'disputed';
+    
+    await errand.save();
+    await errand.populate('requestedBy', 'name email rating avatar');
+    await errand.populate('acceptedBy', 'name email rating avatar');
+    await errand.populate('dispute.reportedBy', 'name email avatar');
+
+    // 수행자에게 이의제기 알림 생성
+    if (errand.acceptedBy) {
+      await createNotification(
+        errand.acceptedBy._id as mongoose.Types.ObjectId,
+        '이의제기가 접수되었습니다',
+        `"${errand.title}" 심부름에 대해 이의제기가 접수되었습니다. 검토 중입니다.`,
+        'errand_disputed',
+        errand._id as mongoose.Types.ObjectId
+      );
+    }
+
+    res.json({
+      success: true,
+      errand
+    });
+  } catch (error) {
+    console.error('Report dispute error:', error);
+    res.status(500).json({ error: 'Server error while reporting dispute' });
+  }
+};
+
+// Get errand details including completion verification
+export const getErrandWithVerification = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    
+    const errand = await Errand.findById(id)
+      .populate('requestedBy', 'name email rating totalErrands avatar')
+      .populate('acceptedBy', 'name email rating totalErrands avatar')
+      .populate('dispute.reportedBy', 'name email avatar');
+    
+    if (!errand) {
+      return res.status(404).json({ error: 'Errand not found' });
+    }
+
+    res.json({
+      success: true,
+      errand
+    });
+  } catch (error) {
+    console.error('Get errand with verification error:', error);
+    res.status(500).json({ error: 'Server error while fetching errand' });
+  }
+};
+
+// Check if user has active errand
+export const checkActiveErrand = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const activeErrand = await Errand.findOne({
+      acceptedBy: user._id,
+      status: { $in: ['accepted', 'in_progress'] }
+    }).populate('requestedBy', 'name email');
+
+    res.json({
+      success: true,
+      hasActiveErrand: !!activeErrand,
+      activeErrand: activeErrand ? {
+        id: activeErrand._id,
+        title: activeErrand.title,
+        status: activeErrand.status,
+        requestedBy: activeErrand.requestedBy
+      } : null
+    });
+  } catch (error) {
+    console.error('Check active errand error:', error);
+    res.status(500).json({ error: 'Server error while checking active errand' });
   }
 };
 

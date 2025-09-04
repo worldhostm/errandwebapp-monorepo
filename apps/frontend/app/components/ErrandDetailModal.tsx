@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { errandApi } from '../lib/api'
 import type { ErrandLocation, User } from '../lib/types'
 
 interface ErrandDetailModalProps {
@@ -45,6 +46,19 @@ export default function ErrandDetailModal({
     
     setIsAccepting(true)
     try {
+      // 먼저 활성 심부름이 있는지 확인
+      const checkResponse = await errandApi.checkActiveErrand()
+      
+      if (checkResponse.success && checkResponse.data?.hasActiveErrand) {
+        const activeErrand = checkResponse.data.activeErrand
+        const confirmMessage = `이미 수행 중인 심부름이 있습니다.\n\n현재 심부름: "${activeErrand.title}" (${activeErrand.status === 'accepted' ? '수락됨' : '진행중'})\n\n그래도 이 심부름을 수락하시겠습니까? (기존 심부름은 취소됩니다)`
+        
+        if (!confirm(confirmMessage)) {
+          setIsAccepting(false)
+          return
+        }
+      }
+      
       await onAcceptErrand(errand.id)
       onClose()
     } catch (error) {
@@ -62,7 +76,7 @@ export default function ErrandDetailModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           {/* 헤더 */}

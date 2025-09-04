@@ -11,11 +11,12 @@ import ErrandDetailModal from './components/ErrandDetailModal'
 import UserTypeTabs, { UserType } from './components/UserTypeTabs'
 import MyErrandHistory from './components/MyErrandHistory'
 import MyAcceptedErrands from './components/MyAcceptedErrands'
+import NotificationModal from './components/NotificationModal'
 import JsonLd, { organizationSchema, serviceSchema, webApplicationSchema } from '../components/JsonLd'
 import { getDefaultProfileImage } from './lib/imageUtils'
 import { processErrands } from './lib/mapUtils'
 import { getCategoryInfo } from './lib/categoryUtils'
-import { authApi, errandApi } from './lib/api'
+import { authApi, errandApi, notificationApi } from './lib/api'
 import { checkLocationPermission, requestLocationWithPermission } from './lib/locationUtils'
 // 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
 import type { ErrandLocation, ErrandFormData } from './lib/types'
@@ -30,6 +31,11 @@ const MapComponent = dynamic(() => import('./components/Map'), {
 export default function Home() {
   const [user, setUser] = useState<User | null>(null)
   const [activeTab, setActiveTab] = useState<UserType>('receiver')
+  
+  // 알림 관련 상태
+  const [showNotificationModal, setShowNotificationModal] = useState(false)
+  const [notifications, setNotifications] = useState<any[]>([])
+  const [unreadCount, setUnreadCount] = useState(0)
   
   // 로그인 상태 확인
   useEffect(() => {
@@ -345,7 +351,87 @@ export default function Home() {
     // JWT 토큰과 테스트 사용자 데이터 삭제
     localStorage.removeItem('authToken')
     localStorage.removeItem('testUser')
+    // 알림 관련 상태 초기화
+    setNotifications([])
+    setUnreadCount(0)
   }
+
+  // 알림 관련 함수들
+  const fetchNotifications = useCallback(async () => {
+    if (!user) return
+    
+    try {
+      const response = await notificationApi.getNotifications()
+      if (response.success && response.data) {
+        setNotifications(response.data.notifications)
+        setUnreadCount(response.data.unreadCount)
+      }
+    } catch (error) {
+      console.error('알림 조회 오류:', error)
+    }
+  }, [user])
+
+  const fetchUnreadCount = useCallback(async () => {
+    if (!user) return
+    
+    try {
+      const response = await notificationApi.getUnreadCount()
+      if (response.success && response.data) {
+        setUnreadCount(response.data.unreadCount)
+      }
+    } catch (error) {
+      console.error('읽지 않은 알림 개수 조회 오류:', error)
+    }
+  }, [user])
+
+  const handleNotificationClick = () => {
+    setShowNotificationModal(true)
+    fetchNotifications()
+  }
+
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      const response = await notificationApi.markAsRead(notificationId)
+      if (response.success) {
+        // 로컬 상태 업데이트
+        setNotifications(prev => 
+          prev.map(notification => 
+            notification.id === notificationId 
+              ? { ...notification, isRead: true }
+              : notification
+          )
+        )
+        fetchUnreadCount() // 읽지 않은 개수 새로고침
+      }
+    } catch (error) {
+      console.error('알림 읽음 처리 오류:', error)
+    }
+  }
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      const response = await notificationApi.markAllAsRead()
+      if (response.success) {
+        // 모든 알림을 읽음으로 표시
+        setNotifications(prev => 
+          prev.map(notification => ({ ...notification, isRead: true }))
+        )
+        setUnreadCount(0)
+      }
+    } catch (error) {
+      console.error('모든 알림 읽음 처리 오류:', error)
+    }
+  }
+
+  // 사용자 로그인 시 알림 개수 체크
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount()
+      // 5분마다 읽지 않은 알림 개수 체크
+      const interval = setInterval(fetchUnreadCount, 5 * 60 * 1000)
+      return () => clearInterval(interval)
+    }
+  }, [user, fetchUnreadCount])
 
   const handleErrandSubmit = async (formData: ErrandFormData) => {
     if (!formData.lat || !formData.lng) {
@@ -457,7 +543,15 @@ export default function Home() {
         
         console.log(`심부름 ${errandId} 수락 성공:`, response.data.errand)
       } else {
+        // 백엔드에서 보낸 에러 메시지 표시 (이미 수행 중인 심부름 있을 때 한글 메시지 포함)
         alert(response.error || '심부름 수락에 실패했습니다.')
+        
+        // 이미 수행 중인 심부름이 있는 경우 내 수행 심부름 탭으로 이동
+        if (response.error && response.error.includes('이미 수행 중인 심부름이 있습니다')) {
+          setTimeout(() => {
+            setActiveTab('performer')
+          }, 1000)
+        }
       }
     } catch (error) {
       console.error('심부름 수락 오류:', error)
@@ -600,6 +694,20 @@ export default function Home() {
                     심부름 등록
                   </button>
                   <div className="flex items-center gap-3">
+                    {/* 알림 벨 아이콘 */}
+                    <button
+                      onClick={handleNotificationClick}
+                      className="relative text-gray-500 hover:text-gray-700 p-1"
+                      title="알림"
+                    >
+                      <span className="text-xl">🔔</span>
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
+                    </button>
+                    
                     <button
                       onClick={() => setShowProfile(true)}
                       className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded-lg"
@@ -998,9 +1106,22 @@ export default function Home() {
         onChatOpen={handleChatOpen}
       />
       
+      {/* 알림 모달 */}
+      {showNotificationModal && (
+        <NotificationModal
+          isOpen={showNotificationModal}
+          onClose={() => setShowNotificationModal(false)}
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={handleMarkAsRead}
+          onMarkAllAsRead={handleMarkAllAsRead}
+          onRefresh={fetchNotifications}
+        />
+      )}
+
       {/* 위치 권한 확인 모달 */}
       {showLocationPermissionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">위치 권한 요청</h2>
             <p className="text-gray-600 mb-4">

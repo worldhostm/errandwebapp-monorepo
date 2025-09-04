@@ -8,6 +8,7 @@ import { getDefaultProfileImage } from '../lib/imageUtils'
 import type { User, ErrandLocation, ErrandStatus } from '../lib/types'
 import type { Errand } from '@errandwebapp/shared'
 import ChatModal from './ChatModal'
+import CompletedErrandView from './CompletedErrandView'
 
 interface MyErrandHistoryProps {
   user: User
@@ -25,55 +26,68 @@ interface MyErrand extends ErrandLocation {
 export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   const [myErrands, setMyErrands] = useState<MyErrand[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState<'all' | 'pending' | 'accepted' | 'in_progress' | 'completed'>('all')
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'pending' | 'accepted' | 'in_progress' | 'completed' | 'disputed'>('all')
   const [showChat, setShowChat] = useState(false)
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<MyErrand | null>(null)
+  const [showCompletedErrandView, setShowCompletedErrandView] = useState(false)
+  const [selectedCompletedErrandId, setSelectedCompletedErrandId] = useState<string>('')
 
-  // Shared Errand 타입을 MyErrand로 변환
-  const convertErrandToMyErrand = useCallback((errand: Errand): MyErrand => {
-    return {
-      id: errand.id,
-      title: errand.title,
-      description: errand.description,
-      lat: errand.location.coordinates[1], // latitude
-      lng: errand.location.coordinates[0], // longitude
-      reward: errand.reward,
-      status: errand.status,
-      category: errand.category,
-      deadline: errand.deadline ? errand.deadline.toISOString() : new Date().toISOString(),
-      createdAt: errand.createdAt.toISOString(),
-      createdBy: typeof errand.requestedBy === 'string' ? errand.requestedBy : errand.requestedBy.id,
-      acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : errand.acceptedBy?.id,
-      acceptedByUser: typeof errand.acceptedBy === 'object' ? {
-        _id: errand.acceptedBy.id,
-        name: errand.acceptedBy.name,
-        profileImage: errand.acceptedBy.avatar
+  // API 응답 데이터를 MyErrand로 변환
+  const convertApiErrandToMyErrand = useCallback((apiErrand: any): MyErrand => {
+    console.log('🔄 변환할 API 심부름 데이터:', apiErrand)
+    
+    // MongoDB 스키마에서 오는 데이터 구조에 맞게 변환
+    const result = {
+      id: apiErrand._id || apiErrand.id,
+      title: apiErrand.title,
+      description: apiErrand.description,
+      lat: apiErrand.location.coordinates[1], // latitude
+      lng: apiErrand.location.coordinates[0], // longitude
+      reward: apiErrand.reward,
+      status: apiErrand.status,
+      category: apiErrand.category,
+      deadline: typeof apiErrand.deadline === 'string' ? apiErrand.deadline : 
+                (apiErrand.deadline ? new Date(apiErrand.deadline).toISOString() : new Date().toISOString()),
+      createdAt: typeof apiErrand.createdAt === 'string' ? apiErrand.createdAt : new Date(apiErrand.createdAt).toISOString(),
+      createdBy: typeof apiErrand.requestedBy === 'string' ? apiErrand.requestedBy : apiErrand.requestedBy?._id,
+      acceptedBy: typeof apiErrand.acceptedBy === 'string' ? apiErrand.acceptedBy : apiErrand.acceptedBy?._id,
+      acceptedByUser: apiErrand.acceptedBy && typeof apiErrand.acceptedBy === 'object' ? {
+        _id: apiErrand.acceptedBy._id,
+        name: apiErrand.acceptedBy.name,
+        profileImage: apiErrand.acceptedBy.avatar
       } : null
     }
+    
+    console.log('✅ 변환된 심부름:', result)
+    return result
   }, [])
 
   // 내가 등록한 심부름 목록 조회
   const fetchMyErrands = useCallback(async () => {
+    console.log('🔍 내가 등록한 심부름 조회 시작')
     setIsLoading(true)
     
     try {
       const response = await errandApi.getMyErrands()
+      console.log('📡 API 응답:', response)
       
       if (response.success && response.data) {
-        const convertedErrands = response.data.errands.map(convertErrandToMyErrand)
+        console.log('📦 원시 API 데이터:', response.data.errands)
+        
+        const convertedErrands = response.data.errands.map(convertApiErrandToMyErrand)
         setMyErrands(convertedErrands)
-        console.log(`내가 등록한 심부름 ${convertedErrands.length}개 조회됨`)
+        console.log(`✅ 내가 등록한 심부름 ${convertedErrands.length}개 조회됨:`, convertedErrands)
       } else {
-        console.error('내 심부름 조회 실패:', response.error)
+        console.error('❌ 내 심부름 조회 실패:', response.error)
         setMyErrands([])
       }
     } catch (error) {
-      console.error('내 심부름 조회 오류:', error)
+      console.error('❌ 내 심부름 조회 오류:', error)
       setMyErrands([])
     }
     
     setIsLoading(false)
-  }, [convertErrandToMyErrand])
+  }, [convertApiErrandToMyErrand])
 
   useEffect(() => {
     if (user) {
@@ -129,12 +143,19 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
     setShowChat(true)
   }
 
+  // 완료된 심부름 상세보기 열기
+  const handleViewCompletedErrand = (errandId: string) => {
+    setSelectedCompletedErrandId(errandId)
+    setShowCompletedErrandView(true)
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800'
       case 'accepted': return 'bg-orange-100 text-orange-800'
       case 'in_progress': return 'bg-blue-100 text-blue-800'
       case 'completed': return 'bg-green-100 text-green-800'
+      case 'disputed': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
@@ -145,6 +166,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       case 'accepted': return '수락됨'
       case 'in_progress': return '진행중'
       case 'completed': return '완료'
+      case 'disputed': return '이의제기됨'
       default: return status
     }
   }
@@ -178,7 +200,8 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
           { key: 'pending', label: '대기중' },
           { key: 'accepted', label: '수락됨' },
           { key: 'in_progress', label: '진행중' },
-          { key: 'completed', label: '완료' }
+          { key: 'completed', label: '완료' },
+          { key: 'disputed', label: '이의제기됨' }
         ].map(({ key, label }) => (
           <button
             key={key}
@@ -312,10 +335,17 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
                     </button>
                   )}
                   
-                  {errand.status === 'completed' && (
-                    <div className="flex-1 text-center py-2 text-sm text-gray-500">
-                      완료된 심부름입니다
-                    </div>
+                  {(errand.status === 'completed' || errand.status === 'disputed') && (
+                    <button 
+                      onClick={() => handleViewCompletedErrand(errand.id)}
+                      className={`flex-1 text-white py-2 rounded text-sm ${
+                        errand.status === 'completed' 
+                          ? 'bg-green-500 hover:bg-green-600' 
+                          : 'bg-red-500 hover:bg-red-600'
+                      }`}
+                    >
+                      {errand.status === 'completed' ? '완료 확인하기' : '이의제기 확인하기'}
+                    </button>
                   )}
                 </div>
               </div>
@@ -335,6 +365,19 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
             name: selectedErrandForChat.acceptedByUser.name
           }}
           currentUserId={user.id}
+        />
+      )}
+
+      {/* 완료된 심부름 상세보기 모달 */}
+      {showCompletedErrandView && selectedCompletedErrandId && (
+        <CompletedErrandView
+          errandId={selectedCompletedErrandId}
+          user={user}
+          onClose={() => {
+            setShowCompletedErrandView(false)
+            setSelectedCompletedErrandId('')
+            fetchMyErrands() // 목록 새로고침 (이의제기 상태 반영)
+          }}
         />
       )}
     </div>

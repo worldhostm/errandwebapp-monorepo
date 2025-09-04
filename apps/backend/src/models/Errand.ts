@@ -1,5 +1,21 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
+export interface ICompletionVerification {
+  image: string;
+  message: string;
+  submittedAt: Date;
+}
+
+export interface IDispute {
+  reportedBy: Types.ObjectId;
+  reason: string;
+  description: string;
+  status: 'pending' | 'reviewed' | 'resolved';
+  submittedAt: Date;
+  resolvedAt?: Date;
+  resolution?: string;
+}
+
 export interface IErrand extends Document {
   title: string;
   description: string;
@@ -12,11 +28,13 @@ export interface IErrand extends Document {
   currency: 'KRW' | 'USD';
   requestedBy: Types.ObjectId;
   acceptedBy?: Types.ObjectId;
-  status: 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
+  status: 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
   category: string;
   deadline?: Date;
   images?: string[];
   requirements?: string[];
+  completionVerification?: ICompletionVerification;
+  dispute?: IDispute;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,7 +90,7 @@ const ErrandSchema = new Schema<IErrand>({
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'in_progress', 'completed', 'cancelled'],
+    enum: ['pending', 'accepted', 'in_progress', 'completed', 'cancelled', 'disputed'],
     default: 'pending'
   },
   category: {
@@ -89,7 +107,48 @@ const ErrandSchema = new Schema<IErrand>({
   requirements: [{
     type: String,
     trim: true
-  }]
+  }],
+  completionVerification: {
+    image: {
+      type: String
+    },
+    message: {
+      type: String,
+      maxlength: 500
+    },
+    submittedAt: {
+      type: Date
+    }
+  },
+  dispute: {
+    reportedBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    reason: {
+      type: String,
+      enum: ['fake_completion', 'poor_quality', 'not_completed', 'other']
+    },
+    description: {
+      type: String,
+      maxlength: 1000
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'reviewed', 'resolved'],
+      default: 'pending'
+    },
+    submittedAt: {
+      type: Date
+    },
+    resolvedAt: {
+      type: Date
+    },
+    resolution: {
+      type: String,
+      maxlength: 1000
+    }
+  }
 }, {
   timestamps: true,
   toJSON: {

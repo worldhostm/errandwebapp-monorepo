@@ -10,6 +10,7 @@ import authRoutes from './routes/auth';
 import errandRoutes from './routes/errands';
 import userRoutes from './routes/users';
 import chatRoutes from './routes/chat';
+import notificationRoutes from './routes/notifications';
 import { errorHandler } from './middleware/errorHandler';
 import { setupSocketIO } from './services/socketService';
 
@@ -47,6 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/errands', errandRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

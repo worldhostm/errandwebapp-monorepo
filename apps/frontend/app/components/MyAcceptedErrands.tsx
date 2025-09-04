@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import { errandApi } from '../lib/api'
+import { errandApi, fileToBase64 } from '../lib/api'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { getDefaultProfileImage } from '../lib/imageUtils'
 import type { User, ErrandLocation } from '../lib/types'
 import ChatModal from './ChatModal'
+import CompletionVerificationModal from './CompletionVerificationModal'
 
 interface MyAcceptedErrandsProps {
   user: User
@@ -24,9 +25,11 @@ interface AcceptedErrand extends ErrandLocation {
 export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
   const [acceptedErrands, setAcceptedErrands] = useState<AcceptedErrand[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState<'all' | 'accepted' | 'in_progress' | 'completed'>('all')
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'accepted' | 'in_progress' | 'completed' | 'disputed'>('all')
   const [showChat, setShowChat] = useState(false)
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<AcceptedErrand | null>(null)
+  const [showCompletionModal, setShowCompletionModal] = useState(false)
+  const [selectedErrandForCompletion, setSelectedErrandForCompletion] = useState<AcceptedErrand | null>(null)
 
   // 백엔드 API 응답을 AcceptedErrand로 변환
   const convertApiErrandToAcceptedErrand = (apiErrand: Record<string, unknown>): AcceptedErrand => {
@@ -99,20 +102,33 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
     return errand.status === selectedStatus
   })
 
-  // 심부름 완료 처리
-  const handleCompleteErrand = async (errandId: string) => {
+  // 완료 인증 모달 열기
+  const handleCompleteErrand = (errand: AcceptedErrand) => {
+    setSelectedErrandForCompletion(errand)
+    setShowCompletionModal(true)
+  }
+
+  // 완료 인증 제출
+  const handleCompletionSubmit = async (imageFile: File, message: string) => {
+    if (!selectedErrandForCompletion) return
+
     try {
-      const response = await errandApi.updateErrandStatus(errandId, 'completed')
-      
+      const base64Image = await fileToBase64(imageFile)
+      const response = await errandApi.completeErrandWithVerification(
+        selectedErrandForCompletion.id,
+        base64Image,
+        message
+      )
+
       if (response.success) {
-        alert('심부름을 완료했습니다!')
+        alert('완료 인증이 제출되었습니다!')
         fetchMyAcceptedErrands() // 목록 새로고침
       } else {
-        alert(response.error || '완료 처리에 실패했습니다.')
+        alert(response.error || '완료 인증 제출에 실패했습니다.')
       }
     } catch (error) {
-      console.error('완료 처리 오류:', error)
-      alert('완료 처리 중 오류가 발생했습니다.')
+      console.error('완료 인증 제출 오류:', error)
+      throw error
     }
   }
 
@@ -144,6 +160,7 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
       case 'accepted': return 'bg-orange-100 text-orange-800'
       case 'in_progress': return 'bg-blue-100 text-blue-800'
       case 'completed': return 'bg-green-100 text-green-800'
+      case 'disputed': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
@@ -153,6 +170,7 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
       case 'accepted': return '수락됨'
       case 'in_progress': return '진행중'
       case 'completed': return '완료'
+      case 'disputed': return '이의제기됨'
       default: return status
     }
   }
@@ -185,7 +203,8 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
           { key: 'all', label: '전체' },
           { key: 'accepted', label: '수락됨' },
           { key: 'in_progress', label: '진행중' },
-          { key: 'completed', label: '완료' }
+          { key: 'completed', label: '완료' },
+          { key: 'disputed', label: '이의제기됨' }
         ].map(({ key, label }) => (
           <button
             key={key}
@@ -306,10 +325,10 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
                   {errand.status === 'in_progress' && (
                     <>
                       <button 
-                        onClick={() => handleCompleteErrand(errand.id)}
+                        onClick={() => handleCompleteErrand(errand)}
                         className="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600 text-sm"
                       >
-                        완료하기
+                        완료 인증
                       </button>
                       {errand.requesterUser && (
                         <button 
@@ -323,8 +342,14 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
                   )}
                   
                   {errand.status === 'completed' && (
-                    <div className="flex-1 text-center py-2 text-sm text-gray-500">
-                      완료된 심부름입니다
+                    <div className="flex-1 text-center py-2 text-sm text-green-600 font-medium">
+                      ✅ 완료된 심부름입니다
+                    </div>
+                  )}
+                  
+                  {errand.status === 'disputed' && (
+                    <div className="flex-1 text-center py-2 text-sm text-red-600 font-medium">
+                      ⚠️ 이의제기된 심부름입니다
                     </div>
                   )}
                 </div>
@@ -345,6 +370,19 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
             name: selectedErrandForChat.requesterUser.name
           }}
           currentUserId={user.id}
+        />
+      )}
+
+      {/* 완료 인증 모달 */}
+      {showCompletionModal && selectedErrandForCompletion && (
+        <CompletionVerificationModal
+          isOpen={showCompletionModal}
+          onClose={() => {
+            setShowCompletionModal(false)
+            setSelectedErrandForCompletion(null)
+          }}
+          errandTitle={selectedErrandForCompletion.title}
+          onSubmit={handleCompletionSubmit}
         />
       )}
     </div>

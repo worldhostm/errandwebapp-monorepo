@@ -2,6 +2,16 @@ import { ApiResponse, User, Errand, ErrandStatus } from '@errandwebapp/shared'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 
+// 파일을 base64로 변환하는 헬퍼 함수
+export const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
+}
+
 // API 요청 공통 함수
 async function apiRequest<T>(
   endpoint: string,
@@ -157,13 +167,71 @@ export const errandApi = {
 
   // 내가 등록한 심부름 목록 조회
   async getMyErrands() {
-    return apiRequest<{ errands: Errand[] }>('/errands/my')
+    return apiRequest<{ errands: Errand[] }>('/errands/user?type=requested')
   },
 
   // 심부름 삭제
   async deleteErrand(id: string) {
     return apiRequest<{ message: string }>(`/errands/${id}`, {
       method: 'DELETE',
+    })
+  },
+
+  // 완료 인증과 함께 심부름 완료
+  async completeErrandWithVerification(id: string, image: string, message: string) {
+    return apiRequest<{ errand: Errand }>(`/errands/${id}/complete-verification`, {
+      method: 'POST',
+      body: JSON.stringify({ image, message }),
+    })
+  },
+
+  // 완료 인증 정보를 포함한 심부름 조회
+  async getErrandWithVerification(id: string) {
+    return apiRequest<{ errand: Errand }>(`/errands/${id}/verification`)
+  },
+
+  // 이의제기 제출
+  async reportDispute(id: string, reason: string, description: string) {
+    return apiRequest<{ errand: Errand }>(`/errands/${id}/dispute`, {
+      method: 'POST',
+      body: JSON.stringify({ reason, description }),
+    })
+  },
+
+  // 사용자의 활성 심부름 상태 확인
+  async checkActiveErrand() {
+    return apiRequest<{ hasActiveErrand: boolean; activeErrand?: any }>('/errands/check-active')
+  },
+}
+
+// 알림 관련 API
+export const notificationApi = {
+  // 사용자 알림 목록 조회
+  async getNotifications(unreadOnly?: boolean) {
+    const params = unreadOnly ? '?unreadOnly=true' : ''
+    return apiRequest<{ 
+      notifications: any[]
+      unreadCount: number
+      pagination: any
+    }>(`/notifications${params}`)
+  },
+
+  // 읽지 않은 알림 개수 조회
+  async getUnreadCount() {
+    return apiRequest<{ unreadCount: number }>('/notifications/unread-count')
+  },
+
+  // 알림을 읽음 처리
+  async markAsRead(notificationId: string) {
+    return apiRequest<{ notification: any }>(`/notifications/${notificationId}/read`, {
+      method: 'PUT',
+    })
+  },
+
+  // 모든 알림을 읽음 처리
+  async markAllAsRead() {
+    return apiRequest<{ message: string }>('/notifications/read-all', {
+      method: 'PUT',
     })
   },
 }

@@ -97,7 +97,7 @@ class SearchOptimizer {
   }
 
   // 상태 정보
-  getStatus(): { activeRequests: number; lastSearch: typeof this.lastSuccessfulSearch } {
+  getStatus(): { activeRequests: number; lastSearch: { timestamp: number; center: { lat: number; lng: number }; bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } } | null } {
     return {
       activeRequests: this.requestQueue.size,
       lastSearch: this.lastSuccessfulSearch
@@ -127,7 +127,7 @@ export function createSmartDebounce<T extends (...args: unknown[]) => unknown>(
     const args = lastArgs
     timeoutId = null
     maxTimeoutId = null
-    result = func(...args)
+    result = func(...args) as ReturnType<T>
     return result
   }
 
@@ -150,7 +150,7 @@ export function createSmartDebounce<T extends (...args: unknown[]) => unknown>(
     return timeoutId ? invokeFunc() : result
   }
 
-  function debounced(...args: Parameters<T>) {
+  function debounced(...args: Parameters<T>): ReturnType<T> | undefined {
     lastArgs = args
 
     const shouldCallNow = leading && !timeoutId
@@ -168,12 +168,13 @@ export function createSmartDebounce<T extends (...args: unknown[]) => unknown>(
     if (shouldCallNow) {
       return invokeFunc()
     }
+    return undefined
   }
 
   debounced.cancel = cancel
   debounced.flush = flush
 
-  return debounced as T & { cancel: () => void; flush: () => void }
+  return debounced as unknown as T & { cancel: () => void; flush: () => void }
 }
 
 // 지능형 배치 요청 처리
@@ -195,7 +196,7 @@ export class BatchRequestManager {
     requestKey: string,
     requestFn: () => Promise<T>
   ): Promise<T> {
-    return new Promise((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       let batch = this.batches.get(batchKey)
 
       if (!batch) {
@@ -206,7 +207,7 @@ export class BatchRequestManager {
         this.batches.set(batchKey, batch)
       }
 
-      batch.requests.push({ key: requestKey, resolve, reject })
+      batch.requests.push({ key: requestKey, resolve: resolve as (value: unknown) => void, reject })
 
       // 배치 크기 제한
       if (batch.requests.length >= this.maxBatchSize) {

@@ -95,8 +95,6 @@ export default function Home() {
   //   }
   // }
 
-  const [allErrands, setAllErrands] = useState<ErrandLocation[]>([])
-  console.log('All errands state:', allErrands) // 사용하지 않는 변수 경고 해결용
   const [isUsingApi, setIsUsingApi] = useState(false)
   const [filteredErrands, setFilteredErrands] = useState<ErrandLocation[]>([])
 
@@ -607,7 +605,7 @@ export default function Home() {
                     {currentMapBounds ? '지도 영역 내' : `반경 ${mapRadius.toFixed(1)}km 내`} 
                     <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
                     {isUsingApi && <span className="ml-2 text-green-600 text-xs">• API 연동</span>}
-                    {!isUsingApi && allErrands.length > 0 && <span className="ml-2 text-orange-600 text-xs">• 샘플 데이터</span>}
+                    {!isUsingApi && filteredErrands.length > 0 && <span className="ml-2 text-orange-600 text-xs">• 샘플 데이터</span>}
                   </p>
                 </div>
               </div>

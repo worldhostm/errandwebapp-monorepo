@@ -22,14 +22,14 @@ export function shouldCluster(zoomLevel: number): boolean {
   return zoomLevel >= MIN_ZOOM_FOR_CLUSTERING
 }
 
-export function createClusters<T extends ClusterableItem>(
-  items: T[],
+export function createClusters(
+  items: ErrandLocation[],
   zoomLevel: number,
   mapBounds?: {
     sw: { lat: number; lng: number }
     ne: { lat: number; lng: number }
   }
-): { clusters: ClusterMarker[]; unclustered: T[] } {
+): { clusters: ClusterMarker[]; unclustered: ErrandLocation[] } {
   if (!shouldCluster(zoomLevel) || items.length === 0) {
     return { clusters: [], unclustered: items }
   }
@@ -46,7 +46,7 @@ export function createClusters<T extends ClusterableItem>(
 
   const clusters: ClusterMarker[] = []
   const clustered = new Set<string>()
-  const unclustered: T[] = []
+  const unclustered: ErrandLocation[] = []
 
   // 거리 계산 함수 (하버사인 공식)
   function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {

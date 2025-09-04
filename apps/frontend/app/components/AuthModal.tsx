@@ -139,14 +139,14 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
           </div>
           <button
             onClick={onClose}
-            className="text-black hover:text-gray-700 text-xl"
+            className="text-black hover:text-black text-xl"
           >
             ✕
           </button>
         </div>
 
         {!isLoginMode && (
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
+          <div className="w-full bg-black rounded-full h-2 mb-8">
             <div 
               className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -164,7 +164,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                className="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="이메일을 입력하세요"
                 required
                 autoFocus
@@ -179,7 +179,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                className="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="비밀번호를 입력하세요"
                 required
                 minLength={6}
@@ -211,7 +211,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     onKeyPress={handleKeyPress}
-                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
+                    className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                     placeholder="이름을 입력해주세요"
                     autoFocus
                   />
@@ -231,7 +231,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     onKeyPress={handleKeyPress}
-                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
+                    className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                     placeholder="example@email.com"
                     autoFocus
                   />
@@ -252,7 +252,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                       value={formData.password}
                       onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                       onKeyPress={handleKeyPress}
-                      className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
+                      className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                       placeholder="비밀번호"
                       minLength={6}
                       autoFocus
@@ -264,7 +264,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                       onKeyPress={handleKeyPress}
-                      className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
+                      className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                       placeholder="비밀번호 확인"
                       minLength={6}
                     />
@@ -283,7 +283,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                   <p className="text-black text-sm">나중에도 언제든 변경할 수 있어요</p>
                 </div>
                 <div className="flex flex-col items-center space-y-4">
-                  <div className="w-24 h-24 border-2 border-gray-300 rounded-full flex items-center justify-center overflow-hidden bg-gray-50">
+                  <div className="w-24 h-24 border-2 border-black rounded-full flex items-center justify-center overflow-hidden bg-black">
                     {profileImage ? (
                       <Image
                         src={profileImage}
@@ -307,7 +307,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                     />
                     <label
                       htmlFor="profile-image"
-                      className={`cursor-pointer px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm text-black ${
+                      className={`cursor-pointer px-6 py-3 border border-black rounded-lg hover:bg-black text-sm text-black ${
                         imageUploading ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
@@ -326,7 +326,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="flex-1 py-3 px-6 border border-gray-300 text-black rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 px-6 border border-black text-black rounded-lg hover:bg-black transition-colors"
                 >
                   이전
                 </button>
@@ -339,7 +339,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                   className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                     canProceedToNext()
                       ? 'bg-blue-500 text-white hover:bg-blue-600'
-                      : 'bg-gray-300 text-black cursor-not-allowed'
+                      : 'bg-black text-black cursor-not-allowed'
                   }`}
                 >
                   다음
@@ -370,16 +370,16 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
         </div>
 
         {isLoginMode && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="mt-4 pt-4 border-t border-black">
             <p className="text-xs text-black text-center mb-3">
               또는 소셜 계정으로 로그인
             </p>
             <div className="space-y-2">
-              <button className="w-full py-2 px-4 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center gap-2 text-black">
+              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black flex items-center justify-center gap-2 text-black">
                 <span>🟢</span>
                 네이버로 로그인
               </button>
-              <button className="w-full py-2 px-4 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center gap-2 text-black">
+              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black flex items-center justify-center gap-2 text-black">
                 <span>🟡</span>
                 카카오로 로그인
               </button>

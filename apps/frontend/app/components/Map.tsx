@@ -8,7 +8,6 @@ import { createProfileMarkerImage } from '../lib/profileMarker'
 import { getRadiusFromZoomLevel } from '../lib/mapUtils'
 import { getDefaultMarkerImages } from '../lib/categoryUtils'
 import { createClusters, createClusterMarkerImage, type ClusterMarker } from '../lib/clustering'
-import { searchOptimizer, createSmartDebounce } from '../lib/searchOptimizer'
 import KakaoMapWrapper from './KakaoMapWrapper'
 import ClusterModal from './ClusterModal'
 
@@ -23,6 +22,7 @@ interface MapComponentProps {
   onMapMove?: (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => void
   onErrandClick?: (errand: ErrandLocation) => void
   onMoveToCurrentLocation?: () => void
+  testMarker?: { lat: number; lng: number } | null
 }
 
 export default function MapComponent({ 
@@ -35,7 +35,8 @@ export default function MapComponent({
   selectedErrandId,
   onMapMove,
   onErrandClick,
-  onMoveToCurrentLocation
+  onMoveToCurrentLocation,
+  testMarker
 }: MapComponentProps) {
   
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(propUserLocation || null)
@@ -49,14 +50,11 @@ export default function MapComponent({
   const [currentLocationPulse, setCurrentLocationPulse] = useState(0)
   const [errandLocationPulse, setErrandLocationPulse] = useState(0)
   const [pulsingErrandId, setPulsingErrandId] = useState<string | null>(null)
-  const [currentMapCenter, setCurrentMapCenter] = useState<{ lat: number; lng: number } | null>(null)
-  const [isAutoSearching, setIsAutoSearching] = useState(false)
   const [userHasDragged, setUserHasDragged] = useState(false)
-  const [lastSearchCenter, setLastSearchCenter] = useState<{ lat: number; lng: number } | null>(null)
-  const [searchAbortController, setSearchAbortController] = useState<AbortController | null>(null)
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const [showClusterModal, setShowClusterModal] = useState(false)
   const [selectedCluster, setSelectedCluster] = useState<ClusterMarker | null>(null)
+  const [showSearchButton, setShowSearchButton] = useState(false)
+  const [pendingSearchLocation, setPendingSearchLocation] = useState<{ center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } } | null>(null)
 
   // 두 지점 간의 거리 계산 (km)
   const getDistance = (pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }) => {
@@ -75,134 +73,36 @@ export default function MapComponent({
     return deg * (Math.PI/180)
   }
 
-  // 실제 검색을 수행하는 함수
-  const performSearch = useCallback(async (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
-    // 1. 최소 이동 거리 체크 (200m 미만 이동 시 무시)
-    if (lastSearchCenter) {
-      const distance = getDistance(lastSearchCenter, center)
-      if (distance < 0.2) { // 0.2km = 200m
-        console.log(`📍 이동 거리가 ${(distance * 1000).toFixed(0)}m로 너무 짧아 검색을 건너뜁니다.`)
-        return
-      }
-    }
-    
-    // 2. 이미 진행 중인 검색이 있으면 취소
-    if (searchAbortController) {
-      searchAbortController.abort()
-      console.log('🚫 이전 검색 요청을 취소했습니다.')
-    }
-    
-    // 3. 새로운 검색을 위한 AbortController 생성
-    const controller = new AbortController()
-    setSearchAbortController(controller)
-    
-    // 지도 중심 좌표 업데이트
-    setCurrentMapCenter(center)
-    setIsAutoSearching(true)
-    
-    try {
-      console.log(`🔍 지도 중심 변경: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)} - 검색 시작`)
-      
-      // 부모 컴포넌트의 handleMapMove 호출 (실제 API 처리는 부모에서)
-      if (onMapMove) {
-        console.log('🚀 부모 onMapMove 호출')
-        onMapMove(center, bounds)
-        setLastSearchCenter(center)
-      } else {
-        console.log('❌ onMapMove가 정의되지 않음 - 검색을 수행할 수 없습니다')
-      }
-    } catch (error: unknown) {
-      console.error('❌ 지도 이동 처리 오류:', error instanceof Error ? error.message : error)
-    } finally {
-      // 검색 완료 후 상태 정리
-      if (!controller.signal.aborted) {
-        setIsAutoSearching(false)
-        setSearchAbortController(null)
-      }
-    }
-  }, [lastSearchCenter, searchAbortController, onMapMove, getDistance])
 
-  // 스마트 디바운스 함수 생성 (컴포넌트 레벨에서 한 번만 생성)
-  const smartDebouncedMapMove = useMemo(() => 
-    createSmartDebounce(
-      ((center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
-        console.log('🚀 스마트 디바운스 검색 실행')
-        performSearch(center, bounds)
-      }) as (...args: unknown[]) => unknown, 
-      800, // 0.8초 디바운스
-      { 
-        maxWait: 2000 // 최대 2초 대기
-      }
-    ), 
-    [performSearch]
-  )
-
-  // 최적화된 지도 이동 핸들러
-  const debouncedOnMapMove = useCallback(async (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
-    const requestKey = `map_${center.lat.toFixed(4)}_${center.lng.toFixed(4)}`
-    
-    try {
-      await searchOptimizer.optimizedRequest(
-        requestKey,
-        async () => {
-          // 실제 검색 로직은 smartDebouncedMapMove를 통해 실행
-          (smartDebouncedMapMove as unknown as (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => void)(center, bounds)
-          return true
-        },
-        {
-          center,
-          bounds,
-          minInterval: 300 // 최소 300ms 간격
-        }
-      )
-    } catch (error) {
-      console.error('❌ 최적화된 검색 요청 실패:', error)
+  // 단순한 수동 검색 핸들러
+  const handleManualSearch = useCallback((center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
+    if (onMapMove) {
+      onMapMove(center, bounds)
+      console.log('🔍 수동 검색 실행')
     }
-  }, [smartDebouncedMapMove])
+  }, [onMapMove])
 
-  // 컴포넌트 언마운트 시 진행 중인 검색 요청 및 타이머 취소
+  // 컴포넌트 언마운트 시 정리
   useEffect(() => {
     return () => {
-      if (searchAbortController) {
-        searchAbortController.abort()
-        console.log('🧹 컴포넌트 언마운트로 검색 요청을 취소했습니다.')
-      }
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
-        console.log('🧹 컴포넌트 언마운트로 디바운스 타이머를 취소했습니다.')
-      }
-      // 스마트 디바운스와 검색 최적화기 정리
-      (smartDebouncedMapMove as unknown as { cancel: () => void })?.cancel()
-      searchOptimizer.cancelAll()
-      console.log('🧹 최적화 도구들 정리 완료')
+      console.log('🧹 Map 컴포넌트 언마운트 정리 완료')
     }
-  }, [searchAbortController, smartDebouncedMapMove])
+  }, [])
 
   // centerLocation이 변경되면 지도 중심 이동
   useEffect(() => {
-    let newCenter = null
     if (centerLocation) {
-      newCenter = centerLocation
-      // centerLocation이 설정되면 드래그 상태 초기화 (현재 위치 버튼 등에 의한 이동)
-      setUserHasDragged(false)
-    } else if (propUserLocation && !userHasDragged) {
-      newCenter = propUserLocation
-    } else if (errands.length > 0 && !userHasDragged) {
-      // 심부름이 있으면 첫 번째 심부름 위치로
-      newCenter = {
-        lat: errands[0].lat,
-        lng: errands[0].lng,
-      }
+      // 지도에서 드래그하면 다시 중앙으로 돌아가는 현상 방지 주석
+      // setMapCenter(centerLocation)
+      // 프로그래밍적 이동이므로 드래그 상태 초기화
+      // setUserHasDragged(false)
+      console.log('🎯 프로그래밍적 이동 - 드래그 상태 초기화')
+    } else if (propUserLocation && !mapCenter) {
+      setMapCenter(propUserLocation)
+    } else if (errands.length > 0 && !mapCenter) {
+      setMapCenter({ lat: errands[0].lat, lng: errands[0].lng })
     }
-    
-    if (newCenter) {
-      setMapCenter(newCenter)
-      // 초기 지도 중심 설정 (재탐색 기준점)
-      if (!currentMapCenter) {
-        setCurrentMapCenter(newCenter)
-      }
-    }
-  }, [centerLocation, propUserLocation, errands, currentMapCenter, userHasDragged])
+  }, [centerLocation, propUserLocation, errands, mapCenter])
 
 
   // 기본 마커 이미지 생성
@@ -258,7 +158,7 @@ export default function MapComponent({
       setClusters([])
       setUnclusteredErrands(errands)
     }
-  }, [errands, currentZoom, clusterImages])
+  }, [errands, currentZoom])
 
   // 외부에서 선택된 심부름 처리 (맥동 애니메이션 적용)
   useEffect(() => {
@@ -398,7 +298,7 @@ export default function MapComponent({
     handleMapMove(map)
   }
 
-  const handleMapMove = (map: { getCenter: () => { getLat: () => number; getLng: () => number }; getBounds: () => { getSouthWest: () => { getLat: () => number; getLng: () => number }; getNorthEast: () => { getLat: () => number; getLng: () => number } } }) => {
+  const handleMapMove = (map: { getCenter: () => { getLat: () => number; getLng: () => number }; getBounds: () => { getSouthWest: () => { getLat: () => number; getLng: () => number }; getNorthEast: () => { getLat: () => number; getLng: () => number } } }, isDrag = false) => {
     if (!onMapMove) return
 
     try {
@@ -423,14 +323,28 @@ export default function MapComponent({
 
       setMapCenter(mapCenter)
       
-      // 사용자가 지도를 드래그했음을 표시
-      setUserHasDragged(true)
-      
-      // 자동으로 해당 좌표를 기준으로 검색 (디바운스됨)
-      debouncedOnMapMove(mapCenter, mapBounds)
+      // 단순화된 처리 방식
+      if (isDrag) {
+        // 사용자 드래그: 수동 검색 버튼만 표시
+        setPendingSearchLocation({ center: mapCenter, bounds: mapBounds })
+        setShowSearchButton(true)
+        setUserHasDragged(true)
+        console.log('📍 드래그: 수동 검색 버튼 활성화')
+      } 
+      // else {
+      //   // 프로그래밍적 이동: 자동 검색
+      //   if (onMapMove) {
+      //     onMapMove(mapCenter, mapBounds)
+      //     console.log('🚀 프로그래밍적 이동: 자동 검색')
+      //   }
+      // }
     } catch (error) {
       console.error('지도 이동 처리 중 오류:', error)
     }
+  }
+
+  const handleMapDrag = (map: { getCenter: () => { getLat: () => number; getLng: () => number }; getBounds: () => { getSouthWest: () => { getLat: () => number; getLng: () => number }; getNorthEast: () => { getLat: () => number; getLng: () => number } } }) => {
+    handleMapMove(map, true) // isDrag = true
   }
 
   if (!mapCenter) {
@@ -455,7 +369,7 @@ export default function MapComponent({
           onClick={handleMapClick}
           onZoomChanged={handleZoomChanged}
           onCenterChanged={handleMapMove}
-          onDragEnd={handleMapMove}
+          onDragEnd={handleMapDrag}
         >
           {/* 클러스터 마커들 */}
           {clusters.map((cluster) => (
@@ -503,8 +417,13 @@ export default function MapComponent({
                     console.log('❌ onErrandClick이 없음')
                   }
                   setPulsingErrandId(errand.id)
+                  
+                  // 마커 클릭으로 인한 지도 중심 이동은 드래그가 아님
+                  // 단, userHasDragged는 건드리지 않아 드래그 기능에 영향을 주지 않음
                   setMapCenter({ lat: errand.lat, lng: errand.lng })
-                  setUserHasDragged(false)
+                  
+                  // 마커 클릭 후에는 검색 버튼 숨기기 (새 위치로 이동했으므로)
+                  setShowSearchButton(false)
                 }}
               />
             )
@@ -542,6 +461,18 @@ export default function MapComponent({
             />
           )}
           
+          {/* 테스트 마커 (위도/경도 입력용) */}
+          {testMarker && (
+            <MapMarker
+              position={testMarker}
+              title={`테스트 마커 (${testMarker.lat.toFixed(6)}, ${testMarker.lng.toFixed(6)})`}
+              image={{
+                src: '/marker-purple.svg',
+                size: { width: 32, height: 42 },
+              }}
+            />
+          )}
+          
           {/* 심부름 마커 클릭 시 맥동 애니메이션 */}
           {pulsingErrandId && errands.find(e => e.id === pulsingErrandId) && errandLocationPulse > 0 && (
             <Circle
@@ -561,14 +492,34 @@ export default function MapComponent({
         </Map>
         
 
-        
-        {/* 자동 검색 로딩 표시 */}
-        {isAutoSearching && (
-          <div className="absolute top-4 right-4 z-10">
-            <div className="bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm text-gray-700">
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              새로운 지역 검색중...
-            </div>
+
+        {/* 수동 검색 버튼 */}
+        {showSearchButton && pendingSearchLocation && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+            <button
+              onClick={() => {
+                if (pendingSearchLocation) {
+                  console.log('🔍 수동 검색 실행:', pendingSearchLocation.center)
+                  handleManualSearch(pendingSearchLocation.center, pendingSearchLocation.bounds)
+                  setShowSearchButton(false)
+                  setPendingSearchLocation(null)
+                }
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
+            >
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                className="text-white"
+              >
+                <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
+                <path d="21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+              현재 위치에서 검색
+            </button>
           </div>
         )}
 
@@ -576,7 +527,12 @@ export default function MapComponent({
         {propUserLocation && onMoveToCurrentLocation && (
           <div className="absolute bottom-4 right-4 z-10">
             <button
-              onClick={onMoveToCurrentLocation}
+              onClick={() => {
+                onMoveToCurrentLocation()
+                // 현재 위치로 이동 시 검색 버튼 숨기기
+                setShowSearchButton(false)
+                setPendingSearchLocation(null)
+              }}
               className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 shadow-lg transition-colors duration-200 flex items-center justify-center"
               title="현재 위치로 이동"
             >
@@ -611,8 +567,16 @@ export default function MapComponent({
             onErrandClick(errand)
           }
           setPulsingErrandId(errand.id)
+          
+          // 클러스터에서 심부름 선택으로 인한 지도 중심 이동은 드래그가 아님
+          // userHasDragged 상태는 건드리지 않아 드래그 기능에 영향을 주지 않음
           setMapCenter({ lat: errand.lat, lng: errand.lng })
-          setUserHasDragged(false)
+          
+          // 모달 닫기 및 검색 버튼 숨기기
+          setShowClusterModal(false)
+          setSelectedCluster(null)
+          setShowSearchButton(false)
+          setPendingSearchLocation(null)
         }}
       />
     </KakaoMapWrapper>

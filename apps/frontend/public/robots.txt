@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://burum-i.com/sitemap.xml
+
+# Block access to admin and api routes
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow specific important pages
+Allow: /
+Allow: /search
+Allow: /about
+Allow: /help
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

@@ -6,7 +6,7 @@ import { checkLocationPermission, requestLocationWithPermission } from '../lib/l
 
 const MapComponent = dynamic(() => import('./Map'), {
   ssr: false,
-  loading: () => <div className="w-full h-96 bg-gray-200 animate-pulse"></div>
+  loading: () => <div className="w-full h-96 bg-black animate-pulse"></div>
 })
 
 import type { ErrandFormData } from '../lib/types'
@@ -61,26 +61,55 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
 
   // 좌표를 주소로 변환하는 함수 (카카오 지오코더 사용)
   const getAddressFromCoords = useCallback(async (lat: number, lng: number) => {
-    if (typeof window === 'undefined' || !window.kakao) {
+    if (typeof window === 'undefined' || !window.kakao || !window.kakao.maps) {
+      console.error('Kakao Maps API가 로드되지 않음')
+      return '주소를 가져올 수 없습니다.'
+    }
+
+    // Geocoder services가 로드될 때까지 최대 5초 대기
+    const waitForGeocoder = async (): Promise<boolean> => {
+      const maxWaitTime = 5000 // 5초
+      const checkInterval = 100 // 100ms
+      let elapsedTime = 0
+      
+      while (elapsedTime < maxWaitTime) {
+        if (window.kakao?.maps?.services?.Geocoder) {
+          return true
+        }
+        await new Promise(resolve => setTimeout(resolve, checkInterval))
+        elapsedTime += checkInterval
+      }
+      return false
+    }
+
+    const geocoderAvailable = await waitForGeocoder()
+    if (!geocoderAvailable) {
+      console.error('Geocoder 서비스 로딩 타임아웃')
       return '주소를 가져올 수 없습니다.'
     }
 
     return new Promise<string>((resolve) => {
-      const geocoder = new window.kakao.maps.services.Geocoder()
-      
-      geocoder.coord2Address(lng, lat, (result: unknown, status: unknown) => {
-        if (status === (window as unknown & { kakao: { maps: { services: { Status: { OK: unknown } } } } }).kakao.maps.services.Status.OK) {
-          const addr = (result as { address?: { address_name?: string } }[])[0]?.address
-          if (addr) {
-            const fullAddress = addr.address_name || '주소를 찾을 수 없습니다.'
-            resolve(fullAddress)
+      try {
+        const geocoder = new window.kakao.maps.services.Geocoder()
+        
+        geocoder.coord2Address(lng, lat, (result: unknown, status: unknown) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            const addr = (result as { address?: { address_name?: string } }[])[0]?.address
+            if (addr) {
+              const fullAddress = addr.address_name || '주소를 찾을 수 없습니다.'
+              resolve(fullAddress)
+            } else {
+              resolve('주소를 찾을 수 없습니다.')
+            }
           } else {
-            resolve('주소를 찾을 수 없습니다.')
+            console.error('Geocoder API 호출 실패:', status)
+            resolve('주소를 가져올 수 없습니다.')
           }
-        } else {
-          resolve('주소를 가져올 수 없습니다.')
-        }
-      })
+        })
+      } catch (error) {
+        console.error('Geocoder 생성 중 오류:', error)
+        resolve('주소를 가져올 수 없습니다.')
+      }
     })
   }, [])
 
@@ -355,13 +384,13 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
             </div>
             <button
               onClick={onCancel}
-              className="text-black hover:text-gray-700 text-xl"
+              className="text-black hover:text-black text-xl"
             >
               ✕
             </button>
           </div>
 
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
+          <div className="w-full bg-black rounded-full h-2 mb-8">
             <div 
               className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -386,7 +415,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                     value={formData.title}
                     onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                     onKeyPress={handleKeyPress}
-                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
+                    className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                     placeholder="예: 편의점에서 음료수 사와주세요"
                     autoFocus
                   />
@@ -409,7 +438,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                       className={`p-4 rounded-lg border-2 transition-all ${
                         formData.category === category
                           ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300 text-black'
+                          : 'border-black hover:border-black text-black'
                       }`}
                     >
                       <span className="text-lg">{category}</span>
@@ -431,7 +460,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     onKeyPress={handleKeyPress}
-                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-32 resize-none text-black"
+                    className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-32 resize-none text-black"
                     placeholder="예: 편의점에서 콜라 2병과 과자 1봉지 사와주세요. 계산은 카드로 부탁드립니다."
                     autoFocus
                   />
@@ -451,7 +480,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                     type="button"
                     onClick={() => getUserLocation(true)}
                     disabled={isGettingLocation}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-black"
                   >
                     {isGettingLocation ? (
                       <>
@@ -478,26 +507,26 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                       }
                     }}
                     placeholder="주소나 장소명 검색"
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    className="flex-1 px-4 py-3 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   />
                   <button
                     type="button"
                     onClick={handleAddressSearch}
                     disabled={isSearching || !searchQuery.trim()}
-                    className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400"
+                    className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-black"
                   >
                     {isSearching ? '검색중' : '🔍'}
                   </button>
                 </div>
 
                 {showSearchResults && searchResults.length > 0 && (
-                  <div className="mb-4 border border-gray-200 rounded-lg bg-white shadow-sm max-h-48 overflow-y-auto">
+                  <div className="mb-4 border border-black rounded-lg bg-white shadow-sm max-h-48 overflow-y-auto">
                     {searchResults.map((result, index) => (
                       <button
                         key={index}
                         type="button"
                         onClick={() => handleSearchResultSelect(result)}
-                        className="w-full p-3 text-left hover:bg-blue-50 border-b border-gray-100 last:border-b-0 text-black"
+                        className="w-full p-3 text-left hover:bg-blue-50 border-b border-black last:border-b-0 text-black"
                       >
                         <div className="font-semibold text-sm text-black">{result.place_name}</div>
                         <div className="text-xs text-black mt-1">📍 {result.address_name}</div>
@@ -524,7 +553,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                       value={detailAddress}
                       onChange={(e) => setDetailAddress(e.target.value)}
                       placeholder="예: 101동 203호, 2층 카페 등"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                      className="w-full px-4 py-3 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     />
                   </div>
                 )}
@@ -554,7 +583,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                       value={formData.reward}
                       onChange={(e) => setFormData(prev => ({ ...prev, reward: parseInt(e.target.value) || 0 }))}
                       onKeyPress={handleKeyPress}
-                      className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
+                      className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                       placeholder="10000"
                       min="1000"
                       step="1000"
@@ -570,7 +599,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                       value={formData.deadline}
                       onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
                       onKeyPress={handleKeyPress}
-                      className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                      className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     />
                   </div>
                 </div>
@@ -583,7 +612,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
               <button
                 type="button"
                 onClick={prevStep}
-                className="flex-1 py-3 px-6 border border-gray-300 text-black rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 py-3 px-6 border border-black text-black rounded-lg hover:bg-black transition-colors"
               >
                 이전
               </button>
@@ -596,7 +625,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                   canProceedToNext()
                     ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-black text-black cursor-not-allowed'
                 }`}
               >
                 다음
@@ -609,7 +638,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                   canProceedToNext()
                     ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-black text-black cursor-not-allowed'
                 }`}
               >
                 심부름 등록하기
@@ -645,7 +674,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   setLocationPermissionDenied(true)
                   setUserLocation({ lat: 37.5665, lng: 126.9780 })
                 }}
-                className="flex-1 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
+                className="flex-1 bg-black text-black px-4 py-2 rounded hover:bg-black"
               >
                 거부
               </button>

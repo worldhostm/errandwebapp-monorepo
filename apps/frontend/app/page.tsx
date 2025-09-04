@@ -11,6 +11,7 @@ import ErrandDetailModal from './components/ErrandDetailModal'
 import UserTypeTabs, { UserType } from './components/UserTypeTabs'
 import MyErrandHistory from './components/MyErrandHistory'
 import MyAcceptedErrands from './components/MyAcceptedErrands'
+import JsonLd, { organizationSchema, serviceSchema, webApplicationSchema } from '../components/JsonLd'
 import { getDefaultProfileImage } from './lib/imageUtils'
 import { processErrands } from './lib/mapUtils'
 import { getCategoryInfo } from './lib/categoryUtils'
@@ -65,6 +66,11 @@ export default function Home() {
   const [currentMapBounds, setCurrentMapBounds] = useState<{ sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } | null>(null)
   const [isLoadingErrands, setIsLoadingErrands] = useState(false)
   const [showLocationPermissionModal, setShowLocationPermissionModal] = useState(false)
+  
+  // 위도/경도 입력으로 마커 테스트용 상태
+  const [testLatInput, setTestLatInput] = useState('')
+  const [testLngInput, setTestLngInput] = useState('')
+  const [testMarker, setTestMarker] = useState<{ lat: number; lng: number } | null>(null)
   
 
   // 샘플 심부름 데이터를 ErrandLocation 형태로 변환 (폴백용)
@@ -379,11 +385,32 @@ export default function Home() {
         setShowErrandForm(false)
         alert('심부름이 성공적으로 등록되었습니다!')
         
-        // 새로 등록된 심부름을 보이기 위해 현재 위치 기준 조회 새로고침
-        // 캐시 무효화 (새 심부름 위치 주변 10km)
-        errandCache.invalidateRegion({ lat: formData.lat!, lng: formData.lng! }, 10)
+        // 등록된 심부름 위치로 지도 이동
+        const errandLocation = { lat: formData.lat!, lng: formData.lng! }
+        setMapCenter(errandLocation)
         
-        fetchErrandsAroundUserLocation()
+        // 새로 등록된 심부름을 선택된 상태로 표시 (애니메이션 효과)
+        if (response.data.errand && response.data.errand.id) {
+          setSelectedErrandId(response.data.errand.id)
+          
+          // 지도로 스크롤 이동
+          const mapElement = document.querySelector('#map-container')
+          if (mapElement) {
+            mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+          
+          // 3초 후 선택 상태 해제
+          setTimeout(() => {
+            setSelectedErrandId(null)
+          }, 3000)
+        }
+        
+        // 새로 등록된 심부름을 보이기 위해 해당 위치 기준 조회
+        // 캐시 무효화 (새 심부름 위치 주변 10km)
+        errandCache.invalidateRegion(errandLocation, 10)
+        
+        // 등록된 위치 기준으로 심부름 조회 (사용자 위치 대신)
+        fetchErrandsAtLocation(errandLocation.lat, errandLocation.lng, '새 심부름 등록 위치')
         
         console.log('새 심부름 등록 성공:', response.data.errand)
       } else {
@@ -498,13 +525,69 @@ export default function Home() {
     }
   }
 
+  const handleTestLocationSubmit = () => {
+    // 텍스트 입력값을 정리하고 숫자로 변환
+    const latText = testLatInput.trim()
+    const lngText = testLngInput.trim()
+    
+    // 빈 값 체크
+    if (!latText || !lngText) {
+      alert('위도와 경도를 모두 입력해주세요.')
+      return
+    }
+    
+    // 숫자로 변환
+    const lat = parseFloat(latText)
+    const lng = parseFloat(lngText)
+    
+    // 숫자 변환 실패 체크
+    if (isNaN(lat) || isNaN(lng)) {
+      alert('올바른 숫자 형식의 위도와 경도를 입력해주세요.\n예: 37.1946, 127.1013')
+      return
+    }
+    
+    // 범위 체크
+    if (lat < -90 || lat > 90) {
+      alert(`위도는 -90 ~ 90 사이의 값이어야 합니다.\n입력된 값: ${lat}`)
+      return
+    }
+    
+    if (lng < -180 || lng > 180) {
+      alert(`경도는 -180 ~ 180 사이의 값이어야 합니다.\n입력된 값: ${lng}`)
+      return
+    }
+    
+    // 테스트 마커 설정 및 지도 이동
+    const testLocation = { lat, lng }
+    setTestMarker(testLocation)
+    setMapCenter(testLocation)
+    
+    // 스크롤을 지도 위치로 이동
+    const mapElement = document.querySelector('#map-container')
+    if (mapElement) {
+      mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    
+    console.log('🎯 테스트 위치로 이동:', testLocation)
+    console.log(`📍 변환된 좌표 - 위도: ${lat}, 경도: ${lng}`)
+  }
+
+  const handleClearTestMarker = () => {
+    setTestMarker(null)
+    setTestLatInput('')
+    setTestLngInput('')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <JsonLd data={organizationSchema} />
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={webApplicationSchema} />
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-blue-600">심부름</h1>
+              <h1 className="text-xl font-bold text-blue-600">부름이</h1>
             </div>
             
             <div className="flex items-center gap-4">
@@ -572,10 +655,10 @@ export default function Home() {
           // 로그인하지 않은 사용자용 기본 콘텐츠
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              심부름 플랫폼에 오신 것을 환영합니다
+              부름이에 오신 것을 환영합니다
             </h2>
             <p className="text-gray-600 mb-8">
-              로그인하여 주변 심부름을 찾거나 새로운 심부름을 등록해보세요
+              로그인하여 주변 심부름을 찾고 부수입을 얻어보세요
             </p>
             <button
               onClick={() => setShowAuthModal(true)}
@@ -587,27 +670,106 @@ export default function Home() {
         ) : activeTab === 'receiver' ? (
           // 심부름 받는 사람 탭 (기존 메인 콘텐츠)
           <>
-            <div className="mb-6 flex justify-between items-center">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  주변 심부름 찾기
-                </h2>
-                <p className="text-gray-600">
-                  지도를 움직여서 다른 지역의 심부름을 확인해보세요
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center gap-2">
-                  {isLoadingErrands && (
-                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  )}
-                  <p className="text-sm text-gray-500">
-                    {currentMapBounds ? '지도 영역 내' : `반경 ${mapRadius.toFixed(1)}km 내`} 
-                    <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
-                    {isUsingApi && <span className="ml-2 text-green-600 text-xs">• API 연동</span>}
-                    {!isUsingApi && filteredErrands.length > 0 && <span className="ml-2 text-orange-600 text-xs">• 샘플 데이터</span>}
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    주변 심부름 찾기
+                  </h2>
+                  <p className="text-gray-600">
+                    지도를 움직여서 다른 지역의 심부름을 확인해보세요
                   </p>
                 </div>
+                <div className="text-right">
+                  <div className="flex items-center gap-2">
+                    {isLoadingErrands && (
+                      <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    )}
+                    <p className="text-sm text-gray-500">
+                      {currentMapBounds ? '지도 영역 내' : `반경 ${mapRadius.toFixed(1)}km 내`} 
+                      <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
+                      {isUsingApi && <span className="ml-2 text-green-600 text-xs">• API 연동</span>}
+                      {!isUsingApi && filteredErrands.length > 0 && <span className="ml-2 text-orange-600 text-xs">• 샘플 데이터</span>}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* 위도/경도 테스트 입력 */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-blue-900 mb-3">📍 위도/경도로 마커 테스트</h3>
+                
+                {/* 예시 위치 버튼 */}
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setTestLatInput('37.1946071232431')
+                      setTestLngInput('127.101332868277')
+                    }}
+                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
+                  >
+                    청계동 예시
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTestLatInput('37.5665')
+                      setTestLngInput('126.9780')
+                    }}
+                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
+                  >
+                    서울시청
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTestLatInput('35.1796')
+                      setTestLngInput('129.0756')
+                    }}
+                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
+                  >
+                    부산
+                  </button>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      value={testLatInput}
+                      onChange={(e) => setTestLatInput(e.target.value)}
+                      placeholder="위도 (예: 37.1946)"
+                      className="w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      value={testLngInput}
+                      onChange={(e) => setTestLngInput(e.target.value)}
+                      placeholder="경도 (예: 127.1013)"
+                      className="text-black w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button
+                    onClick={handleTestLocationSubmit}
+                    disabled={!testLatInput || !testLngInput}
+                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    마커 표시
+                  </button>
+                  {testMarker && (
+                    <button
+                      onClick={handleClearTestMarker}
+                      className="px-3 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 whitespace-nowrap"
+                    >
+                      초기화
+                    </button>
+                  )}
+                </div>
+                {testMarker && (
+                  <p className="mt-2 text-xs text-blue-700">
+                    🎯 테스트 마커: {testMarker.lat.toFixed(6)}, {testMarker.lng.toFixed(6)}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -628,6 +790,7 @@ export default function Home() {
                 onMapMove={handleMapMove}
                 onErrandClick={handleErrandDetailOpen}
                 onMoveToCurrentLocation={handleMoveToCurrentLocation}
+                testMarker={testMarker}
               />
             </div>
 
@@ -668,6 +831,11 @@ export default function Home() {
                             <span className="text-lg">{categoryInfo.emoji}</span>
                             <h4 className="font-medium text-gray-900">{errand.title}</h4>
                           </div>
+                          {errand.requestedBy && (
+                            <p className="text-xs text-gray-500 mb-2">
+                              {errand.requestedBy.name}님의 심부름
+                            </p>
+                          )}
                           {errand.isUrgent && (
                             <span className="inline-block mt-1 px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">
                               🚨 마감임박
@@ -761,7 +929,7 @@ export default function Home() {
               {filteredErrands.length === 0 && !isLoadingErrands && (
                 <div className="text-center py-12 text-gray-500">
                   <p>
-                    현재 위치 주변 50km 내에 심부름이 없습니다.
+                    현재 위치 주변에 심부름이 없습니다.
                   </p>
                   <p className="text-sm mt-1">잠시 후 다시 확인해보시거나 심부름을 새로 등록해보세요.</p>
                 </div>

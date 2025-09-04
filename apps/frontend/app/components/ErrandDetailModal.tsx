@@ -67,7 +67,14 @@ export default function ErrandDetailModal({
         <div className="p-6">
           {/* 헤더 */}
           <div className="flex justify-between items-start mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">{errand.title}</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">{errand.title}</h2>
+              {errand.requestedBy && (
+                <p className="text-sm text-gray-500 mt-1">
+                  {errand.requestedBy.name}님의 심부름
+                </p>
+              )}
+            </div>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 text-2xl"

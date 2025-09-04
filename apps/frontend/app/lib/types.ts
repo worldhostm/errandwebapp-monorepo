@@ -21,6 +21,11 @@ export interface ErrandLocation extends ClusterableItem {
   acceptedBy?: string
   distance?: number
   isUrgent?: boolean
+  requestedBy?: {
+    name: string
+    email?: string
+    avatar?: string
+  }
 }
 
 // 내 메시지 타입 (내가 사용할 형태)
@@ -149,6 +154,11 @@ export const convertErrandToErrandLocation = (errand: Record<string, unknown>): 
     category: errand.category as string,
     deadline: errand.deadline ? (typeof errand.deadline === 'string' ? errand.deadline : (errand.deadline as { toISOString: () => string }).toISOString()) : new Date().toISOString(),
     createdAt: typeof errand.createdAt === 'string' ? errand.createdAt : (errand.createdAt as { toISOString: () => string }).toISOString(),
-    acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : (errand.acceptedBy as User)?.id
+    acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : (errand.acceptedBy as User)?.id,
+    requestedBy: errand.requestedBy ? {
+      name: (errand.requestedBy as { name: string; email?: string; avatar?: string }).name,
+      email: (errand.requestedBy as { name: string; email?: string; avatar?: string }).email,
+      avatar: (errand.requestedBy as { name: string; email?: string; avatar?: string }).avatar
+    } : undefined
   }
 }

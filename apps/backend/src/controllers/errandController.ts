@@ -74,9 +74,16 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
       status
     };
 
-    // 자신의 심부름 제외 (로그인한 경우에만)
+    // 자신의 심부름 제외 (로그인한 경우에만, 단 테스트 계정은 예외)
     if (user) {
-      query.requestedBy = { $ne: user._id };
+      const isTestAccount = user.email?.startsWith('test') || user.name?.includes('테스트') || user.name?.includes('운영자');
+      
+      if (!isTestAccount) {
+        query.requestedBy = { $ne: user._id };
+        console.log(`🚫 자신의 심부름 제외: ${user.email} (일반 계정)`);
+      } else {
+        console.log(`✅ 테스트 계정으로 모든 심부름 표시: ${user.email} (${user.name})`);
+      }
     }
 
     let errands;
@@ -89,15 +96,31 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
       const neLatNum = parseFloat(neLat as string);
       const neLngNum = parseFloat(neLng as string);
       
+      // Bounds를 약간 확장하여 경계선 근처의 심부름도 포함 (약 1km 확장)
+      const expansionDelta = 0.009; // 약 1km (1도 ≈ 111km)
+      const expandedSwLat = swLatNum - expansionDelta;
+      const expandedSwLng = swLngNum - expansionDelta;
+      const expandedNeLat = neLatNum + expansionDelta;
+      const expandedNeLng = neLngNum + expansionDelta;
+      
       query.location = {
         $geoWithin: {
           $box: [
-            [swLngNum, swLatNum], // 남서쪽 좌표 [lng, lat]
-            [neLngNum, neLatNum]  // 북동쪽 좌표 [lng, lat]
+            [expandedSwLng, expandedSwLat], // 확장된 남서쪽 좌표 [lng, lat]
+            [expandedNeLng, expandedNeLat]  // 확장된 북동쪽 좌표 [lng, lat]
           ]
         }
       };
-      console.log(`📦 Bounds 기준 조회: SW(${swLatNum}, ${swLngNum}) - NE(${neLatNum}, ${neLngNum})`);
+      console.log(`📦 Bounds 기준 조회 (확장됨): 원본 SW(${swLatNum}, ${swLngNum}) - NE(${neLatNum}, ${neLngNum})`);
+      console.log(`📦 확장된 범위: SW(${expandedSwLat}, ${expandedSwLng}) - NE(${expandedNeLat}, ${expandedNeLng})`);
+      console.log(`🔍 쿼리 조건:`, JSON.stringify(query, null, 2));
+
+      // 디버깅: 모든 심부름 위치 확인
+      const allErrandsForDebug = await Errand.find({ status }).select('location title');
+      console.log(`🗺️ 모든 ${status} 심부름 위치:`, allErrandsForDebug.map(e => ({
+        title: e.title,
+        coordinates: e.location.coordinates
+      })));
 
       // Bounds 기준 조회 (정렬 없이)
       errands = await Errand.find(query)
@@ -107,6 +130,14 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
         .limit(limitNum);
 
       total = await Errand.countDocuments(query);
+      
+      console.log(`📊 Bounds 조회 결과: ${errands.length}개 심부름 (총 ${total}개)`);
+      if (errands.length > 0) {
+        console.log(`📍 조회된 심부름들:`, errands.map((e: any) => ({
+          title: e.title,
+          coordinates: e.location.coordinates
+        })));
+      }
 
     } else {
       // 반경 기준 조회: $geoWithin으로 대체하여 populate 충돌 해결

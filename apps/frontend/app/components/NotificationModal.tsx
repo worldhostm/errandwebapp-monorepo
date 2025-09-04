@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import { useState } from 'react'
 
 interface Notification {
   id: string
@@ -216,6 +215,7 @@ export default function NotificationModal({
           <p className="text-xs text-gray-500">
             총 {notifications.length}개의 알림
           </p>
+        </div>
         </div>
       </div>
     </>

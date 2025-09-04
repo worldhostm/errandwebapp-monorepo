@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import Link from 'next/link'
 import AuthModal from './components/AuthModal'
 import ErrandForm from './components/ErrandForm'
 import ChatModal from './components/ChatModal'
@@ -680,8 +681,17 @@ export default function Home() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-blue-600">부름이</h1>
+            <div className="flex items-center gap-6">
+              <Link href="/" className="text-xl font-bold text-blue-600 hover:text-blue-700">
+                부름이
+              </Link>
+              <Link 
+                href="/guide" 
+                className="text-gray-600 hover:text-gray-900 font-medium flex items-center gap-1"
+              >
+                <span>📖</span>
+                <span>사용 가이드</span>
+              </Link>
             </div>
             
             <div className="flex items-center gap-4">
@@ -768,12 +778,21 @@ export default function Home() {
             <p className="text-gray-600 mb-8">
               로그인하여 주변 심부름을 찾고 부수입을 얻어보세요
             </p>
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-lg"
-            >
-              시작하기
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-lg"
+              >
+                시작하기
+              </button>
+              <Link 
+                href="/guide"
+                className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 text-lg"
+              >
+                <span>📖</span>
+                <span>사용법 알아보기</span>
+              </Link>
+            </div>
           </div>
         ) : activeTab === 'receiver' ? (
           // 심부름 받는 사람 탭 (기존 메인 콘텐츠)
@@ -918,8 +937,20 @@ export default function Home() {
                   disabled={isLoadingErrands}
                   className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
                 >
-                  <span>🔄</span>
-                  새로고침
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
                 </button>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

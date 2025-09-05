@@ -51,7 +51,7 @@ export default function ErrandDetailModal({
       
       if (checkResponse.success && checkResponse.data?.hasActiveErrand) {
         const activeErrand = checkResponse.data.activeErrand
-        const confirmMessage = `이미 수행 중인 심부름이 있습니다.\n\n현재 심부름: "${activeErrand.title}" (${activeErrand.status === 'accepted' ? '수락됨' : '진행중'})\n\n그래도 이 심부름을 수락하시겠습니까? (기존 심부름은 취소됩니다)`
+        const confirmMessage = `이미 수행 중인 심부름이 있습니다.\n\n현재 심부름: "${activeErrand?.title}" (${activeErrand?.status === 'accepted' ? '수락됨' : '진행중'})\n\n그래도 이 심부름을 수락하시겠습니까? (기존 심부름은 취소됩니다)`
         
         if (!confirm(confirmMessage)) {
           setIsAccepting(false)

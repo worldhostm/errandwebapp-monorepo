@@ -28,7 +28,7 @@ export interface IErrand extends Document {
   currency: 'KRW' | 'USD';
   requestedBy: Types.ObjectId;
   acceptedBy?: Types.ObjectId;
-  status: 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
+  status: 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed' | 'paid';
   category: string;
   deadline?: Date;
   images?: string[];
@@ -90,7 +90,7 @@ const ErrandSchema = new Schema<IErrand>({
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'in_progress', 'completed', 'cancelled', 'disputed'],
+    enum: ['pending', 'accepted', 'in_progress', 'completed', 'cancelled', 'disputed', 'paid'],
     default: 'pending'
   },
   category: {

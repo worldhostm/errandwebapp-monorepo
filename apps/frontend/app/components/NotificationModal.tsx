@@ -1,20 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-
-interface Notification {
-  id: string
-  title: string
-  message: string
-  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system'
-  relatedErrand?: {
-    id: string
-    title: string
-    status: string
-  }
-  isRead: boolean
-  createdAt: string
-}
+import type { Notification } from '../lib/types'
 
 interface NotificationModalProps {
   isOpen: boolean

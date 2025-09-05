@@ -36,7 +36,20 @@ export interface Errand {
     createdAt: Date;
     updatedAt: Date;
 }
-export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
+export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed' | 'paid';
+export interface Notification {
+    id: string;
+    title: string;
+    message: string;
+    type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized';
+    isRead: boolean;
+    createdAt: string;
+    relatedErrand?: {
+        id: string;
+        title: string;
+        status: string;
+    };
+}
 export interface Message {
     id: string;
     sender: string | User;

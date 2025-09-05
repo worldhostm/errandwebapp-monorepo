@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import type { LocalMessage } from '../lib/types'
 import { chatApi } from '../lib/api'
 
@@ -35,14 +35,7 @@ export default function ChatModal({
     scrollToBottom()
   }, [messages])
 
-  // 채팅 데이터 로드
-  useEffect(() => {
-    if (isOpen && errandId) {
-      loadChatData()
-    }
-  }, [isOpen, errandId])
-
-  const loadChatData = async () => {
+  const loadChatData = useCallback(async () => {
     setLoading(true)
     setError(null)
     
@@ -51,18 +44,18 @@ export default function ChatModal({
       
       if (response.success && response.data) {
         const chat = response.data.chat
-        setChatId((chat as any)._id)
+        setChatId((chat as unknown as { _id: string })._id || chat.id)
         
         // 상대방 정보 찾기
         const otherParticipant = chat.participants.find(p => {
           // MongoDB _id 또는 id 필드를 안전하게 비교
-          const participant = p as any // 백엔드에서 오는 데이터의 타입이 일치하지 않을 수 있음
+          const participant = p as { _id?: string; id?: string; name: string } // 백엔드에서 오는 데이터의 타입이 일치하지 않을 수 있음
           const participantId = participant._id?.toString() || participant.id?.toString()
           return participantId && participantId !== currentUserId
         })
         
         if (otherParticipant) {
-          const participant = otherParticipant as any
+          const participant = otherParticipant as { _id?: string; id?: string; name: string }
           setOtherUser({ 
             id: participant._id?.toString() || participant.id?.toString() || 'unknown', 
             name: participant.name || '상대방'
@@ -77,7 +70,7 @@ export default function ChatModal({
         
         // 메시지 변환
         const convertedMessages: LocalMessage[] = chat.messages.map(msg => ({
-          id: (msg as any)._id || msg.id,
+          id: (msg as { _id?: string; id: string })._id || msg.id,
           senderId: msg.senderId,
           senderName: msg.sender.name,
           content: msg.content,
@@ -89,7 +82,7 @@ export default function ChatModal({
         
         // 메시지 읽음 처리
         if (chat.messages.some(msg => !msg.isRead && msg.senderId !== currentUserId)) {
-          await chatApi.markMessagesAsRead((chat as any)._id)
+          await chatApi.markMessagesAsRead((chat as unknown as { _id: string })._id || chat.id)
         }
       } else {
         console.error('채팅 로드 실패:', response.error)
@@ -101,7 +94,14 @@ export default function ChatModal({
     } finally {
       setLoading(false)
     }
-  }
+  }, [errandId, currentUserId])
+
+  // 채팅 데이터 로드
+  useEffect(() => {
+    if (isOpen && errandId) {
+      loadChatData()
+    }
+  }, [isOpen, errandId, loadChatData])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -114,7 +114,7 @@ export default function ChatModal({
       const response = await chatApi.sendMessage(chatId, messageContent)
       
       if (response.success && response.data) {
-        const message = response.data.message as any
+        const message = response.data.message as { _id?: string; id: string; senderId: string; sender: { name: string }; content: string; createdAt: string }
         const newMsg: LocalMessage = {
           id: message._id || message.id,
           senderId: message.senderId,

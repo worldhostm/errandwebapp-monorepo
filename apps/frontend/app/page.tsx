@@ -20,7 +20,7 @@ import { getCategoryInfo } from './lib/categoryUtils'
 import { authApi, errandApi, notificationApi } from './lib/api'
 import { checkLocationPermission, requestLocationWithPermission } from './lib/locationUtils'
 // 임시로 직접 임포트 (monorepo 설정이 완료되면 '@errandwebapp/shared'로 변경)
-import type { ErrandLocation, ErrandFormData } from './lib/types'
+import type { ErrandLocation, ErrandFormData, Notification } from './lib/types'
 import { convertErrandToErrandLocation, User } from './lib/types'
 import { errandCache } from './lib/errandCache'
 
@@ -35,7 +35,7 @@ export default function Home() {
   
   // 알림 관련 상태
   const [showNotificationModal, setShowNotificationModal] = useState(false)
-  const [notifications, setNotifications] = useState<any[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   
   // 로그인 상태 확인

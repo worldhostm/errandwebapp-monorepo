@@ -107,7 +107,7 @@ export const createNotification = async (
   userId: mongoose.Types.ObjectId,
   title: string,
   message: string,
-  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system',
+  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized',
   relatedErrand?: mongoose.Types.ObjectId
 ) => {
   try {

@@ -200,8 +200,55 @@ export const errandApi = {
 
   // 사용자의 활성 심부름 상태 확인
   async checkActiveErrand() {
-    return apiRequest<{ hasActiveErrand: boolean; activeErrand?: any }>('/errands/check-active')
+    return apiRequest<{ 
+      hasActiveErrand: boolean; 
+      activeErrand?: {
+        id: string;
+        title: string;
+        status: string;
+        requestedBy: { name: string; email: string; }
+      } 
+    }>('/errands/check-active')
   },
+}
+
+// 결제 관련 API
+export const paymentApi = {
+  // 결제 상태 확인
+  async checkPaymentStatus(errandId: string) {
+    return apiRequest<{
+      canProcess: boolean
+      currentStatus: string
+      hasDispute: boolean
+      hoursUntilPayment: number | null
+      lastUpdated: string
+    }>(`/payments/${errandId}/status`)
+  },
+
+  // 수동 결제 처리
+  async manualPayment(errandId: string) {
+    return apiRequest<{ message: string }>(`/payments/${errandId}/manual`, {
+      method: 'POST'
+    })
+  },
+
+  // 스케줄러 상태 확인
+  async getSchedulerStatus() {
+    return apiRequest<{
+      scheduler: {
+        isRunning: boolean
+        activeJobs: number
+        paymentJobRunning: boolean
+      }
+    }>('/payments/scheduler/status')
+  },
+
+  // 수동 결제 체크 트리거
+  async triggerPaymentCheck() {
+    return apiRequest<{ message: string }>('/payments/scheduler/trigger', {
+      method: 'POST'
+    })
+  }
 }
 
 // 알림 관련 API
@@ -210,9 +257,14 @@ export const notificationApi = {
   async getNotifications(unreadOnly?: boolean) {
     const params = unreadOnly ? '?unreadOnly=true' : ''
     return apiRequest<{ 
-      notifications: any[]
+      notifications: import('@errandwebapp/shared').Notification[]
       unreadCount: number
-      pagination: any
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        pages: number;
+      }
     }>(`/notifications${params}`)
   },
 
@@ -223,7 +275,14 @@ export const notificationApi = {
 
   // 알림을 읽음 처리
   async markAsRead(notificationId: string) {
-    return apiRequest<{ notification: any }>(`/notifications/${notificationId}/read`, {
+    return apiRequest<{ 
+      notification: {
+        id: string;
+        title: string;
+        message: string;
+        isRead: boolean;
+      }
+    }>(`/notifications/${notificationId}/read`, {
       method: 'PUT',
     })
   },

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Map, MapMarker, Circle } from 'react-kakao-maps-sdk'
 import type { ErrandLocation, User } from '../lib/types'
 import { getDefaultProfileImage } from '../lib/imageUtils'
@@ -50,7 +50,7 @@ export default function MapComponent({
   const [currentLocationPulse, setCurrentLocationPulse] = useState(0)
   const [errandLocationPulse, setErrandLocationPulse] = useState(0)
   const [pulsingErrandId, setPulsingErrandId] = useState<string | null>(null)
-  const [userHasDragged, setUserHasDragged] = useState(false)
+  const [, setUserHasDragged] = useState(false)
   const [showClusterModal, setShowClusterModal] = useState(false)
   const [selectedCluster, setSelectedCluster] = useState<ClusterMarker | null>(null)
   const [showSearchButton, setShowSearchButton] = useState(false)

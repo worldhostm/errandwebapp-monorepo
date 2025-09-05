@@ -40,7 +40,22 @@ export interface Errand {
   updatedAt: Date;
 }
 
-export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
+export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed' | 'paid';
+
+// Notification Types
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized';
+  isRead: boolean;
+  createdAt: string;
+  relatedErrand?: {
+    id: string;
+    title: string;
+    status: string;
+  };
+}
 
 // Chat Types
 export interface Message {

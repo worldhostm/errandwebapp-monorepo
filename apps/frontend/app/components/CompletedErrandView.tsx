@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import { errandApi } from '../lib/api'
+import { errandApi, paymentApi } from '../lib/api'
 import DisputeModal from './DisputeModal'
 
 interface CompletedErrandViewProps {
   errandId: string
-  user: any
+  user: { id: string; name: string; email: string }
   onClose: () => void
 }
 
@@ -34,23 +34,34 @@ interface CompletedErrand {
   }
 }
 
-export default function CompletedErrandView({ errandId, user, onClose }: CompletedErrandViewProps) {
+export default function CompletedErrandView({ errandId, onClose }: CompletedErrandViewProps) {
   const [errand, setErrand] = useState<CompletedErrand | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [showDisputeModal, setShowDisputeModal] = useState(false)
+  const [paymentStatus, setPaymentStatus] = useState<{
+    canProcess: boolean
+    hoursUntilPayment: number | null
+  } | null>(null)
 
-  useEffect(() => {
-    fetchErrandDetails()
-  }, [errandId])
-
-  const fetchErrandDetails = async () => {
+  const fetchErrandDetails = useCallback(async () => {
     try {
-      const response = await errandApi.getErrandWithVerification(errandId)
-      if (response.success && response.data) {
-        setErrand(response.data.errand as any)
+      const [errandResponse, paymentResponse] = await Promise.all([
+        errandApi.getErrandWithVerification(errandId),
+        paymentApi.checkPaymentStatus(errandId)
+      ])
+      
+      if (errandResponse.success && errandResponse.data) {
+        setErrand(errandResponse.data.errand as CompletedErrand)
       } else {
         alert('심부름 정보를 불러올 수 없습니다.')
         onClose()
+      }
+      
+      if (paymentResponse.success && paymentResponse.data) {
+        setPaymentStatus({
+          canProcess: paymentResponse.data.canProcess,
+          hoursUntilPayment: paymentResponse.data.hoursUntilPayment
+        })
       }
     } catch (error) {
       console.error('심부름 정보 조회 오류:', error)
@@ -59,7 +70,11 @@ export default function CompletedErrandView({ errandId, user, onClose }: Complet
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [errandId, onClose])
+
+  useEffect(() => {
+    fetchErrandDetails()
+  }, [errandId, fetchErrandDetails])
 
   const handleDisputeSubmit = async (reason: string, description: string) => {
     try {
@@ -140,10 +155,12 @@ export default function CompletedErrandView({ errandId, user, onClose }: Complet
                   <p className="text-sm text-gray-500">
                     상태: <span className={`px-2 py-1 rounded text-xs ${
                       errand.status === 'completed' ? 'bg-green-100 text-green-800' :
-                      errand.status === 'disputed' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                      errand.status === 'disputed' ? 'bg-red-100 text-red-800' :
+                      errand.status === 'paid' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
                     }`}>
                       {errand.status === 'completed' ? '완료' :
-                       errand.status === 'disputed' ? '이의제기됨' : errand.status}
+                       errand.status === 'disputed' ? '이의제기됨' :
+                       errand.status === 'paid' ? '결제완료' : errand.status}
                     </span>
                   </p>
                 </div>
@@ -183,6 +200,37 @@ export default function CompletedErrandView({ errandId, user, onClose }: Complet
             </div>
           )}
 
+          {/* 결제 상태 정보 */}
+          {errand.status === 'completed' && !errand.dispute && paymentStatus && (
+            <div className="mb-6">
+              <h4 className="text-lg font-medium text-gray-900 mb-4">결제 정보</h4>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                {paymentStatus.canProcess ? (
+                  <div className="text-blue-800">
+                    <p className="text-sm font-medium mb-2">🕐 자동 결제 대기 중</p>
+                    <p className="text-xs">
+                      이의제기 기간이 만료되어 곧 자동으로 결제가 처리됩니다.
+                    </p>
+                  </div>
+                ) : paymentStatus.hoursUntilPayment !== null ? (
+                  <div className="text-orange-800">
+                    <p className="text-sm font-medium mb-2">⏳ 이의제기 기간 중</p>
+                    <p className="text-xs">
+                      약 {paymentStatus.hoursUntilPayment}시간 후 자동 결제가 진행됩니다.
+                    </p>
+                    <p className="text-xs mt-1 text-orange-600">
+                      문제가 있다면 이 시간 내에 이의제기를 해주세요.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-gray-800">
+                    <p className="text-sm">결제 대기 중입니다.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* 이의제기 정보 (있는 경우) */}
           {errand.dispute && (
             <div className="mb-6">
@@ -203,6 +251,20 @@ export default function CompletedErrandView({ errandId, user, onClose }: Complet
                 <p className="text-xs text-red-600 mt-2">
                   제출일: {new Date(errand.dispute.submittedAt).toLocaleString('ko-KR')}
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* 결제 완료 메시지 */}
+          {errand.status === 'paid' && (
+            <div className="mb-6">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="text-green-800">
+                  <p className="text-sm font-medium mb-2">✅ 결제 완료</p>
+                  <p className="text-xs">
+                    심부름이 성공적으로 완료되어 보상이 지급되었습니다.
+                  </p>
+                </div>
               </div>
             </div>
           )}

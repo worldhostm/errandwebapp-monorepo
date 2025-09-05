@@ -1,7 +1,7 @@
 'use client'
 
 interface JsonLdProps {
-  data: Record<string, any>
+  data: Record<string, unknown>
 }
 
 export default function JsonLd({ data }: JsonLdProps) {

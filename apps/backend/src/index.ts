@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import createApp from './app';
 import { setupSocketIO } from './services/socketService';
+import { SchedulerService } from './services/schedulerService';
 
 dotenv.config();
 
@@ -34,6 +35,9 @@ const startServer = async () => {
     server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
       console.log(`Frontend URL: ${process.env.FRONTEND_URL || "http://localhost:3000"}`);
+      
+      // 자동 결제 스케줄러 시작
+      SchedulerService.startScheduler();
     });
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);

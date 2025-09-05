@@ -6,7 +6,6 @@ import { errandApi } from '../lib/api'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { getDefaultProfileImage } from '../lib/imageUtils'
 import type { User, ErrandLocation, ErrandStatus } from '../lib/types'
-import type { Errand } from '@errandwebapp/shared'
 import ChatModal from './ChatModal'
 import CompletedErrandView from './CompletedErrandView'
 
@@ -33,22 +32,36 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   const [selectedCompletedErrandId, setSelectedCompletedErrandId] = useState<string>('')
 
   // API 응답 데이터를 MyErrand로 변환
-  const convertApiErrandToMyErrand = useCallback((apiErrand: any): MyErrand => {
+  const convertApiErrandToMyErrand = useCallback((apiErrand: {
+    _id?: string;
+    id?: string;
+    title: string;
+    description: string;
+    location: { coordinates: [number, number] };
+    reward: number;
+    status: string;
+    category: string;
+    deadline?: string | Date;
+    createdAt?: string | Date;
+    acceptedBy?: { _id: string; name: string; profileImage?: string; avatar?: string };
+    requestedBy?: { _id: string };
+  }): MyErrand => {
     console.log('🔄 변환할 API 심부름 데이터:', apiErrand)
     
     // MongoDB 스키마에서 오는 데이터 구조에 맞게 변환
     const result = {
-      id: apiErrand._id || apiErrand.id,
+      id: apiErrand._id || apiErrand.id || 'unknown',
       title: apiErrand.title,
       description: apiErrand.description,
       lat: apiErrand.location.coordinates[1], // latitude
       lng: apiErrand.location.coordinates[0], // longitude
       reward: apiErrand.reward,
-      status: apiErrand.status,
+      status: apiErrand.status as ErrandStatus,
       category: apiErrand.category,
       deadline: typeof apiErrand.deadline === 'string' ? apiErrand.deadline : 
                 (apiErrand.deadline ? new Date(apiErrand.deadline).toISOString() : new Date().toISOString()),
-      createdAt: typeof apiErrand.createdAt === 'string' ? apiErrand.createdAt : new Date(apiErrand.createdAt).toISOString(),
+      createdAt: typeof apiErrand.createdAt === 'string' ? apiErrand.createdAt : 
+                (apiErrand.createdAt ? new Date(apiErrand.createdAt).toISOString() : new Date().toISOString()),
       createdBy: typeof apiErrand.requestedBy === 'string' ? apiErrand.requestedBy : apiErrand.requestedBy?._id,
       acceptedBy: typeof apiErrand.acceptedBy === 'string' ? apiErrand.acceptedBy : apiErrand.acceptedBy?._id,
       acceptedByUser: apiErrand.acceptedBy && typeof apiErrand.acceptedBy === 'object' ? {
@@ -74,7 +87,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       if (response.success && response.data) {
         console.log('📦 원시 API 데이터:', response.data.errands)
         
-        const convertedErrands = response.data.errands.map(convertApiErrandToMyErrand)
+        const convertedErrands = response.data.errands.map((errand: Record<string, unknown>) => convertApiErrandToMyErrand(errand as Parameters<typeof convertApiErrandToMyErrand>[0]))
         setMyErrands(convertedErrands)
         console.log(`✅ 내가 등록한 심부름 ${convertedErrands.length}개 조회됨:`, convertedErrands)
       } else {

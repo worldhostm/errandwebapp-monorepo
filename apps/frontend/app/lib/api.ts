@@ -238,5 +238,47 @@ export const notificationApi = {
 
 // 채팅 관련 API (향후 구현)
 export const chatApi = {
-  // 채팅 관련 API 함수들을 여기에 추가할 예정
+  // 심부름별 채팅방 가져오기
+  async getChatByErrand(errandId: string) {
+    return apiRequest<{
+      chat: {
+        id: string;
+        errandId: string;
+        participantIds: string[];
+        participants: User[];
+        messages: {
+          id: string;
+          content: string;
+          senderId: string;
+          sender: User;
+          createdAt: string;
+          isRead: boolean;
+        }[];
+      }
+    }>(`/chat/errand/${errandId}`)
+  },
+
+  // 메시지 전송
+  async sendMessage(chatId: string, content: string) {
+    return apiRequest<{
+      message: {
+        id: string;
+        content: string;
+        senderId: string;
+        sender: User;
+        createdAt: string;
+        isRead: boolean;
+      }
+    }>(`/chat/${chatId}/message`, {
+      method: 'POST',
+      body: JSON.stringify({ content })
+    })
+  },
+
+  // 메시지 읽음 처리
+  async markMessagesAsRead(chatId: string) {
+    return apiRequest<{ message: string }>(`/chat/${chatId}/read`, {
+      method: 'PUT'
+    })
+  }
 }

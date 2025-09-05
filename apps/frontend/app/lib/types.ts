@@ -22,6 +22,7 @@ export interface ErrandLocation extends ClusterableItem {
   distance?: number
   isUrgent?: boolean
   requestedBy?: {
+    id: string
     name: string
     email?: string
     avatar?: string
@@ -156,6 +157,8 @@ export const convertErrandToErrandLocation = (errand: Record<string, unknown>): 
     createdAt: typeof errand.createdAt === 'string' ? errand.createdAt : (errand.createdAt as { toISOString: () => string }).toISOString(),
     acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : (errand.acceptedBy as User)?.id,
     requestedBy: errand.requestedBy ? {
+      id: (errand.requestedBy as { _id?: string; id?: string; name: string; email?: string; avatar?: string })._id || 
+          (errand.requestedBy as { _id?: string; id?: string; name: string; email?: string; avatar?: string }).id || '',
       name: (errand.requestedBy as { name: string; email?: string; avatar?: string }).name,
       email: (errand.requestedBy as { name: string; email?: string; avatar?: string }).email,
       avatar: (errand.requestedBy as { name: string; email?: string; avatar?: string }).avatar

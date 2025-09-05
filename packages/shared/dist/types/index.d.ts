@@ -36,7 +36,7 @@ export interface Errand {
     createdAt: Date;
     updatedAt: Date;
 }
-export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
+export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
 export interface Message {
     id: string;
     sender: string | User;

@@ -367,15 +367,12 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       )}
 
       {/* 채팅 모달 */}
-      {showChat && selectedErrandForChat && selectedErrandForChat.acceptedByUser && (
+      {showChat && selectedErrandForChat && (
         <ChatModal
           isOpen={showChat}
           onClose={() => setShowChat(false)}
           errandTitle={selectedErrandForChat.title}
-          otherUser={{
-            id: selectedErrandForChat.acceptedByUser._id,
-            name: selectedErrandForChat.acceptedByUser.name
-          }}
+          errandId={String(selectedErrandForChat._id)}
           currentUserId={user.id}
         />
       )}

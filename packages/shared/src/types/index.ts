@@ -40,7 +40,7 @@ export interface Errand {
   updatedAt: Date;
 }
 
-export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
+export type ErrandStatus = 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
 
 // Chat Types
 export interface Message {

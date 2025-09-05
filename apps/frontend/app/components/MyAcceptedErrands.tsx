@@ -372,15 +372,12 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
       )}
 
       {/* 채팅 모달 */}
-      {showChat && selectedErrandForChat && selectedErrandForChat.requesterUser && (
+      {showChat && selectedErrandForChat && (
         <ChatModal
           isOpen={showChat}
           onClose={() => setShowChat(false)}
           errandTitle={selectedErrandForChat.title}
-          otherUser={{
-            id: selectedErrandForChat.requesterUser._id,
-            name: selectedErrandForChat.requesterUser.name
-          }}
+          errandId={String(selectedErrandForChat._id)}
           currentUserId={user.id}
         />
       )}

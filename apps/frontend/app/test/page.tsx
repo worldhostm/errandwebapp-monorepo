@@ -27,25 +27,25 @@ export default function TestLoginPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
         <h1 className="text-2xl font-bold text-center mb-6">테스트 로그인</h1>
-        <p className="text-gray-600 text-center mb-4">
+        <p className="text-black text-center mb-4">
           개발/테스트 목적으로만 사용하세요
         </p>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-black mb-1">
               사용자명
             </label>
             <input
               type="text"
               value="test"
               disabled
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-black"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-black mb-1">
               비밀번호
             </label>
             <input
@@ -53,7 +53,7 @@ export default function TestLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="1234"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
               required
             />
           </div>

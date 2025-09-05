@@ -822,82 +822,84 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* 위도/경도 테스트 입력 */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-900 mb-3">📍 위도/경도로 마커 테스트</h3>
-                
-                {/* 예시 위치 버튼 */}
-                <div className="mb-3 flex flex-wrap gap-2">
-                  <button
-                    onClick={() => {
-                      setTestLatInput('37.1946071232431')
-                      setTestLngInput('127.101332868277')
-                    }}
-                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
-                  >
-                    청계동 예시
-                  </button>
-                  <button
-                    onClick={() => {
-                      setTestLatInput('37.5665')
-                      setTestLngInput('126.9780')
-                    }}
-                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
-                  >
-                    서울시청
-                  </button>
-                  <button
-                    onClick={() => {
-                      setTestLatInput('35.1796')
-                      setTestLngInput('129.0756')
-                    }}
-                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
-                  >
-                    부산
-                  </button>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={testLatInput}
-                      onChange={(e) => setTestLatInput(e.target.value)}
-                      placeholder="위도 (예: 37.1946)"
-                      className="w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={testLngInput}
-                      onChange={(e) => setTestLngInput(e.target.value)}
-                      placeholder="경도 (예: 127.1013)"
-                      className="text-black w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <button
-                    onClick={handleTestLocationSubmit}
-                    disabled={!testLatInput || !testLngInput}
-                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed whitespace-nowrap"
-                  >
-                    마커 표시
-                  </button>
-                  {testMarker && (
+              {/* 위도/경도 테스트 입력 - 로그인한 사용자만 */}
+              {user.id ==='test-user' && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="text-sm font-medium text-blue-900 mb-3">📍 위도/경도로 마커 테스트</h3>
+                  
+                  {/* 예시 위치 버튼 */}
+                  <div className="mb-3 flex flex-wrap gap-2">
                     <button
-                      onClick={handleClearTestMarker}
-                      className="px-3 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 whitespace-nowrap"
+                      onClick={() => {
+                        setTestLatInput('37.1946071232431')
+                        setTestLngInput('127.101332868277')
+                      }}
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
                     >
-                      초기화
+                      청계동 예시
                     </button>
+                    <button
+                      onClick={() => {
+                        setTestLatInput('37.5665')
+                        setTestLngInput('126.9780')
+                      }}
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
+                    >
+                      서울시청
+                    </button>
+                    <button
+                      onClick={() => {
+                        setTestLatInput('35.1796')
+                        setTestLngInput('129.0756')
+                      }}
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200"
+                    >
+                      부산
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        value={testLatInput}
+                        onChange={(e) => setTestLatInput(e.target.value)}
+                        placeholder="위도 (예: 37.1946)"
+                        className="w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        value={testLngInput}
+                        onChange={(e) => setTestLngInput(e.target.value)}
+                        placeholder="경도 (예: 127.1013)"
+                        className="text-black w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <button
+                      onClick={handleTestLocationSubmit}
+                      disabled={!testLatInput || !testLngInput}
+                      className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed whitespace-nowrap"
+                    >
+                      마커 표시
+                    </button>
+                    {testMarker && (
+                      <button
+                        onClick={handleClearTestMarker}
+                        className="px-3 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 whitespace-nowrap"
+                      >
+                        초기화
+                      </button>
+                    )}
+                  </div>
+                  {testMarker && (
+                    <p className="mt-2 text-xs text-blue-700">
+                      🎯 테스트 마커: {testMarker.lat.toFixed(6)}, {testMarker.lng.toFixed(6)}
+                    </p>
                   )}
                 </div>
-                {testMarker && (
-                  <p className="mt-2 text-xs text-blue-700">
-                    🎯 테스트 마커: {testMarker.lat.toFixed(6)}, {testMarker.lng.toFixed(6)}
-                  </p>
-                )}
-              </div>
+              )}
             </div>
 
             <div id="map-container" className="bg-white rounded-lg shadow-sm overflow-hidden relative">
@@ -1021,15 +1023,19 @@ export default function Home() {
                     {/* 버튼 영역 */}
                     {errand.status === 'pending' && user && (
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button 
-                          onClick={() => handleErrandAccept(errand.id)}
-                          className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
-                        >
-                          수락하기
-                        </button>
+                        {/* 자신의 심부름이 아닌 경우에만 수락 버튼 표시 */}
+                        {errand.requestedBy?.id !== user.id && (
+                          <button 
+                            onClick={() => handleErrandAccept(errand.id)}
+                            className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
+                          >
+                            수락하기
+                          </button>
+                        )}
+                        {/* 모든 사용자가 채팅 가능 */}
                         <button 
                           onClick={() => handleChatOpen(errand)}
-                          className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                          className={`${errand.requestedBy?.id !== user.id ? 'flex-1' : 'w-full'} bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm`}
                         >
                           채팅하기
                         </button>
@@ -1047,6 +1053,18 @@ export default function Home() {
                         <button 
                           onClick={() => handleChatOpen(errand)}
                           className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                        >
+                          채팅하기
+                        </button>
+                      </div>
+                    )}
+
+                    {/* 심부름 요청자인 경우 수락된 심부름에서도 채팅 가능 */}
+                    {errand.status === 'accepted' && user && errand.requestedBy?.id === user.id && errand.acceptedBy !== user.id && (
+                      <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                        <button 
+                          onClick={() => handleChatOpen(errand)}
+                          className="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
                         >
                           채팅하기
                         </button>
@@ -1110,7 +1128,7 @@ export default function Home() {
           isOpen={showChat}
           onClose={() => setShowChat(false)}
           errandTitle={selectedErrandForChat.title}
-          otherUser={{ id: 'other-user', name: '김사용자' }}
+          errandId={selectedErrandForChat.id}
           currentUserId={user.id}
         />
       )}

@@ -383,6 +383,7 @@ export default function MapComponent({
                   height: cluster.count > 99 ? 50 : cluster.count > 9 ? 45 : 40
                 },
               }}
+              zIndex={100}
               clickable={true}
               onClick={() => {
                 // 클러스터를 클릭하면 모달로 심부름 목록 표시
@@ -405,6 +406,7 @@ export default function MapComponent({
                   src: markerColor,
                   size: { width: 24, height: 35 },
                 }}
+                zIndex={100}
                 clickable={true}
                 title={errand.title}
                 onClick={() => {
@@ -442,13 +444,14 @@ export default function MapComponent({
                 fillColor="#10B981"
                 fillOpacity={Math.max(0.3 - (currentLocationPulse / 21) * 0.3, 0)}
               />
-              {/* 사용자 프로필 마커 */}
+              {/* 사용자 프로필 마커 - 심부름 마커보다 낮은 zIndex */}
               <MapMarker
                 position={propUserLocation}
                 image={{
                   src: userMarkerImage,
                   size: { width: 40, height: 40 },
                 }}
+                zIndex={50}
               />
             </>
           )}
@@ -458,6 +461,7 @@ export default function MapComponent({
             <MapMarker
               position={selectedLocation}
               title="선택된 위치"
+              zIndex={90}
             />
           )}
           
@@ -470,6 +474,7 @@ export default function MapComponent({
                 src: '/marker-purple.svg',
                 size: { width: 32, height: 42 },
               }}
+              zIndex={110}
             />
           )}
           

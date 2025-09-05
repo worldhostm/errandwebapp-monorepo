@@ -1,4 +1,4 @@
-import { ApiResponse, User, Errand, ErrandStatus } from '@errandwebapp/shared'
+import { ApiResponse, User, Errand, ErrandStatus, VerificationStatus } from '@errandwebapp/shared'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 
@@ -339,5 +339,71 @@ export const chatApi = {
     return apiRequest<{ message: string }>(`/chat/${chatId}/read`, {
       method: 'PUT'
     })
+  },
+
+  // === 인증 API ===
+  
+  // 전화번호 인증 요청
+  async requestPhoneVerification(phone: string) {
+    return apiRequest<{
+      success: true;
+      message: string;
+      data: { verificationId: string };
+    }>('/verification/phone/request', {
+      method: 'POST',
+      body: JSON.stringify({ phone })
+    })
+  },
+
+  // 전화번호 인증 확인
+  async verifyPhoneCode(verificationId: string, code: string) {
+    return apiRequest<{
+      success: true;
+      message: string;
+    }>('/verification/phone/verify', {
+      method: 'POST',
+      body: JSON.stringify({ verificationId, code })
+    })
+  },
+
+  // 이메일 인증 요청
+  async requestEmailVerification() {
+    return apiRequest<{
+      success: true;
+      message: string;
+      data: { verificationToken: string };
+    }>('/verification/email/request', {
+      method: 'POST'
+    })
+  },
+
+  // 신분증 인증 요청
+  async requestIdentityVerification(documents: string[]) {
+    return apiRequest<{
+      success: true;
+      message: string;
+    }>('/verification/identity/request', {
+      method: 'POST',
+      body: JSON.stringify({ documents })
+    })
+  },
+
+  // 주소 인증 요청
+  async requestAddressVerification(address: string, documents: string[]) {
+    return apiRequest<{
+      success: true;
+      message: string;
+    }>('/verification/address/request', {
+      method: 'POST',
+      body: JSON.stringify({ address, documents })
+    })
+  },
+
+  // 인증 상태 조회
+  async getVerificationStatus() {
+    return apiRequest<{
+      success: true;
+      data: VerificationStatus;
+    }>('/verification/status')
   }
 }

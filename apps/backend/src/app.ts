@@ -7,6 +7,7 @@ import userRoutes from './routes/users';
 import chatRoutes from './routes/chat';
 import notificationRoutes from './routes/notifications';
 import paymentRoutes from './routes/payments';
+import verificationRoutes from './routes/verification';
 import { errorHandler } from './middleware/errorHandler';
 
 const createApp = () => {
@@ -39,6 +40,7 @@ const createApp = () => {
   app.use('/api/chat', chatRoutes);
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/payments', paymentRoutes);
+  app.use('/api/verification', verificationRoutes);
 
   // 404 handler
   app.use('*', (req, res) => {

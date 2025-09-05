@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { handleImageUpload, getDefaultProfileImage } from '../lib/imageUtils'
 import type { User } from '../lib/types'
+import VerificationSection from './VerificationSection'
 
 interface ProfileModalProps {
   isOpen: boolean
@@ -19,6 +20,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
   })
   const [profileImage, setProfileImage] = useState<string | null>(user.avatar || null)
   const [imageUploading, setImageUploading] = useState(false)
+  const [activeTab, setActiveTab] = useState<'profile' | 'verification'>('profile')
 
   useEffect(() => {
     setFormData({ name: user.name, email: user.email })
@@ -68,112 +70,151 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
 
   return (
     <div className="fixed inset-0 bg-black bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">프로필 설정</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
-          >
-            ✕
-          </button>
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white p-6 border-b">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">프로필 설정</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✕
+            </button>
+          </div>
+          
+          {/* 탭 메뉴 */}
+          <div className="flex mt-4">
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`flex-1 py-2 px-4 text-center font-medium border-b-2 transition-colors ${
+                activeTab === 'profile'
+                  ? 'text-blue-600 border-blue-500'
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+              }`}
+            >
+              👤 기본 정보
+            </button>
+            <button
+              onClick={() => setActiveTab('verification')}
+              className={`flex-1 py-2 px-4 text-center font-medium border-b-2 transition-colors ${
+                activeTab === 'verification'
+                  ? 'text-blue-600 border-blue-500'
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+              }`}
+            >
+              🔐 사용자 인증
+            </button>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              프로필 사진
-            </label>
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 border border-gray-300 rounded-full flex items-center justify-center overflow-hidden bg-gray-50">
-                <Image
-                  src={getCurrentProfileImage()}
-                  alt="현재 프로필"
-                  width={80}
-                  height={80}
-                  className="w-full h-full object-cover"
+        <div className="p-6">
+          {activeTab === 'profile' && (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  프로필 사진
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 border border-gray-300 rounded-full flex items-center justify-center overflow-hidden bg-gray-50">
+                    <Image
+                      src={getCurrentProfileImage()}
+                      alt="현재 프로필"
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                        id="profile-image-edit"
+                        disabled={imageUploading}
+                      />
+                      <label
+                        htmlFor="profile-image-edit"
+                        className={`cursor-pointer px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm ${
+                          imageUploading ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
+                      >
+                        {imageUploading ? '업로드 중...' : '변경'}
+                      </label>
+                      {profileImage && (
+                        <button
+                          type="button"
+                          onClick={removeProfileImage}
+                          className="px-3 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 text-sm"
+                        >
+                          삭제
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      5MB 이하, JPG/PNG 권장
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  이름
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="이름을 입력하세요"
+                  required
                 />
               </div>
-              <div className="flex-1 space-y-2">
-                <div className="flex gap-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="profile-image-edit"
-                    disabled={imageUploading}
-                  />
-                  <label
-                    htmlFor="profile-image-edit"
-                    className={`cursor-pointer px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm ${
-                      imageUploading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                  >
-                    {imageUploading ? '업로드 중...' : '변경'}
-                  </label>
-                  {profileImage && (
-                    <button
-                      type="button"
-                      onClick={removeProfileImage}
-                      className="px-3 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 text-sm"
-                    >
-                      삭제
-                    </button>
-                  )}
-                </div>
-                <p className="text-xs text-gray-500">
-                  5MB 이하, JPG/PNG 권장
-                </p>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  이메일
+                </label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="이메일을 입력하세요"
+                  required
+                />
               </div>
-            </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              이름
-            </label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="이름을 입력하세요"
-              required
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                >
+                  취소
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  disabled={imageUploading}
+                >
+                  저장
+                </button>
+              </div>
+            </form>
+          )}
+
+          {activeTab === 'verification' && (
+            <VerificationSection 
+              onVerificationChange={() => {
+                // 인증 상태 변경 시 필요한 로직
+                // 예: 사용자 정보 다시 불러오기
+              }}
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              이메일
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="이메일을 입력하세요"
-              required
-            />
-          </div>
-
-          <div className="flex gap-4 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-            >
-              취소
-            </button>
-            <button
-              type="submit"
-              className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              disabled={imageUploading}
-            >
-              저장
-            </button>
-          </div>
-        </form>
+          )}
+        </div>
       </div>
     </div>
   )

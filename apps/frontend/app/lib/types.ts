@@ -1,9 +1,9 @@
 // User 타입은 shared 패키지에서 가져옴
-import { User, Errand, ErrandStatus, Message as SharedMessage, ApiResponse, Notification } from '@errandwebapp/shared'
+import { User, Errand, ErrandStatus, Message as SharedMessage, ApiResponse, Notification, Verification, VerificationStatus } from '@errandwebapp/shared'
 import { ClusterableItem } from './clustering'
 
 // shared 타입들을 re-export
-export type { User, Errand, ErrandStatus, ApiResponse, Notification }
+export type { User, Errand, ErrandStatus, ApiResponse, Notification, Verification, VerificationStatus }
 export type { SharedMessage }
 
 // Errand 타입을 기반으로 한 내가 사용할 타입

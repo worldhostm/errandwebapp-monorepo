@@ -1,3 +1,22 @@
+// Verification Types
+export interface Verification {
+  type: 'phone' | 'email' | 'identity' | 'address';
+  status: 'pending' | 'verified' | 'rejected';
+  verifiedAt?: Date;
+  rejectionReason?: string;
+  documents?: string[];
+}
+
+export interface VerificationStatus {
+  level: number;
+  badges: string[];
+  isPhoneVerified: boolean;
+  isEmailVerified: boolean;
+  isIdentityVerified: boolean;
+  isAddressVerified: boolean;
+  verifications: Verification[];
+}
+
 // User Types
 export interface User {
   id: string;
@@ -13,6 +32,8 @@ export interface User {
   rating: number;
   totalErrands: number;
   isVerified: boolean;
+  verification?: Verification[];
+  verificationLevel?: number;
   createdAt: Date;
   updatedAt: Date;
 }

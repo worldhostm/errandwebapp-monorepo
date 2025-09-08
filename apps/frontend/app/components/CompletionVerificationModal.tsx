@@ -131,24 +131,25 @@ export default function CompletionVerificationModal({
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-black">
               심부름 완료 인증
             </h3>
             <button
+              type="button"
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-black hover:text-gray-600"
             >
               ✕
             </button>
           </div>
 
           <div className="mb-4">
-            <h4 className="font-medium text-gray-700 mb-2">심부름 제목</h4>
-            <p className="text-gray-600 bg-gray-50 p-3 rounded-md">{errandTitle}</p>
+            <h4 className="font-medium text-black mb-2">심부름 제목</h4>
+            <p className="text-black bg-gray-50 p-3 rounded-md">{errandTitle}</p>
           </div>
 
           <div className="mb-6">
-            <h4 className="font-medium text-gray-700 mb-3">완료 인증 사진</h4>
+            <h4 className="font-medium text-black mb-3">완료 인증 사진</h4>
             
             {!capturedImage ? (
               <div className="space-y-4">
@@ -228,7 +229,7 @@ export default function CompletionVerificationModal({
           </div>
 
           <div className="mb-6">
-            <label className="block font-medium text-gray-700 mb-2">
+            <label className="block font-medium text-black mb-2">
               완료 메시지 <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -239,7 +240,7 @@ export default function CompletionVerificationModal({
               rows={4}
               maxLength={500}
             />
-            <div className="text-right text-sm text-gray-500 mt-1">
+            <div className="text-right text-sm text-black mt-1">
               {completionMessage.length}/500
             </div>
           </div>

@@ -183,7 +183,6 @@ export default function Home() {
       }
       
       const response = await apiCall
-      console.log(`📡 API 응답:`, response)
       
       if (response.success && response.data) {
         const apiErrands = response.data.errands.map((errand) => convertErrandToErrandLocation(errand as unknown as Record<string, unknown>))
@@ -196,26 +195,18 @@ export default function Home() {
         // bounds 기반 필터링 (API 서버 필터링이 실패했을 경우를 위한 이중 보안)
         let finalErrands = processed
         const usedBounds = bounds || currentMapBounds
+      
         
-        console.log(`🔍 필터링 조건 체크:`)
-        console.log(`  - currentMapBounds:`, currentMapBounds)
-        console.log(`  - bounds:`, bounds)
-        console.log(`  - usedBounds:`, usedBounds)
-        
-        if (usedBounds) {
-          console.log(`📍 클라이언트 bounds 필터링 시작: ${processed.length}개 심부름`)
-          console.log(`📍 Bounds: SW(${usedBounds.sw.lat}, ${usedBounds.sw.lng}) - NE(${usedBounds.ne.lat}, ${usedBounds.ne.lng})`)
-          
+        if (usedBounds) {         
           finalErrands = processed.filter(errand => {
             const inBounds = errand.lat >= usedBounds.sw.lat && 
                            errand.lat <= usedBounds.ne.lat &&
                            errand.lng >= usedBounds.sw.lng && 
                            errand.lng <= usedBounds.ne.lng
-                           
-            console.log(`📍 심부름 "${errand.title}" (${errand.lat}, ${errand.lng}): ${inBounds ? '✅ 포함' : '❌ 제외'}`)
+                          
             return inBounds
           })
-          console.log(`📍 클라이언트 bounds 필터링: ${processed.length}개 → ${finalErrands.length}개`)
+
         } else {
           console.log(`📍 bounds가 없어 필터링 건너뜀`)
         }

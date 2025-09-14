@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import User, { IUser } from '../models/User';
+import User from '../models/User';
 import { AuthRequest } from '../middleware/auth';
 
 const generateToken = (userId: string): string => {

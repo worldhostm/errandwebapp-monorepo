@@ -48,21 +48,21 @@ export * from '@testing-library/react';
 export { customRender as render };
 
 // Helper function to create mock API responses
-export const createMockApiResponse = <T>(data: T, success = true, error?: string) => ({
+export const createMockApiResponse = <T,>(data: T, success = true, error?: string) => ({
   success,
   data: success ? data : undefined,
   error: success ? undefined : error,
 });
 
 // Helper function to wait for element to appear
-export const waitForElement = async (getByTestId: any, testId: string, timeout = 1000) => {
+export const waitForElement = async (getByTestId: (testId: string) => HTMLElement, testId: string, timeout = 1000) => {
   return new Promise((resolve, reject) => {
     const start = Date.now();
     const check = () => {
       try {
         const element = getByTestId(testId);
         resolve(element);
-      } catch (error) {
+      } catch {
         if (Date.now() - start >= timeout) {
           reject(new Error(`Element with testId "${testId}" not found within ${timeout}ms`));
         } else {

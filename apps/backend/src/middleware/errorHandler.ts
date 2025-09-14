@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 interface CustomError extends Error {
   statusCode?: number;
@@ -8,8 +8,7 @@ interface CustomError extends Error {
 export const errorHandler = (
   err: CustomError,
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   let error = { ...err };
   error.message = err.message;
@@ -24,14 +23,14 @@ export const errorHandler = (
   }
 
   // Mongoose duplicate key
-  if (err.name === 'MongoServerError' && (err as any).code === 11000) {
+  if (err.name === 'MongoServerError' && 'code' in err && (err as { code: number }).code === 11000) {
     const message = 'Duplicate field value entered';
     error = { name: 'MongoServerError', message, statusCode: 400 };
   }
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const message = Object.values((err as any).errors).map((val: any) => val.message).join(', ');
+    const message = Object.values((err as { errors: Record<string, { message: string }> }).errors).map(val => val.message).join(', ');
     error = { name: 'ValidationError', message, statusCode: 400 };
   }
 

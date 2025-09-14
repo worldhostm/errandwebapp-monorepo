@@ -23,7 +23,7 @@ export const auth = async (req: AuthRequest, res: Response, next: NextFunction) 
 
     req.user = user;
     next();
-  } catch (error) {
+  } catch {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
@@ -50,7 +50,7 @@ export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFu
 
     req.user = user;
     next();
-  } catch (error) {
+  } catch {
     // 토큰 검증 실패해도 계속 진행
     req.user = undefined;
     next();

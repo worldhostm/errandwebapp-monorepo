@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import mongoose from 'mongoose';
 import Chat from '../models/Chat';
 import Errand from '../models/Errand';

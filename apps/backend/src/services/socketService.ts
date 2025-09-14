@@ -27,7 +27,7 @@ export const setupSocketIO = (io: Server) => {
 
       socket.userId = (user._id as mongoose.Types.ObjectId).toString();
       next();
-    } catch (error) {
+    } catch {
       next(new Error('Authentication error'));
     }
   });
@@ -51,7 +51,7 @@ export const setupSocketIO = (io: Server) => {
     });
 
     // Handle sending messages
-    socket.on('send_message', (data: { chatId: string; message: any }) => {
+    socket.on('send_message', (data: { chatId: string; message: unknown }) => {
       // Emit to all users in the chat room except sender
       socket.to(`chat_${data.chatId}`).emit('new_message', {
         chatId: data.chatId,
@@ -60,7 +60,7 @@ export const setupSocketIO = (io: Server) => {
     });
 
     // Handle errand status updates
-    socket.on('errand_status_update', (data: { errandId: string; status: string; errand: any }) => {
+    socket.on('errand_status_update', (data: { errandId: string; status: string; errand: unknown }) => {
       // Notify all users following this errand
       io.emit('errand_updated', {
         errandId: data.errandId,

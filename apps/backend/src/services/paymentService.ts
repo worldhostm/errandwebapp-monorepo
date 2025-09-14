@@ -1,4 +1,4 @@
-import Errand from '../models/Errand';
+import Errand, { IErrand } from '../models/Errand';
 import { createNotification } from '../controllers/notificationController';
 import mongoose from 'mongoose';
 
@@ -57,7 +57,7 @@ export class PaymentService {
     return results;
   }
 
-  private static async processPayment(errand: any): Promise<void> {
+  private static async processPayment(errand: IErrand): Promise<void> {
     this.validateErrandForPayment(errand);
     
     console.log(`💰 결제 처리 시작: ${errand.title} (ID: ${errand.id})`);
@@ -129,7 +129,7 @@ export class PaymentService {
       .populate('acceptedBy', 'name email');
   }
 
-  private static validateErrandForPayment(errand: any): void {
+  private static validateErrandForPayment(errand: IErrand): void {
     if (!errand) {
       throw new Error('심부름 정보가 없습니다.');
     }
@@ -143,7 +143,7 @@ export class PaymentService {
     }
   }
 
-  private static validateManualPayment(errand: any): PaymentResult {
+  private static validateManualPayment(errand: IErrand): PaymentResult {
     if (errand.status === 'paid') {
       return { success: false, message: '이미 결제가 완료된 심부름입니다.' };
     }
@@ -155,17 +155,17 @@ export class PaymentService {
     return { success: true, message: '' };
   }
 
-  private static async updateErrandToPaid(errand: any): Promise<void> {
+  private static async updateErrandToPaid(errand: IErrand): Promise<void> {
     errand.status = 'paid';
     await errand.save();
   }
 
-  private static async sendPaymentNotifications(errand: any): Promise<void> {
+  private static async sendPaymentNotifications(errand: IErrand): Promise<void> {
     await this.sendAcceptorNotification(errand);
     await this.sendRequesterNotification(errand);
   }
 
-  private static async sendAcceptorNotification(errand: any): Promise<void> {
+  private static async sendAcceptorNotification(errand: IErrand): Promise<void> {
     try {
       if (errand.acceptedBy && errand.acceptedBy._id) {
         await createNotification(
@@ -181,7 +181,7 @@ export class PaymentService {
     }
   }
 
-  private static async sendRequesterNotification(errand: any): Promise<void> {
+  private static async sendRequesterNotification(errand: IErrand): Promise<void> {
     try {
       if (errand.requestedBy && errand.requestedBy._id) {
         await createNotification(

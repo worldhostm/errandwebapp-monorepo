@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import Errand, { IErrand } from '../models/Errand';
+import Errand from '../models/Errand';
 import Chat from '../models/Chat';
 import { AuthRequest } from '../middleware/auth';
 import { createNotification } from './notificationController';
@@ -71,7 +71,7 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
     const limitNum = parseInt(limit as string);
     const skip = (parseInt(page as string) - 1) * limitNum;
 
-    let query: any = {
+    const query: Record<string, unknown> = {
       status
     };
 
@@ -134,7 +134,7 @@ export const getNearbyErrands = async (req: AuthRequest, res: Response) => {
       
       console.log(`📊 Bounds 조회 결과: ${errands.length}개 심부름 (총 ${total}개)`);
       if (errands.length > 0) {
-        console.log(`📍 조회된 심부름들:`, errands.map((e: any) => ({
+        console.log(`📍 조회된 심부름들:`, errands.map((e) => ({
           title: e.title,
           coordinates: e.location.coordinates
         })));
@@ -277,7 +277,7 @@ export const acceptErrand = async (req: AuthRequest, res: Response) => {
     await createNotification(
       errand.requestedBy._id as mongoose.Types.ObjectId,
       '심부름이 수락되었습니다',
-      `"${errand.title}" 심부름을 ${(errand.acceptedBy as any).name}님이 수락했습니다.`,
+      `"${errand.title}" 심부름을 ${user.name}님이 수락했습니다.`,
       'errand_accepted',
       errand._id as mongoose.Types.ObjectId
     );
@@ -342,7 +342,7 @@ export const getUserErrands = async (req: AuthRequest, res: Response) => {
     const limitNum = parseInt(limit as string);
     const skip = (parseInt(page as string) - 1) * limitNum;
 
-    let query: any = {};
+    const query: Record<string, unknown> = {};
     
     if (type === 'requested') {
       query.requestedBy = user._id;

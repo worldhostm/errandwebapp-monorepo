@@ -339,17 +339,14 @@ export const chatApi = {
     return apiRequest<{ message: string }>(`/chat/${chatId}/read`, {
       method: 'PUT'
     })
-  },
+  }
+}
 
-  // === 인증 API ===
-  
+// 인증 관련 API
+export const verificationApi = {
   // 전화번호 인증 요청
   async requestPhoneVerification(phone: string) {
-    return apiRequest<{
-      success: true;
-      message: string;
-      data: { verificationId: string };
-    }>('/verification/phone/request', {
+    return apiRequest<{ verificationId: string }>('/verification/phone/request', {
       method: 'POST',
       body: JSON.stringify({ phone })
     })

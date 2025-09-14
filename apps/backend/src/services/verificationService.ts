@@ -1,10 +1,10 @@
-import User, { IUser } from '../models/User';
+import User from '../models/User';
 import crypto from 'crypto';
 
 interface VerificationResult {
   success: boolean;
   message: string;
-  data?: any;
+  data?: unknown;
   error?: string;
 }
 

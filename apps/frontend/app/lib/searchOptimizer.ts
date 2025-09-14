@@ -194,7 +194,8 @@ export class BatchRequestManager {
   async addRequest<T>(
     batchKey: string,
     requestKey: string,
-    requestFn: () => Promise<T>
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _requestFn: () => Promise<T>
   ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       let batch = this.batches.get(batchKey)

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { api } from '../lib/api'
+import { chatApi, verificationApi } from '../lib/api'
 import { VerificationStatus, Verification } from '../lib/types'
 
 interface VerificationSectionProps {
@@ -31,7 +31,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
   const loadVerificationStatus = async () => {
     setLoading(true)
     try {
-      const response = await api.getVerificationStatus()
+      const response = await verificationApi.getVerificationStatus()
       if (response.success && response.data) {
         setVerificationStatus(response.data.data)
       }
@@ -49,18 +49,18 @@ export default function VerificationSection({ onVerificationChange }: Verificati
     }
 
     try {
-      const response = await api.requestPhoneVerification(phoneVerification.phone)
+      const response = await verificationApi.requestPhoneVerification(phoneVerification.phone)
       if (response.success && response.data) {
         setPhoneVerification(prev => ({
           ...prev,
-          verificationId: response.data.data.verificationId,
+          verificationId: response.data?.verificationId || '',
           step: 'verify'
         }))
-        alert(response.data.message)
+        alert(response.message || '인증번호가 발송되었습니다.')
       } else {
         alert(response.error || '인증번호 요청에 실패했습니다.')
       }
-    } catch (error) {
+    } catch {
       alert('인증번호 요청 중 오류가 발생했습니다.')
     }
   }
@@ -72,7 +72,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
     }
 
     try {
-      const response = await api.verifyPhoneCode(phoneVerification.verificationId, phoneVerification.code)
+      const response = await verificationApi.verifyPhoneCode(phoneVerification.verificationId, phoneVerification.code)
       if (response.success) {
         alert(response.data?.message || '전화번호 인증이 완료되었습니다.')
         setPhoneVerification({ phone: '', verificationId: '', code: '', step: 'input' })
@@ -81,21 +81,21 @@ export default function VerificationSection({ onVerificationChange }: Verificati
       } else {
         alert(response.error || '인증번호가 올바르지 않습니다.')
       }
-    } catch (error) {
+    } catch {
       alert('인증 확인 중 오류가 발생했습니다.')
     }
   }
 
   const handleEmailRequest = async () => {
     try {
-      const response = await api.requestEmailVerification()
+      const response = await verificationApi.requestEmailVerification()
       if (response.success) {
         alert(response.data?.message || '인증 이메일이 발송되었습니다.')
         await loadVerificationStatus()
       } else {
         alert(response.error || '이메일 인증 요청에 실패했습니다.')
       }
-    } catch (error) {
+    } catch {
       alert('이메일 인증 요청 중 오류가 발생했습니다.')
     }
   }
@@ -128,7 +128,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
 
     try {
       const documents = await handleFileUpload(documentFiles)
-      const response = await api.requestIdentityVerification(documents)
+      const response = await verificationApi.requestIdentityVerification(documents)
       if (response.success) {
         alert(response.data?.message || '신분증 인증 요청이 제출되었습니다.')
         setDocumentFiles([])
@@ -137,7 +137,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
       } else {
         alert(response.error || '신분증 인증 요청에 실패했습니다.')
       }
-    } catch (error) {
+    } catch {
       alert('신분증 인증 요청 중 오류가 발생했습니다.')
     }
   }
@@ -150,7 +150,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
 
     try {
       const documents = await handleFileUpload(addressData.files)
-      const response = await api.requestAddressVerification(addressData.address, documents)
+      const response = await verificationApi.requestAddressVerification(addressData.address, documents)
       if (response.success) {
         alert(response.data?.message || '주소 인증 요청이 제출되었습니다.')
         setAddressData({ address: '', files: [] })
@@ -159,7 +159,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
       } else {
         alert(response.error || '주소 인증 요청에 실패했습니다.')
       }
-    } catch (error) {
+    } catch {
       alert('주소 인증 요청 중 오류가 발생했습니다.')
     }
   }

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import mongoose from 'mongoose';
 import Notification from '../models/Notification';
 import { AuthRequest } from '../middleware/auth';
@@ -15,7 +15,7 @@ export const getUserNotifications = async (req: AuthRequest, res: Response) => {
     const limitNum = parseInt(limit as string);
     const skip = (parseInt(page as string) - 1) * limitNum;
 
-    let query: any = { userId: user._id };
+    const query: Record<string, unknown> = { userId: user._id };
     
     if (unreadOnly === 'true') {
       query.isRead = false;

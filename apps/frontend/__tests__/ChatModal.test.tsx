@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ChatModal from '../app/components/ChatModal';
 import { chatApi } from '../app/lib/api';
@@ -60,7 +60,7 @@ const mockChatResponse = {
 describe('ChatModal Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedChatApi.getChatByErrand.mockResolvedValue(mockChatResponse as any);
+    mockedChatApi.getChatByErrand.mockResolvedValue(mockChatResponse);
   });
 
   it('should render loading state initially', async () => {
@@ -84,7 +84,8 @@ describe('ChatModal Component', () => {
     mockedChatApi.getChatByErrand.mockResolvedValue({
       success: false,
       error: '채팅을 불러올 수 없습니다.',
-    } as any);
+      data: null
+    });
 
     render(<ChatModal {...mockProps} />);
 
@@ -115,7 +116,7 @@ describe('ChatModal Component', () => {
       },
     };
 
-    mockedChatApi.sendMessage.mockResolvedValue(sendMessageResponse as any);
+    mockedChatApi.sendMessage.mockResolvedValue(sendMessageResponse);
 
     render(<ChatModal {...mockProps} />);
 
@@ -145,7 +146,7 @@ describe('ChatModal Component', () => {
           _id: undefined, // No chat ID
         },
       },
-    } as any);
+    });
 
     render(<ChatModal {...mockProps} />);
 
@@ -181,7 +182,7 @@ describe('ChatModal Component', () => {
           messages: [],
         },
       },
-    } as any);
+    });
 
     render(<ChatModal {...mockProps} />);
 

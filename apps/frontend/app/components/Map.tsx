@@ -56,22 +56,7 @@ export default function MapComponent({
   const [showSearchButton, setShowSearchButton] = useState(false)
   const [pendingSearchLocation, setPendingSearchLocation] = useState<{ center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } } } | null>(null)
 
-  // 두 지점 간의 거리 계산 (km)
-  const getDistance = (pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }) => {
-    const R = 6371 // 지구 반지름 (km)
-    const dLat = deg2rad(pos2.lat - pos1.lat)
-    const dLon = deg2rad(pos2.lng - pos1.lng)
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(deg2rad(pos1.lat)) * Math.cos(deg2rad(pos2.lat)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-    return R * c
-  }
 
-  const deg2rad = (deg: number) => {
-    return deg * (Math.PI/180)
-  }
 
 
   // 단순한 수동 검색 핸들러
@@ -158,7 +143,7 @@ export default function MapComponent({
       setClusters([])
       setUnclusteredErrands(errands)
     }
-  }, [errands, currentZoom])
+  }, [errands, currentZoom, clusterImages])
 
   // 외부에서 선택된 심부름 처리 (맥동 애니메이션 적용)
   useEffect(() => {

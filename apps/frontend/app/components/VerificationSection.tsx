@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { chatApi, verificationApi } from '../lib/api'
+import { verificationApi } from '../lib/api'
 import { VerificationStatus, Verification } from '../lib/types'
 
 interface VerificationSectionProps {

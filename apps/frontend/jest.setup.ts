@@ -49,11 +49,16 @@ Object.defineProperty(window, 'matchMedia', {
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  readonly root: Element | null = null
+  readonly rootMargin: string = ''
+  readonly thresholds: ReadonlyArray<number> = []
+
   constructor() {}
   observe() { return null }
   disconnect() { return null }
   unobserve() { return null }
-}
+  takeRecords(): IntersectionObserverEntry[] { return [] }
+} as any
 
 // Mock scrollIntoView for ChatModal tests
 Element.prototype.scrollIntoView = jest.fn()

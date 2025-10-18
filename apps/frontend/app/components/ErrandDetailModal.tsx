@@ -23,19 +23,11 @@ export default function ErrandDetailModal({
 }: ErrandDetailModalProps) {
   const [isAccepting, setIsAccepting] = useState(false)
 
-  console.log('🎭 ErrandDetailModal 렌더링:', { 
-    isOpen, 
-    errand: errand?.title, 
-    currentUser: currentUser?.name 
-  })
-
   if (!isOpen) {
-    console.log('❌ 모달이 닫힌 상태 (isOpen:', isOpen, ')')
     return null
   }
   
   if (!errand) {
-    console.log('❌ errand 데이터가 없음')
     return null
   }
   

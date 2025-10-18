@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 interface LandingPageProps {
   onGetStarted: () => void
 }

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { errandApi } from '../lib/api'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { getDefaultProfileImage } from '../lib/imageUtils'
-import type { User, ErrandLocation, ErrandStatus } from '../lib/types'
+import type { User, ErrandLocation, ErrandStatus, Errand } from '../lib/types'
 import ChatModal from './ChatModal'
 import CompletedErrandView from './CompletedErrandView'
 
@@ -16,7 +16,7 @@ interface MyErrandHistoryProps {
 interface MyErrand extends ErrandLocation {
   createdBy?: string
   acceptedByUser?: {
-    _id: string
+    id: string
     name: string
     profileImage?: string
   } | null
@@ -32,45 +32,45 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   const [selectedCompletedErrandId, setSelectedCompletedErrandId] = useState<string>('')
 
   // API 응답 데이터를 MyErrand로 변환
-  const convertApiErrandToMyErrand = useCallback((apiErrand: {
-    _id?: string;
-    id?: string;
-    title: string;
-    description: string;
-    location: { coordinates: [number, number] };
-    reward: number;
-    status: string;
-    category: string;
-    deadline?: string | Date;
-    createdAt?: string | Date;
-    acceptedBy?: { _id: string; name: string; profileImage?: string; avatar?: string };
-    requestedBy?: { _id: string };
-  }): MyErrand => {
-    console.log('🔄 변환할 API 심부름 데이터:', apiErrand)
-    
-    // MongoDB 스키마에서 오는 데이터 구조에 맞게 변환
-    const result = {
-      id: apiErrand._id || apiErrand.id || 'unknown',
-      title: apiErrand.title,
-      description: apiErrand.description,
-      lat: apiErrand.location.coordinates[1], // latitude
-      lng: apiErrand.location.coordinates[0], // longitude
-      reward: apiErrand.reward,
-      status: apiErrand.status as ErrandStatus,
-      category: apiErrand.category,
-      deadline: typeof apiErrand.deadline === 'string' ? apiErrand.deadline : 
-                (apiErrand.deadline ? new Date(apiErrand.deadline).toISOString() : new Date().toISOString()),
-      createdAt: typeof apiErrand.createdAt === 'string' ? apiErrand.createdAt : 
-                (apiErrand.createdAt ? new Date(apiErrand.createdAt).toISOString() : new Date().toISOString()),
-      createdBy: typeof apiErrand.requestedBy === 'string' ? apiErrand.requestedBy : apiErrand.requestedBy?._id,
-      acceptedBy: typeof apiErrand.acceptedBy === 'string' ? apiErrand.acceptedBy : apiErrand.acceptedBy?._id,
-      acceptedByUser: apiErrand.acceptedBy && typeof apiErrand.acceptedBy === 'object' ? {
-        _id: apiErrand.acceptedBy._id,
-        name: apiErrand.acceptedBy.name,
-        profileImage: apiErrand.acceptedBy.avatar
+  const convertErrandToMyErrand = useCallback((errand: Errand): MyErrand => {
+    console.log('🔄 변환할 심부름 데이터:', errand)
+
+    // deadline 변환: Date | undefined -> string
+    const deadlineStr = errand.deadline
+      ? (errand.deadline instanceof Date ? errand.deadline.toISOString() : String(errand.deadline))
+      : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 기본값: 24시간 후
+
+    // createdAt 변환: Date -> string
+    const createdAtStr = errand.createdAt instanceof Date
+      ? errand.createdAt.toISOString()
+      : String(errand.createdAt)
+
+    // requestedBy 변환: string | User -> string
+    const createdByStr = typeof errand.requestedBy === 'string'
+      ? errand.requestedBy
+      : errand.requestedBy.id
+
+    // Errand 타입을 MyErrand로 변환
+    const result: MyErrand = {
+      id: errand.id,
+      title: errand.title,
+      description: errand.description,
+      lat: errand.location.coordinates[1], // latitude
+      lng: errand.location.coordinates[0], // longitude
+      reward: errand.reward,
+      status: errand.status,
+      category: errand.category,
+      deadline: deadlineStr,
+      createdAt: createdAtStr,
+      createdBy: createdByStr,
+      acceptedBy: typeof errand.acceptedBy === 'string' ? errand.acceptedBy : errand.acceptedBy?.id,
+      acceptedByUser: errand.acceptedBy && typeof errand.acceptedBy === 'object' ? {
+        id: errand.acceptedBy.id,
+        name: errand.acceptedBy.name,
+        profileImage: errand.acceptedBy.avatar
       } : null
     }
-    
+
     console.log('✅ 변환된 심부름:', result)
     return result
   }, [])
@@ -87,7 +87,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       if (response.success && response.data) {
         console.log('📦 원시 API 데이터:', response.data.errands)
         
-        const convertedErrands = response.data.errands.map((errand: Record<string, unknown>) => convertApiErrandToMyErrand(errand as Parameters<typeof convertApiErrandToMyErrand>[0]))
+        const convertedErrands = response.data.errands.map((errand: Errand) => convertErrandToMyErrand(errand))
         setMyErrands(convertedErrands)
         console.log(`✅ 내가 등록한 심부름 ${convertedErrands.length}개 조회됨:`, convertedErrands)
       } else {
@@ -100,7 +100,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
     }
     
     setIsLoading(false)
-  }, [convertApiErrandToMyErrand])
+  }, [convertErrandToMyErrand])
 
   useEffect(() => {
     if (user) {
@@ -385,7 +385,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
           isOpen={showChat}
           onClose={() => setShowChat(false)}
           errandTitle={selectedErrandForChat.title}
-          errandId={String(selectedErrandForChat._id)}
+          errandId={selectedErrandForChat.id}
           currentUserId={user.id}
         />
       )}

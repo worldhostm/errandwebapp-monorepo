@@ -17,11 +17,13 @@ interface ErrandFormProps {
 }
 
 const categories = [
-  '배달/픽업',
-  '쇼핑/구매',
-  '청소/정리',
-  '이사/운반',
-  '기타'
+  { name: '배달/픽업', emoji: '🚚', description: '음식, 물건 배달 및 픽업' },
+  { name: '쇼핑/구매', emoji: '🛒', description: '장보기, 물건 구매 대행' },
+  { name: '청소/정리', emoji: '🧹', description: '집안일, 청소, 정리정돈' },
+  { name: '이사/운반', emoji: '📦', description: '짐 옮기기, 이사 도움' },
+  { name: '반려동물', emoji: '🐕', description: '산책, 돌봄 서비스' },
+  { name: '심부름', emoji: '🏃', description: '각종 심부름 대행' },
+  { name: '기타', emoji: '✨', description: '그 외 다양한 요청' }
 ]
 
 export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
@@ -36,7 +38,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
     lat: null,
     lng: null,
     deadline: new Date(Date.now() + 9 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString().slice(0, 16), // 한국 시간(UTC+9) + 2시간
-    category: categories[0],
+    category: categories[0].name,
     address: ''
   })
   
@@ -429,19 +431,31 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   <h3 className="text-xl font-semibold mb-2 text-black">카테고리를 선택해주세요</h3>
                   <p className="text-black text-sm">어떤 종류의 심부름인지 선택해주세요</p>
                 </div>
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {categories.map(category => (
                     <button
-                      key={category}
+                      key={category.name}
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, category }))}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        formData.category === category
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-black hover:border-black text-black'
+                      onClick={() => setFormData(prev => ({ ...prev, category: category.name }))}
+                      className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-3 ${
+                        formData.category === category.name
+                          ? 'border-blue-500 bg-blue-50 shadow-lg scale-105'
+                          : 'border-gray-300 hover:border-blue-400 hover:shadow-md'
                       }`}
                     >
-                      <span className="text-lg">{category}</span>
+                      <div className="text-5xl">{category.emoji}</div>
+                      <div className="text-center">
+                        <div className={`font-semibold text-base ${
+                          formData.category === category.name ? 'text-blue-700' : 'text-gray-900'
+                        }`}>
+                          {category.name}
+                        </div>
+                        <div className={`text-xs mt-1 ${
+                          formData.category === category.name ? 'text-blue-600' : 'text-gray-500'
+                        }`}>
+                          {category.description}
+                        </div>
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -612,7 +626,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
               <button
                 type="button"
                 onClick={prevStep}
-                className="flex-1 py-3 px-6 border border-black text-black rounded-lg hover:bg-black transition-colors"
+                className="flex-1 py-3 px-6 border border-black text-black rounded-lg hover:bg-black hover:text-white transition-colors"
               >
                 이전
               </button>
@@ -625,7 +639,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                   canProceedToNext()
                     ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-black text-black cursor-not-allowed'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
                 다음
@@ -638,7 +652,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                   canProceedToNext()
                     ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-black text-black cursor-not-allowed'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
                 심부름 등록하기
@@ -674,7 +688,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   setLocationPermissionDenied(true)
                   setUserLocation({ lat: 37.5665, lng: 126.9780 })
                 }}
-                className="flex-1 bg-black text-black px-4 py-2 rounded hover:bg-black"
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
               >
                 거부
               </button>

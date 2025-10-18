@@ -307,7 +307,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                     />
                     <label
                       htmlFor="profile-image"
-                      className={`cursor-pointer px-6 py-3 border border-black rounded-lg hover:bg-black text-sm text-black ${
+                      className={`cursor-pointer px-6 py-3 border border-black rounded-lg hover:bg-black hover:text-white text-sm text-black transition-colors ${
                         imageUploading ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
@@ -326,7 +326,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="flex-1 py-3 px-6 border border-black text-black rounded-lg hover:bg-black transition-colors"
+                  className="flex-1 py-3 px-6 border border-black text-black rounded-lg hover:bg-black hover:text-white transition-colors"
                 >
                   이전
                 </button>
@@ -339,7 +339,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                   className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                     canProceedToNext()
                       ? 'bg-blue-500 text-white hover:bg-blue-600'
-                      : 'bg-black text-black cursor-not-allowed'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   }`}
                 >
                   다음
@@ -375,11 +375,11 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
               또는 소셜 계정으로 로그인
             </p>
             <div className="space-y-2">
-              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black flex items-center justify-center gap-2 text-black">
+              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black hover:text-white flex items-center justify-center gap-2 text-black transition-colors">
                 <span>🟢</span>
                 네이버로 로그인
               </button>
-              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black flex items-center justify-center gap-2 text-black">
+              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black hover:text-white flex items-center justify-center gap-2 text-black transition-colors">
                 <span>🟡</span>
                 카카오로 로그인
               </button>

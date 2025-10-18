@@ -13,6 +13,7 @@ import UserTypeTabs, { UserType } from './components/UserTypeTabs'
 import MyErrandHistory from './components/MyErrandHistory'
 import MyAcceptedErrands from './components/MyAcceptedErrands'
 import NotificationModal from './components/NotificationModal'
+import LandingPage from './components/LandingPage'
 import JsonLd, { organizationSchema, serviceSchema, webApplicationSchema } from '../components/JsonLd'
 import { getDefaultProfileImage } from './lib/imageUtils'
 import { processErrands } from './lib/mapUtils'
@@ -759,33 +760,12 @@ export default function Home() {
         />
       )}
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {!user ? (
-          // 로그인하지 않은 사용자용 기본 콘텐츠
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              부름이에 오신 것을 환영합니다
-            </h2>
-            <p className="text-gray-600 mb-8">
-              로그인하여 주변 심부름을 찾고 부수입을 얻어보세요
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-lg"
-              >
-                시작하기
-              </button>
-              <Link 
-                href="/guide"
-                className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 text-lg"
-              >
-                <span>📖</span>
-                <span>사용법 알아보기</span>
-              </Link>
-            </div>
-          </div>
-        ) : activeTab === 'receiver' ? (
+      {!user ? (
+        // 로그인하지 않은 사용자용 랜딩 페이지
+        <LandingPage onGetStarted={() => setShowAuthModal(true)} />
+      ) : (
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'receiver' ? (
           // 심부름 받는 사람 탭 (기존 메인 콘텐츠)
           <>
             <div className="mb-6">
@@ -1098,7 +1078,8 @@ export default function Home() {
           // 심부름 시키는 사람 탭 (내 심부름 이력)
           <MyErrandHistory key={`requester-${activeTab}`} user={user} />
         )}
-      </main>
+        </main>
+      )}
 
       <AuthModal
         isOpen={showAuthModal}

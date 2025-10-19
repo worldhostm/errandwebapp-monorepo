@@ -1,0 +1,1092 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\csm\\workspace\\errandwebapp\\playwright.config.ts",
+    "rootDir": "C:/Users/csm/workspace/errandwebapp/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/csm/workspace/errandwebapp/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/csm/workspace/errandwebapp/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev --workspace=apps/frontend",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "ignore",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "auth.spec.ts",
+      "file": "auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication",
+          "file": "auth.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "AUTH-01: 랜딩 페이지 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-ab5564c67840397bfc5a",
+              "file": "auth.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "AUTH-02: 로그인 모달 열기",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-ba4098ad8cfc690470b2",
+              "file": "auth.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "AUTH-03: 회원가입 탭 전환",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-4f7db585a4d139d8b284",
+              "file": "auth.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "AUTH-04: 빈 필드로 로그인 시도 (클라이언트 검증)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-5f6261b64bf390c032ea",
+              "file": "auth.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "AUTH-05: 테스트 로그인 페이지 접근",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-48d6d44c7d54b8e142d0",
+              "file": "auth.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "AUTH-06: 정상 로그인 플로우 (실제 API)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-facd1ff8c9cad51567f2",
+              "file": "auth.spec.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "AUTH-07: 로그아웃",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-9d0c3e87eb773f063fd5",
+              "file": "auth.spec.ts",
+              "line": 84,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "errand-form.spec.ts",
+      "file": "errand-form.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Errand Registration Form",
+          "file": "errand-form.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ERR-01: 심부름 등록 버튼 클릭",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-0410fcfc1df851cf6ebd",
+              "file": "errand-form.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "ERR-02: 폼 필드 표시 확인",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-486e5299dc3c8228b3cf",
+              "file": "errand-form.spec.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "ERR-03: 카테고리 선택",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-8f779d212a4caf3de5b6",
+              "file": "errand-form.spec.ts",
+              "line": 45,
+              "column": 7
+            },
+            {
+              "title": "ERR-04: 필수 필드 없이 제출 시도",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-7ba76a974a6e4f98601e",
+              "file": "errand-form.spec.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "ERR-05: 보상금 입력",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-8e0df70757f5ba46a4f6",
+              "file": "errand-form.spec.ts",
+              "line": 87,
+              "column": 7
+            },
+            {
+              "title": "ERR-06: 마감 시간 설정",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-cff8b844c53df45e6f2f",
+              "file": "errand-form.spec.ts",
+              "line": 100,
+              "column": 7
+            },
+            {
+              "title": "ERR-07: 폼 취소",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-23c590c9e1572024476b",
+              "file": "errand-form.spec.ts",
+              "line": 119,
+              "column": 7
+            },
+            {
+              "title": "ERR-08: 지도에서 위치 선택 UI 확인",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-27fbef107d24e02411f4",
+              "file": "errand-form.spec.ts",
+              "line": 134,
+              "column": 7
+            },
+            {
+              "title": "ERR-09: 주소 검색 기능",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-537473cc7239ed14230b",
+              "file": "errand-form.spec.ts",
+              "line": 152,
+              "column": 7
+            },
+            {
+              "title": "ERR-10: 완전한 심부름 등록 플로우",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-0b1481566e7cfefc1efe",
+              "file": "errand-form.spec.ts",
+              "line": 174,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "errand-list.spec.ts",
+      "file": "errand-list.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Errand List",
+          "file": "errand-list.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ERR-08: 주변 심부름 목록 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-32d0f51d7200ce9ff047",
+              "file": "errand-list.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "ERR-09: 심부름 개수 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-4d35aeaa72dbc548b35d",
+              "file": "errand-list.spec.ts",
+              "line": 30,
+              "column": 7
+            },
+            {
+              "title": "ERR-10: 심부름 카드 기본 정보 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-845d5adbd76cc8843146",
+              "file": "errand-list.spec.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "ERR-11: 새로고침 버튼 작동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-7c5cfe1afeb519bcf0c7",
+              "file": "errand-list.spec.ts",
+              "line": 59,
+              "column": 7
+            },
+            {
+              "title": "ERR-12: 사용자 탭 전환",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-bab85898c231a0c22b79",
+              "file": "errand-list.spec.ts",
+              "line": 77,
+              "column": 7
+            },
+            {
+              "title": "ERR-13: 심부름 카드 클릭 시 지도 이동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-d392e1dc13a45c7ec0aa",
+              "file": "errand-list.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "ERR-14: 현재 위치로 버튼",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-ec18eb6cd76f0e425988",
+              "file": "errand-list.spec.ts",
+              "line": 123,
+              "column": 7
+            },
+            {
+              "title": "ERR-15: 카테고리 아이콘 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-1a21d1ac44c33c16e4bf",
+              "file": "errand-list.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "ERR-16: 심부름 상태 배지 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9b819c0838c415745295-706b1d0af923499d0e48",
+              "file": "errand-list.spec.ts",
+              "line": 162,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "map.spec.ts",
+      "file": "map.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Map and Location",
+          "file": "map.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "MAP-01: 지도 컨테이너 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-2adc09ed146ca1e39464",
+              "file": "map.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "MAP-02: 지도 로드 확인",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-ba42ace1e6368d62fdb4",
+              "file": "map.spec.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "MAP-03: 현재 위치로 버튼",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-c1745193033e87bf5f6f",
+              "file": "map.spec.ts",
+              "line": 39,
+              "column": 7
+            },
+            {
+              "title": "MAP-04: 지도 줌 컨트롤",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-6ac22543fd538ec307f4",
+              "file": "map.spec.ts",
+              "line": 56,
+              "column": 7
+            },
+            {
+              "title": "MAP-05: 심부름 마커 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-3bb4b6ff1ebfe346e47a",
+              "file": "map.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "MAP-06: 테스트 마커 기능 (test-user)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-b03208408c8c73e2007c",
+              "file": "map.spec.ts",
+              "line": 85,
+              "column": 7
+            },
+            {
+              "title": "MAP-07: 예시 위치 버튼 (test-user)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-1bb497bc700cd54badce",
+              "file": "map.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "MAP-08: 잘못된 좌표 입력 검증",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-1b3f257de9dab37f75d5",
+              "file": "map.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "MAP-09: 지도 이동 시 심부름 조회",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2d8799038d2916f69765-43efcc5cbad719c2ab3e",
+              "file": "map.spec.ts",
+              "line": 152,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "navigation.spec.ts",
+      "file": "navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Navigation and UI",
+          "file": "navigation.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "NAV-01: 홈페이지 로드",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-8c8519202c0d95dbce55",
+              "file": "navigation.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "NAV-02: 헤더 요소 확인",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-3dfe7793b9b6947c59fc",
+              "file": "navigation.spec.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "NAV-03: 사용 가이드 페이지 이동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-8c8c24a4e89a26efe3da",
+              "file": "navigation.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "NAV-04: 로고 클릭 시 홈으로 이동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-466627b2b1bf708308bc",
+              "file": "navigation.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "NAV-05: 반응형 레이아웃 - 모바일",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-7e7f1440db6c4382f39c",
+              "file": "navigation.spec.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "NAV-06: 반응형 레이아웃 - 태블릿",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-a6c6852c1fafb8207262",
+              "file": "navigation.spec.ts",
+              "line": 53,
+              "column": 7
+            },
+            {
+              "title": "NAV-07: 다크모드 지원 여부",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-d6db57762bfd1dc15417",
+              "file": "navigation.spec.ts",
+              "line": 61,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Logged In Navigation",
+          "file": "navigation.spec.ts",
+          "line": 75,
+          "column": 6,
+          "specs": [
+            {
+              "title": "NAV-08: 로그인 후 헤더 요소",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-416c9f27ff3bc1bc88fe",
+              "file": "navigation.spec.ts",
+              "line": 86,
+              "column": 7
+            },
+            {
+              "title": "NAV-09: 프로필 클릭",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-f119d60bd5941cfeda04",
+              "file": "navigation.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "NAV-10: 알림 벨 클릭",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-5437d13a97f1972145be",
+              "file": "navigation.spec.ts",
+              "line": 115,
+              "column": 7
+            },
+            {
+              "title": "NAV-11: 탭 전환",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-50b02285ab4fc304064e",
+              "file": "navigation.spec.ts",
+              "line": 128,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-10-19T05:10:06.806Z",
+    "duration": 207.30299999999988,
+    "expected": 0,
+    "skipped": 46,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

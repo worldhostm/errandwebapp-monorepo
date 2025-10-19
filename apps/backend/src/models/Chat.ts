@@ -46,8 +46,8 @@ const ChatSchema = new Schema<IChat>({
   errand: {
     type: Schema.Types.ObjectId,
     ref: 'Errand',
-    required: true,
-    unique: true
+    required: true
+    // unique 제거: 한 심부름에 여러 1:1 채팅방 가능
   },
   participants: [{
     type: Schema.Types.ObjectId,
@@ -64,5 +64,7 @@ const ChatSchema = new Schema<IChat>({
 ChatSchema.index({ errand: 1 });
 ChatSchema.index({ participants: 1 });
 ChatSchema.index({ 'messages.timestamp': -1 });
+// 복합 인덱스: 특정 심부름의 특정 참여자 조합 찾기 (한 쌍당 하나의 채팅방)
+ChatSchema.index({ errand: 1, participants: 1 }, { unique: true });
 
 export default mongoose.model<IChat>('Chat', ChatSchema);

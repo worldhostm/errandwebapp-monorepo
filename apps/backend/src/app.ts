@@ -8,6 +8,8 @@ import chatRoutes from './routes/chat';
 import notificationRoutes from './routes/notifications';
 import paymentRoutes from './routes/payments';
 import verificationRoutes from './routes/verification';
+import supportRoutes from './routes/support';
+import reportRoutes from './routes/report';
 import { errorHandler } from './middleware/errorHandler';
 
 const createApp = () => {
@@ -41,6 +43,8 @@ const createApp = () => {
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/payments', paymentRoutes);
   app.use('/api/verification', verificationRoutes);
+  app.use('/api/support', supportRoutes);
+  app.use('/api/report', reportRoutes);
 
   // 404 handler
   app.use('*', (req, res) => {

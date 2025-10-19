@@ -404,3 +404,183 @@ export const verificationApi = {
     }>('/verification/status')
   }
 }
+
+// 고객센터 관련 API
+export const supportApi = {
+  // 문의 생성
+  async createSupport(supportData: {
+    type: 'inquiry' | 'report' | 'bug' | 'feature' | 'other'
+    subject: string
+    description: string
+    attachments?: string[]
+    relatedErrand?: string
+  }) {
+    return apiRequest<{
+      support: {
+        id: string
+        type: string
+        subject: string
+        description: string
+        status: string
+        createdAt: string
+      }
+    }>('/support', {
+      method: 'POST',
+      body: JSON.stringify(supportData)
+    })
+  },
+
+  // 내 문의 목록 조회
+  async getMySupportTickets(status?: string, page?: number, limit?: number) {
+    const params = new URLSearchParams({
+      ...(status && { status }),
+      ...(page && { page: page.toString() }),
+      ...(limit && { limit: limit.toString() })
+    })
+    return apiRequest<{
+      supports: Array<{
+        id: string
+        type: string
+        subject: string
+        description: string
+        status: string
+        priority: string
+        createdAt: string
+        relatedErrand?: { id: string; title: string; status: string }
+        responses: Array<{
+          content: string
+          isAdmin: boolean
+          createdAt: string
+        }>
+      }>
+      pagination: {
+        page: number
+        limit: number
+        total: number
+        pages: number
+      }
+    }>(`/support?${params}`)
+  },
+
+  // 특정 문의 조회
+  async getSupportById(id: string) {
+    return apiRequest<{
+      support: {
+        id: string
+        type: string
+        subject: string
+        description: string
+        status: string
+        priority: string
+        createdAt: string
+        relatedErrand?: { id: string; title: string; status: string }
+        responses: Array<{
+          id: string
+          content: string
+          isAdmin: boolean
+          createdBy: { name: string; email: string }
+          createdAt: string
+        }>
+      }
+    }>(`/support/${id}`)
+  },
+
+  // 문의에 답변 추가
+  async addSupportResponse(id: string, content: string) {
+    return apiRequest<{
+      support: {
+        id: string
+        responses: Array<{
+          content: string
+          isAdmin: boolean
+          createdAt: string
+        }>
+      }
+    }>(`/support/${id}/response`, {
+      method: 'POST',
+      body: JSON.stringify({ content })
+    })
+  },
+
+  // 문의 삭제
+  async deleteSupport(id: string) {
+    return apiRequest<{ message: string }>(`/support/${id}`, {
+      method: 'DELETE'
+    })
+  }
+}
+
+// 신고 관련 API
+export const reportApi = {
+  // 신고 생성
+  async createReport(reportData: {
+    reason: 'inappropriate' | 'scam' | 'spam' | 'harassment' | 'other'
+    description: string
+    reportedUser?: string
+    reportedErrand?: string
+    evidence?: string[]
+  }) {
+    return apiRequest<{
+      report: {
+        id: string
+        reason: string
+        description: string
+        status: string
+        createdAt: string
+      }
+    }>('/report', {
+      method: 'POST',
+      body: JSON.stringify(reportData)
+    })
+  },
+
+  // 내 신고 목록 조회
+  async getMyReports(status?: string, page?: number, limit?: number) {
+    const params = new URLSearchParams({
+      ...(status && { status }),
+      ...(page && { page: page.toString() }),
+      ...(limit && { limit: limit.toString() })
+    })
+    return apiRequest<{
+      reports: Array<{
+        id: string
+        reason: string
+        description: string
+        status: string
+        createdAt: string
+        reportedUser?: { id: string; name: string }
+        reportedErrand?: { id: string; title: string }
+      }>
+      pagination: {
+        page: number
+        limit: number
+        total: number
+        pages: number
+      }
+    }>(`/report?${params}`)
+  },
+
+  // 특정 신고 조회
+  async getReportById(id: string) {
+    return apiRequest<{
+      report: {
+        id: string
+        reason: string
+        description: string
+        status: string
+        evidence?: string[]
+        adminNotes?: string
+        createdAt: string
+        reportedUser?: { id: string; name: string }
+        reportedErrand?: { id: string; title: string }
+      }
+    }>(`/report/${id}`)
+  },
+
+  // 신고 취소
+  async deleteReport(id: string) {
+    return apiRequest<{ message: string }>(`/report/${id}`, {
+      method: 'DELETE'
+    })
+  }
+}

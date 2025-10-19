@@ -12,85 +12,74 @@ export const getChatByErrand = async (req: AuthRequest, res: Response) => {
     }
 
     const { errandId } = req.params;
-    
+
     // Check if user is part of the errand
     const errand = await Errand.findById(errandId);
     if (!errand) {
       return res.status(404).json({ error: 'Errand not found' });
     }
 
-    const isRequester = errand.requestedBy.toString() === (user._id as mongoose.Types.ObjectId).toString();
-    const isAcceptor = errand.acceptedBy && errand.acceptedBy.toString() === (user._id as mongoose.Types.ObjectId).toString();
-    
-    // 심부름 요청자는 항상 접근 가능
-    // 다른 사용자는 심부름이 pending 상태이거나 자신이 수락한 경우에만 접근 가능
-    const canAccess = isRequester || 
-                     (errand.status === 'pending') || 
+    const userId = (user._id as mongoose.Types.ObjectId).toString();
+    const requesterId = errand.requestedBy.toString();
+    const isRequester = requesterId === userId;
+    const isAcceptor = errand.acceptedBy && errand.acceptedBy.toString() === userId;
+
+    // 요청자가 자신의 심부름에 채팅 시도하는 경우 차단
+    if (isRequester && !errand.acceptedBy) {
+      return res.status(403).json({
+        error: '자신이 등록한 심부름에는 채팅을 시작할 수 없습니다. 다른 사용자가 채팅을 시작하면 대화할 수 있습니다.'
+      });
+    }
+
+    // 심부름 요청자 또는 관련 사용자만 접근 가능
+    const canAccess = isRequester ||
+                     (errand.status === 'pending') ||
                      (isAcceptor);
-    
+
     if (!canAccess) {
       return res.status(403).json({ error: 'Not authorized to access this chat' });
     }
 
-    let chat = await Chat.findOne({ errand: errandId })
+    // 1:1 채팅방 찾기: 요청자와 현재 사용자 간의 채팅
+    // participants 배열이 정확히 두 명이고, 그 두 명이 requester와 현재 사용자인 채팅방
+    const participants = isRequester
+      ? [errand.requestedBy, errand.acceptedBy || user._id]  // 요청자가 보는 경우
+      : [errand.requestedBy, user._id];  // helper가 보는 경우
+
+    // participants 배열의 순서와 관계없이 찾기
+    let chat = await Chat.findOne({
+      errand: errandId,
+      participants: { $all: participants, $size: 2 }
+    })
       .populate('participants', 'name email avatar')
       .populate('messages.sender', 'name email avatar');
 
-    // 채팅방이 없으면 새로 생성
+    // 채팅방이 없으면 새로 생성 (helper만 생성 가능)
     if (!chat) {
-      const participants = [errand.requestedBy];
-      
-      // 현재 사용자가 요청자가 아니면 참여자로 추가
-      if (!isRequester) {
-        participants.push(user._id as mongoose.Types.ObjectId);
-      }
-      
-      // 수락자가 있고, 요청자나 현재 사용자와 다르면 추가
-      if (errand.acceptedBy && 
-          errand.acceptedBy.toString() !== errand.requestedBy.toString() &&
-          errand.acceptedBy.toString() !== (user._id as mongoose.Types.ObjectId).toString()) {
-        participants.push(errand.acceptedBy);
+      if (isRequester) {
+        // 요청자는 채팅방을 만들 수 없음 (다른 사람이 먼저 채팅을 시작해야 함)
+        return res.status(403).json({
+          error: '채팅방이 아직 생성되지 않았습니다. 다른 사용자가 먼저 채팅을 시작해야 합니다.'
+        });
       }
 
-      console.log('Creating chat with participants:', participants.map(p => p.toString()));
-      console.log('Current user:', (user._id as mongoose.Types.ObjectId).toString());
-      console.log('Is requester:', isRequester);
-
+      // Helper가 채팅 시작
+      console.log('Creating chat with participants:', participants.map((p: any) => p.toString()));
+      console.log('Current user:', userId);
 
       chat = new Chat({
         errand: errandId,
         participants,
         messages: []
       });
-      
+
       await chat.save();
-      
+
       // 다시 populate해서 가져오기
       chat = await Chat.findById(chat._id)
         .populate('participants', 'name email avatar')
         .populate('messages.sender', 'name email avatar');
-    } else {
-      // 기존 채팅방이 있지만 현재 사용자가 참여자가 아닌 경우 추가
-      const currentUserInChat = chat.participants.some(p => 
-        p._id?.toString() === (user._id as mongoose.Types.ObjectId).toString()
-      );
-      
-      console.log('Existing chat - Current user in chat:', currentUserInChat);
-      
-      if (!currentUserInChat) {
-        console.log('Adding current user to existing chat');
-        await Chat.updateOne(
-          { _id: chat._id },
-          { $addToSet: { participants: user._id } }
-        );
-        
-        // 다시 로드
-        chat = await Chat.findById(chat._id)
-          .populate('participants', 'name email avatar')
-          .populate('messages.sender', 'name email avatar');
-      }
     }
-
 
     res.json({
       success: true,

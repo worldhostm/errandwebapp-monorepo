@@ -13,6 +13,7 @@ import UserTypeTabs, { UserType } from './components/UserTypeTabs'
 import MyErrandHistory from './components/MyErrandHistory'
 import MyAcceptedErrands from './components/MyAcceptedErrands'
 import NotificationModal from './components/NotificationModal'
+import SupportModal from './components/SupportModal'
 import LandingPage from './components/LandingPage'
 import JsonLd, { organizationSchema, serviceSchema, webApplicationSchema } from '../components/JsonLd'
 import { getDefaultProfileImage } from './lib/imageUtils'
@@ -38,6 +39,9 @@ export default function Home() {
   const [showNotificationModal, setShowNotificationModal] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
+
+  // 고객센터 관련 상태
+  const [showSupportModal, setShowSupportModal] = useState(false)
   
   // 로그인 상태 확인
   useEffect(() => {
@@ -188,9 +192,15 @@ export default function Home() {
       if (response.success && response.data) {
         const apiErrands = response.data.errands.map((errand) => convertErrandToErrandLocation(errand as unknown as Record<string, unknown>))
         console.log(`📍 ${description} 조회 결과:`, apiErrands.length, '개', apiErrands)
-        
+
+        // 자신이 등록한 심부름 제외
+        const filteredByUser = user
+          ? apiErrands.filter(errand => errand.requestedBy?.id !== user.id)
+          : apiErrands
+        console.log(`👤 자신의 심부름 제외 후:`, filteredByUser.length, '개')
+
         // 거리별로 정렬 (반경 제한 없이)
-        const processed = processErrands(apiErrands, lat, lng, 1000) // 충분히 큰 값으로 설정
+        const processed = processErrands(filteredByUser, lat, lng, 1000) // 충분히 큰 값으로 설정
         console.log(`🔄 processErrands 결과:`, processed.length, '개', processed)
                     
         // bounds 기반 필터링 (API 서버 필터링이 실패했을 경우를 위한 이중 보안)
@@ -233,9 +243,9 @@ export default function Home() {
       // API 실패 시 빈 배열로 설정
       setFilteredErrands([])
     }
-    
+
     setIsLoadingErrands(false)
-  }, [currentMapBounds])
+  }, [currentMapBounds, user])
 
   // 지도 이동 시 호출되는 핸들러 - 새 위치 기준으로 심부름 조회
   const handleMapMove = async (center: { lat: number; lng: number }, bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } }) => {
@@ -696,6 +706,15 @@ export default function Home() {
                     심부름 등록
                   </button>
                   <div className="flex items-center gap-3">
+                    {/* 고객센터 아이콘 */}
+                    <button
+                      onClick={() => setShowSupportModal(true)}
+                      className="text-gray-500 hover:text-gray-700 p-1"
+                      title="고객센터"
+                    >
+                      <span className="text-xl">💬</span>
+                    </button>
+
                     {/* 알림 벨 아이콘 */}
                     <button
                       onClick={handleNotificationClick}
@@ -709,7 +728,7 @@ export default function Home() {
                         </span>
                       )}
                     </button>
-                    
+
                     <button
                       onClick={() => setShowProfile(true)}
                       className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded-lg"
@@ -994,22 +1013,29 @@ export default function Home() {
                     {/* 버튼 영역 */}
                     {errand.status === 'pending' && user && (
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                        {/* 자신의 심부름이 아닌 경우에만 수락 버튼 표시 */}
+                        {/* 자신의 심부름이 아닌 경우에만 수락 버튼과 채팅 버튼 표시 */}
                         {errand.requestedBy?.id !== user.id && (
-                          <button 
-                            onClick={() => handleErrandAccept(errand.id)}
-                            className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
-                          >
-                            수락하기
-                          </button>
+                          <>
+                            <button
+                              onClick={() => handleErrandAccept(errand.id)}
+                              className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
+                            >
+                              수락하기
+                            </button>
+                            <button
+                              onClick={() => handleChatOpen(errand)}
+                              className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                            >
+                              채팅하기
+                            </button>
+                          </>
                         )}
-                        {/* 모든 사용자가 채팅 가능 */}
-                        <button 
-                          onClick={() => handleChatOpen(errand)}
-                          className={`${errand.requestedBy?.id !== user.id ? 'flex-1' : 'w-full'} bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm`}
-                        >
-                          채팅하기
-                        </button>
+                        {/* 자신의 심부름인 경우 안내 메시지 표시 */}
+                        {errand.requestedBy?.id === user.id && (
+                          <div className="w-full text-center py-2 text-sm text-gray-500">
+                            다른 사용자가 채팅을 시작하면 대화할 수 있습니다
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1137,6 +1163,14 @@ export default function Home() {
           onMarkAsRead={handleMarkAsRead}
           onMarkAllAsRead={handleMarkAllAsRead}
           onRefresh={fetchNotifications}
+        />
+      )}
+
+      {/* 고객센터 모달 */}
+      {showSupportModal && (
+        <SupportModal
+          isOpen={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
         />
       )}
 

@@ -74,7 +74,7 @@ export default function ChatModal({
           senderId: msg.senderId,
           senderName: msg.sender.name,
           content: msg.content,
-          timestamp: new Date(msg.createdAt),
+          timestamp: new Date((msg as { timestamp?: string }).timestamp || msg.createdAt),
           type: 'text'
         }))
         
@@ -114,13 +114,13 @@ export default function ChatModal({
       const response = await chatApi.sendMessage(chatId, messageContent)
       
       if (response.success && response.data) {
-        const message = response.data.message as { _id?: string; id: string; senderId: string; sender: { name: string }; content: string; createdAt: string }
+        const message = response.data.message as { _id?: string; id: string; senderId: string; sender: { name: string }; content: string; timestamp?: string; createdAt?: string }
         const newMsg: LocalMessage = {
           id: message._id || message.id,
           senderId: message.senderId,
           senderName: message.sender.name,
           content: message.content,
-          timestamp: new Date(message.createdAt),
+          timestamp: new Date(message.timestamp || message.createdAt || new Date()),
           type: 'text'
         }
         
@@ -137,6 +137,9 @@ export default function ChatModal({
   }
 
   const formatTime = (timestamp: Date) => {
+    if (!timestamp || isNaN(timestamp.getTime())) {
+      return '--:--'
+    }
     return timestamp.toLocaleTimeString('ko-KR', {
       hour: '2-digit',
       minute: '2-digit'
@@ -150,7 +153,7 @@ export default function ChatModal({
       <div className="bg-white rounded-lg max-w-md w-full h-[600px] flex flex-col">
         <div className="p-4 border-b border-gray-200 flex justify-between items-center">
           <div>
-            <h3 className="font-semibold text-lg">
+            <h3 className="font-semibold text-lg text-black">
               {loading ? '채팅 로딩 중...' : otherUser?.name || '알 수 없는 사용자'}
             </h3>
             <p className="text-sm text-black truncate">{errandTitle}</p>

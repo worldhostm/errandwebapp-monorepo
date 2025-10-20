@@ -66,12 +66,12 @@ export default function DisputeModal({
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-black">
               완료 인증 이의제기
             </h3>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-black hover:text-black"
             >
               ✕
             </button>
@@ -79,14 +79,14 @@ export default function DisputeModal({
 
           {/* 심부름 정보 */}
           <div className="mb-6">
-            <h4 className="font-medium text-gray-700 mb-2">심부름 제목</h4>
-            <p className="text-gray-600 bg-gray-50 p-3 rounded-md">{errand.title}</p>
+            <h4 className="font-medium text-black mb-2">심부름 제목</h4>
+            <p className="text-black bg-gray-50 p-3 rounded-md">{errand.title}</p>
           </div>
 
           {/* 완료 인증 정보 */}
           {errand.completionVerification && (
             <div className="mb-6">
-              <h4 className="font-medium text-gray-700 mb-3">제출된 완료 인증</h4>
+              <h4 className="font-medium text-black mb-3">제출된 완료 인증</h4>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="mb-3">
                   <Image
@@ -98,12 +98,12 @@ export default function DisputeModal({
                   />
                 </div>
                 <div className="mb-2">
-                  <span className="text-sm font-medium text-gray-600">완료 메시지:</span>
+                  <span className="text-sm font-medium text-black">완료 메시지:</span>
                 </div>
-                <p className="text-gray-800 bg-white p-3 rounded border">
+                <p className="text-black bg-white p-3 rounded border">
                   {errand.completionVerification.message}
                 </p>
-                <div className="mt-2 text-sm text-gray-500">
+                <div className="mt-2 text-sm text-black">
                   제출일: {new Date(errand.completionVerification.submittedAt).toLocaleString('ko-KR')}
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function DisputeModal({
 
           {/* 이의제기 사유 선택 */}
           <div className="mb-6">
-            <label className="block font-medium text-gray-700 mb-3">
+            <label className="block font-medium text-black mb-3">
               이의제기 사유 <span className="text-red-500">*</span>
             </label>
             <div className="space-y-2">
@@ -129,7 +129,7 @@ export default function DisputeModal({
                     onChange={(e) => setSelectedReason(e.target.value)}
                     className="mr-3 text-red-500"
                   />
-                  <span className="text-gray-700">{reason.label}</span>
+                  <span className="text-black">{reason.label}</span>
                 </label>
               ))}
             </div>
@@ -137,7 +137,7 @@ export default function DisputeModal({
 
           {/* 상세 설명 */}
           <div className="mb-6">
-            <label className="block font-medium text-gray-700 mb-2">
+            <label className="block font-medium text-black mb-2">
               상세 설명 <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -148,7 +148,7 @@ export default function DisputeModal({
               rows={6}
               maxLength={1000}
             />
-            <div className="text-right text-sm text-gray-500 mt-1">
+            <div className="text-right text-sm text-black mt-1">
               {description.length}/1000
             </div>
           </div>

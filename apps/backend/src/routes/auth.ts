@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, getProfile, updateProfile } from '../controllers/authController';
+import { register, login, getProfile, updateProfile, sendEmailVerification, verifyEmailCode, resendVerificationCode, changePassword } from '../controllers/authController';
 import { auth } from '../middleware/auth';
 import { validateRegistration, validateLogin } from '../middleware/validation';
 
@@ -16,5 +16,17 @@ router.get('/profile', auth, getProfile);
 
 // PUT /api/auth/profile
 router.put('/profile', auth, updateProfile);
+
+// POST /api/auth/send-verification
+router.post('/send-verification', sendEmailVerification);
+
+// POST /api/auth/verify-email
+router.post('/verify-email', verifyEmailCode);
+
+// POST /api/auth/resend-verification
+router.post('/resend-verification', resendVerificationCode);
+
+// POST /api/auth/change-password
+router.post('/change-password', auth, changePassword);
 
 export default router;

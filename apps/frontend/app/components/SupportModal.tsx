@@ -162,7 +162,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
       pending: { text: '대기중', color: 'bg-yellow-100 text-yellow-800' },
       in_progress: { text: '처리중', color: 'bg-blue-100 text-blue-800' },
       resolved: { text: '해결됨', color: 'bg-green-100 text-green-800' },
-      closed: { text: '종료됨', color: 'bg-gray-100 text-gray-800' }
+      closed: { text: '종료됨', color: 'bg-gray-100 text-black' }
     }
     const badge = badges[status as keyof typeof badges] || badges.pending
     return <span className={`px-2 py-1 rounded text-xs ${badge.color}`}>{badge.text}</span>
@@ -172,8 +172,8 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold">고객센터</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
+          <h2 className="text-xl font-bold text-black">고객센터</h2>
+          <button onClick={onClose} className="text-black hover:text-black text-2xl">
             ×
           </button>
         </div>
@@ -185,7 +185,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
             className={`flex-1 px-4 py-3 font-medium ${
               activeTab === 'inquiry'
                 ? 'border-b-2 border-blue-500 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-black hover:text-black'
             }`}
           >
             문의하기
@@ -195,7 +195,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
             className={`flex-1 px-4 py-3 font-medium ${
               activeTab === 'myTickets'
                 ? 'border-b-2 border-blue-500 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-black hover:text-black'
             }`}
           >
             내 문의
@@ -205,7 +205,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
             className={`flex-1 px-4 py-3 font-medium ${
               activeTab === 'report'
                 ? 'border-b-2 border-blue-500 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-black hover:text-black'
             }`}
           >
             신고하기
@@ -215,7 +215,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
             className={`flex-1 px-4 py-3 font-medium ${
               activeTab === 'myReports'
                 ? 'border-b-2 border-blue-500 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-black hover:text-black'
             }`}
           >
             내 신고
@@ -227,11 +227,11 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
           {activeTab === 'inquiry' && (
             <form onSubmit={handleSubmitInquiry} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">문의 유형</label>
+                <label className="block text-sm font-medium mb-2 text-black">문의 유형</label>
                 <select
                   value={inquiryType}
-                  onChange={(e) => setInquiryType(e.target.value as any)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setInquiryType(e.target.value as 'inquiry' | 'bug' | 'feature' | 'other')}
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 >
                   <option value="inquiry">일반 문의</option>
                   <option value="bug">버그 신고</option>
@@ -241,19 +241,19 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">제목</label>
+                <label className="block text-sm font-medium mb-2 text-black">제목</label>
                 <input
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   placeholder="문의 제목을 입력하세요"
                   maxLength={100}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">내용</label>
+                <label className="block text-sm font-medium mb-2 text-black">내용</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -278,10 +278,10 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               {isLoading ? (
                 <div className="text-center py-12">
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="text-gray-500 mt-4">로딩 중...</p>
+                  <p className="text-black mt-4">로딩 중...</p>
                 </div>
               ) : myTickets.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-black">
                   등록된 문의가 없습니다.
                 </div>
               ) : (
@@ -291,11 +291,11 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                     className="border rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-lg">{ticket.subject}</h3>
+                      <h3 className="font-medium text-lg text-black">{ticket.subject}</h3>
                       {getStatusBadge(ticket.status)}
                     </div>
-                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">{ticket.description}</p>
-                    <div className="flex justify-between items-center text-xs text-gray-500">
+                    <p className="text-black text-sm mb-2 line-clamp-2">{ticket.description}</p>
+                    <div className="flex justify-between items-center text-xs text-black">
                       <span>{new Date(ticket.createdAt).toLocaleDateString('ko-KR')}</span>
                       <span>답변 {ticket.responses?.length || 0}개</span>
                     </div>
@@ -309,11 +309,11 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
           {activeTab === 'report' && (
             <form onSubmit={handleSubmitReport} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">신고 사유</label>
+                <label className="block text-sm font-medium mb-2 text-black">신고 사유</label>
                 <select
                   value={reportReason}
-                  onChange={(e) => setReportReason(e.target.value as any)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setReportReason(e.target.value as 'inappropriate' | 'scam' | 'spam' | 'harassment' | 'other')}
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 >
                   <option value="inappropriate">부적절한 콘텐츠</option>
                   <option value="scam">사기/사칭</option>
@@ -324,33 +324,33 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">신고 대상 사용자 ID (선택)</label>
+                <label className="block text-sm font-medium mb-2 text-black">신고 대상 사용자 ID (선택)</label>
                 <input
                   type="text"
                   value={reportedUserId}
                   onChange={(e) => setReportedUserId(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   placeholder="신고할 사용자 ID를 입력하세요"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">신고 대상 심부름 ID (선택)</label>
+                <label className="block text-sm font-medium mb-2 text-black">신고 대상 심부름 ID (선택)</label>
                 <input
                   type="text"
                   value={reportedErrandId}
                   onChange={(e) => setReportedErrandId(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   placeholder="신고할 심부름 ID를 입력하세요"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">신고 내용</label>
+                <label className="block text-sm font-medium mb-2 text-black">신고 내용</label>
                 <textarea
                   value={reportDescription}
                   onChange={(e) => setReportDescription(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px] text-black"
                   placeholder="신고 내용을 상세히 입력해주세요"
                 />
               </div>
@@ -371,10 +371,10 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               {isLoading ? (
                 <div className="text-center py-12">
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="text-gray-500 mt-4">로딩 중...</p>
+                  <p className="text-black mt-4">로딩 중...</p>
                 </div>
               ) : myReports.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-black">
                   접수된 신고가 없습니다.
                 </div>
               ) : (
@@ -384,7 +384,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                     className="border rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium">
+                      <h3 className="font-medium text-black">
                         {report.reason === 'inappropriate' && '부적절한 콘텐츠'}
                         {report.reason === 'scam' && '사기/사칭'}
                         {report.reason === 'spam' && '스팸'}
@@ -393,8 +393,8 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                       </h3>
                       {getStatusBadge(report.status)}
                     </div>
-                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">{report.description}</p>
-                    <div className="text-xs text-gray-500">
+                    <p className="text-black text-sm mb-2 line-clamp-2">{report.description}</p>
+                    <div className="text-xs text-black">
                       {new Date(report.createdAt).toLocaleDateString('ko-KR')}
                     </div>
                   </div>

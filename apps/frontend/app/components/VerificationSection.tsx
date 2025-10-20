@@ -204,10 +204,10 @@ export default function VerificationSection({ onVerificationChange }: Verificati
   return (
     <div className="border-t pt-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold">사용자 인증</h3>
+        <h3 className="text-lg font-semibold text-black">사용자 인증</h3>
         {verificationStatus && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">인증 레벨</span>
+            <span className="text-sm text-black">인증 레벨</span>
             <div className="flex items-center gap-1">
               {[...Array(3)].map((_, i) => (
                 <div
@@ -226,7 +226,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
       {/* 인증 배지 */}
       {verificationStatus && verificationStatus.badges.length > 0 && (
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">획득한 인증 배지</h4>
+          <h4 className="text-sm font-medium text-black mb-2">획득한 인증 배지</h4>
           <div className="flex flex-wrap gap-2">
             {verificationStatus.badges.map((badge) => {
               const badgeInfo = getVerificationBadge(badge)
@@ -235,8 +235,8 @@ export default function VerificationSection({ onVerificationChange }: Verificati
                   key={badge}
                   className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${badgeInfo.color}`}
                 >
-                  <span>{badgeInfo.icon}</span>
-                  <span>{badgeInfo.label}</span>
+                  <span className="text-black">{badgeInfo.icon}</span>
+                  <span className="text-black">{badgeInfo.label}</span>
                 </div>
               )
             })}
@@ -260,12 +260,12 @@ export default function VerificationSection({ onVerificationChange }: Verificati
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
                   ? 'text-blue-600 border-blue-500'
-                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                  : 'text-black border-transparent hover:text-black'
               }`}
             >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-              <span>{getVerificationIcon(verification)}</span>
+              <span className="text-black">{tab.icon}</span>
+              <span className="text-black">{tab.label}</span>
+              <span className="text-black">{getVerificationIcon(verification)}</span>
             </button>
           )
         })}
@@ -276,11 +276,11 @@ export default function VerificationSection({ onVerificationChange }: Verificati
         {activeTab === 'phone' && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <h4 className="font-medium">전화번호 인증</h4>
+              <h4 className="font-medium text-black">전화번호 인증</h4>
               {verificationStatus?.isPhoneVerified ? (
                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">인증완료</span>
               ) : (
-                <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">미인증</span>
+                <span className="text-xs bg-gray-100 text-black px-2 py-1 rounded-full">미인증</span>
               )}
             </div>
             
@@ -306,7 +306,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-black">
                       {phoneVerification.phone}로 발송된 인증번호를 입력해주세요.
                     </p>
                     <input
@@ -320,7 +320,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
                     <div className="flex gap-2">
                       <button
                         onClick={() => setPhoneVerification({ phone: '', verificationId: '', code: '', step: 'input' })}
-                        className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                        className="flex-1 px-4 py-2 border border-gray-300 text-black rounded-md hover:bg-gray-50"
                       >
                         다시 입력
                       </button>
@@ -347,17 +347,17 @@ export default function VerificationSection({ onVerificationChange }: Verificati
         {activeTab === 'email' && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <h4 className="font-medium">이메일 인증</h4>
+              <h4 className="font-medium text-black">이메일 인증</h4>
               {verificationStatus?.isEmailVerified ? (
                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">인증완료</span>
               ) : (
-                <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">미인증</span>
+                <span className="text-xs bg-gray-100 text-black px-2 py-1 rounded-full">미인증</span>
               )}
             </div>
             
             {!verificationStatus?.isEmailVerified && (
               <div className="space-y-3">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-black">
                   가입한 이메일 주소로 인증 링크를 발송합니다.
                 </p>
                 <button
@@ -380,17 +380,17 @@ export default function VerificationSection({ onVerificationChange }: Verificati
         {activeTab === 'identity' && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <h4 className="font-medium">신분증 인증</h4>
+              <h4 className="font-medium text-black">신분증 인증</h4>
               {verificationStatus?.isIdentityVerified ? (
                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">인증완료</span>
               ) : (
-                <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">미인증</span>
+                <span className="text-xs bg-gray-100 text-black px-2 py-1 rounded-full">미인증</span>
               )}
             </div>
             
             {!verificationStatus?.isIdentityVerified && (
               <div className="space-y-3">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-black">
                   신분증 사진을 업로드해주세요. (앞면, 뒷면 모두 필요)
                 </p>
                 <div>
@@ -402,7 +402,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   />
                   {documentFiles.length > 0 && (
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-black mt-1">
                       {documentFiles.length}개 파일 선택됨
                     </p>
                   )}
@@ -428,18 +428,18 @@ export default function VerificationSection({ onVerificationChange }: Verificati
         {activeTab === 'address' && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <h4 className="font-medium">주소 인증</h4>
+              <h4 className="font-medium text-black">주소 인증</h4>
               {verificationStatus?.isAddressVerified ? (
                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">인증완료</span>
               ) : (
-                <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">미인증</span>
+                <span className="text-xs bg-gray-100 text-black px-2 py-1 rounded-full">미인증</span>
               )}
             </div>
             
             {!verificationStatus?.isAddressVerified && (
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">주소</label>
+                  <label className="block text-sm font-medium text-black mb-1">주소</label>
                   <input
                     type="text"
                     placeholder="상세 주소를 입력해주세요"
@@ -449,7 +449,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">증빙서류</label>
+                  <label className="block text-sm font-medium text-black mb-1">증빙서류</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -457,7 +457,7 @@ export default function VerificationSection({ onVerificationChange }: Verificati
                     onChange={(e) => setAddressData(prev => ({ ...prev, files: Array.from(e.target.files || []) }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-black mt-1">
                     공과금 고지서, 주민등록등본 등 주소를 확인할 수 있는 서류
                   </p>
                 </div>

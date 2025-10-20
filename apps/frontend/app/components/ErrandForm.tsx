@@ -446,12 +446,12 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                       <div className="text-5xl">{category.emoji}</div>
                       <div className="text-center">
                         <div className={`font-semibold text-base ${
-                          formData.category === category.name ? 'text-blue-700' : 'text-gray-900'
+                          formData.category === category.name ? 'text-blue-700' : 'text-black'
                         }`}>
                           {category.name}
                         </div>
                         <div className={`text-xs mt-1 ${
-                          formData.category === category.name ? 'text-blue-600' : 'text-gray-500'
+                          formData.category === category.name ? 'text-blue-600' : 'text-black'
                         }`}>
                           {category.description}
                         </div>
@@ -639,7 +639,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                   canProceedToNext()
                     ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-200 text-black cursor-not-allowed'
                 }`}
               >
                 다음
@@ -652,7 +652,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                 className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                   canProceedToNext()
                     ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-200 text-black cursor-not-allowed'
                 }`}
               >
                 심부름 등록하기
@@ -688,7 +688,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
                   setLocationPermissionDenied(true)
                   setUserLocation({ lat: 37.5665, lng: 126.9780 })
                 }}
-                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                className="flex-1 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
               >
                 거부
               </button>

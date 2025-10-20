@@ -689,7 +689,7 @@ export default function Home() {
               </Link>
               <Link 
                 href="/guide" 
-                className="text-gray-600 hover:text-gray-900 font-medium flex items-center gap-1"
+                className="text-black hover:text-black font-medium flex items-center gap-1"
               >
                 <span>📖</span>
                 <span>사용 가이드</span>
@@ -709,7 +709,7 @@ export default function Home() {
                     {/* 고객센터 아이콘 */}
                     <button
                       onClick={() => setShowSupportModal(true)}
-                      className="text-gray-500 hover:text-gray-700 p-1"
+                      className="text-black hover:text-black p-1"
                       title="고객센터"
                     >
                       <span className="text-xl">💬</span>
@@ -718,7 +718,7 @@ export default function Home() {
                     {/* 알림 벨 아이콘 */}
                     <button
                       onClick={handleNotificationClick}
-                      className="relative text-gray-500 hover:text-gray-700 p-1"
+                      className="relative text-black hover:text-black p-1"
                       title="알림"
                     >
                       <span className="text-xl">🔔</span>
@@ -741,11 +741,11 @@ export default function Home() {
                           className="object-cover"
                         />
                       </div>
-                      <span className="text-gray-700">{user.name}님</span>
+                      <span className="text-black">{user.name}님</span>
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-black hover:text-black"
                     >
                       로그아웃
                     </button>
@@ -790,10 +790,10 @@ export default function Home() {
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-2xl font-bold text-black mb-2">
                     주변 심부름 찾기
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-black">
                     지도를 움직여서 다른 지역의 심부름을 확인해보세요
                   </p>
                 </div>
@@ -802,7 +802,7 @@ export default function Home() {
                     {isLoadingErrands && (
                       <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                     )}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-black">
                       {currentMapBounds ? '지도 영역 내' : `반경 ${mapRadius.toFixed(1)}km 내`} 
                       <span className="ml-1 font-semibold text-blue-600">{filteredErrands.length}개</span> 심부름
                       {isUsingApi && <span className="ml-2 text-green-600 text-xs">• API 연동</span>}
@@ -896,7 +896,7 @@ export default function Home() {
               {isLoadingErrands && (
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg z-20 flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-sm text-gray-600">심부름 조회 중...</span>
+                  <span className="text-sm text-black">심부름 조회 중...</span>
                 </div>
               )}
               <MapComponent 
@@ -915,9 +915,9 @@ export default function Home() {
 
             <div className="mt-8">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-black flex items-center gap-2">
                   현재 위치 주변 심부름 목록
-                  <span className="text-sm font-normal text-gray-500">
+                  <span className="text-sm font-normal text-black">
                     (거리순 정렬)
                   </span>
                   {isLoadingErrands && (
@@ -927,7 +927,7 @@ export default function Home() {
                 <button
                   onClick={fetchErrandsAroundUserLocation}
                   disabled={isLoadingErrands}
-                  className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 text-black rounded-md hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
                 >
                   <svg
                     className="w-4 h-4"
@@ -960,10 +960,10 @@ export default function Home() {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-lg">{categoryInfo.emoji}</span>
-                            <h4 className="font-medium text-gray-900">{errand.title}</h4>
+                            <h4 className="font-medium text-black">{errand.title}</h4>
                           </div>
                           {errand.requestedBy && (
-                            <p className="text-xs text-gray-500 mb-2">
+                            <p className="text-xs text-black mb-2">
                               {errand.requestedBy.name}님의 심부름
                             </p>
                           )}
@@ -985,9 +985,9 @@ export default function Home() {
                       </span>
                     </div>
                     
-                    <p className="text-gray-600 text-sm mb-3">{errand.description}</p>
+                    <p className="text-black text-sm mb-3">{errand.description}</p>
                     
-                    <div className="space-y-2 text-xs text-gray-500 mb-3">
+                    <div className="space-y-2 text-xs text-black mb-3">
                       <div className="flex justify-between">
                         <span>거리: {errand.distance?.toFixed(1)}km</span>
                         <span className={`px-2 py-1 rounded ${categoryInfo.color}`}>
@@ -1032,7 +1032,7 @@ export default function Home() {
                         )}
                         {/* 자신의 심부름인 경우 안내 메시지 표시 */}
                         {errand.requestedBy?.id === user.id && (
-                          <div className="w-full text-center py-2 text-sm text-gray-500">
+                          <div className="w-full text-center py-2 text-sm text-black">
                             다른 사용자가 채팅을 시작하면 대화할 수 있습니다
                           </div>
                         )}
@@ -1069,11 +1069,11 @@ export default function Home() {
                     )}
 
                     {(errand.status === 'in_progress' || errand.status === 'completed') && (
-                      <div className="text-center py-2 text-sm text-gray-500">
+                      <div className="text-center py-2 text-sm text-black">
                         {errand.status === 'in_progress' ? '진행 중인 심부름입니다' : '완료된 심부름입니다'}
                       </div>
                     )}
-                    <div className="mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors">
+                    <div className="mt-2 text-xs text-black hover:text-black transition-colors">
                       클릭하면 지도에서 위치를 확인할 수 있습니다 📍
                     </div>
                   </div>
@@ -1081,7 +1081,7 @@ export default function Home() {
               </div>
               
               {filteredErrands.length === 0 && !isLoadingErrands && (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-black">
                   <p>
                     현재 위치 주변에 심부름이 없습니다.
                   </p>
@@ -1092,7 +1092,7 @@ export default function Home() {
               {isLoadingErrands && filteredErrands.length === 0 && (
                 <div className="text-center py-12">
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-gray-500">심부름을 조회하고 있습니다...</p>
+                  <p className="text-black">심부름을 조회하고 있습니다...</p>
                 </div>
               )}
             </div>
@@ -1179,7 +1179,7 @@ export default function Home() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">위치 권한 요청</h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-black mb-4">
               근처 심부름을 찾기 위해 현재 위치가 필요합니다.
               위치 권한을 허용하시겠습니까?
             </p>
@@ -1205,7 +1205,7 @@ export default function Home() {
                   console.log('사용자가 위치 권한을 거부했습니다. 기본 위치(청계동 근처)로 설정합니다.')
                   setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
                 }}
-                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                className="flex-1 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
               >
                 거부
               </button>

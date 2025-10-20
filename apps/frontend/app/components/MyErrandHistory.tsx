@@ -169,7 +169,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       case 'in_progress': return 'bg-blue-100 text-blue-800'
       case 'completed': return 'bg-green-100 text-green-800'
       case 'disputed': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      default: return 'bg-gray-100 text-black'
     }
   }
 
@@ -189,17 +189,17 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       {/* 헤더 */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-black mb-2">
             내가 등록한 심부름
           </h2>
-          <p className="text-gray-600">
+          <p className="text-black">
             등록한 심부름의 진행 상황을 확인하고 관리하세요
           </p>
         </div>
         <button
           onClick={fetchMyErrands}
           disabled={isLoading}
-          className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 text-black rounded-md hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
         >
           <svg
             className="w-4 h-4"
@@ -234,7 +234,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
               selectedStatus === key
                 ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-black hover:text-black'
             }`}
           >
             {label}
@@ -249,11 +249,11 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       {isLoading ? (
         <div className="text-center py-12">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500">심부름을 조회하고 있습니다...</p>
+          <p className="text-black">심부름을 조회하고 있습니다...</p>
         </div>
       ) : filteredErrands.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <p>
+        <div className="text-center py-12 text-black">
+          <p className="text-black">
             {selectedStatus === 'all' 
               ? '등록한 심부름이 없습니다.' 
               : `${getStatusText(selectedStatus)} 상태의 심부름이 없습니다.`}
@@ -273,7 +273,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-lg">{categoryInfo.emoji}</span>
-                      <h4 className="font-medium text-gray-900">{errand.title}</h4>
+                      <h4 className="font-medium text-black">{errand.title}</h4>
                     </div>
                   </div>
                   <span className={`px-2 py-1 rounded text-xs ml-2 ${getStatusColor(errand.status)}`}>
@@ -281,7 +281,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
                   </span>
                 </div>
                 
-                <p className="text-gray-600 text-sm mb-3">{errand.description}</p>
+                <p className="text-black text-sm mb-3">{errand.description}</p>
                 
                 {/* 수행자 정보 */}
                 {errand.acceptedByUser && (
@@ -294,20 +294,20 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
                         className="object-cover"
                       />
                     </div>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-black">
                       수행자: {errand.acceptedByUser.name}
                     </span>
                   </div>
                 )}
                 
-                <div className="space-y-2 text-xs text-gray-500 mb-3">
+                <div className="space-y-2 text-xs text-black mb-3">
                   <div className="flex justify-between">
                     <span className={`px-2 py-1 rounded ${categoryInfo.color}`}>
                       {categoryInfo.emoji} {errand.category}
                     </span>
-                    <span>등록: {new Date(errand.createdAt).toLocaleDateString('ko-KR')}</span>
+                    <span className="text-black">등록: {new Date(errand.createdAt).toLocaleDateString('ko-KR')}</span>
                   </div>
-                  <div>
+                  <div className="text-black">
                     마감: {new Date(errand.deadline).toLocaleString('ko-KR', {
                       month: 'short',
                       day: 'numeric',

@@ -152,7 +152,7 @@ const ErrandSchema = new Schema<IErrand>({
 }, {
   timestamps: true,
   toJSON: {
-    transform: function(doc, ret: any) {
+    transform: function(doc, ret: Record<string, unknown>) {
       ret.id = ret._id;
       delete ret._id;
       delete ret.__v;

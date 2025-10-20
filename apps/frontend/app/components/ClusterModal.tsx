@@ -28,12 +28,12 @@ export default function ClusterModal({
         <div className="p-4">
           {/* 헤더 */}
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-black">
               이 지역의 심부름 ({errands.length}개)
             </h3>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-xl"
+              className="text-black hover:text-black text-xl"
             >
               ✕
             </button>
@@ -56,7 +56,7 @@ export default function ClusterModal({
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-sm">{categoryInfo.emoji}</span>
-                        <h4 className="font-medium text-gray-900 text-sm">{errand.title}</h4>
+                        <h4 className="font-medium text-black text-sm">{errand.title}</h4>
                       </div>
                       {errand.isUrgent && (
                         <span className="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">
@@ -76,12 +76,12 @@ export default function ClusterModal({
                     </span>
                   </div>
                   
-                  <p className="text-gray-600 text-sm mb-2 line-clamp-2">{errand.description}</p>
+                  <p className="text-black text-sm mb-2 line-clamp-2">{errand.description}</p>
                   
-                  <div className="flex justify-between items-center text-xs text-gray-500">
-                    <span>💰 ₩{errand.reward.toLocaleString()}</span>
+                  <div className="flex justify-between items-center text-xs text-black">
+                    <span className="text-black">💰 ₩{errand.reward.toLocaleString()}</span>
                     {errand.distance && (
-                      <span>📍 {errand.distance.toFixed(1)}km</span>
+                      <span className="text-black">📍 {errand.distance.toFixed(1)}km</span>
                     )}
                   </div>
                 </div>

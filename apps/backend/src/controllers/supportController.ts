@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import mongoose from 'mongoose';
 import Support from '../models/Support';
 import { AuthRequest } from '../middleware/auth';
 
@@ -57,8 +58,11 @@ export const getMySupportTickets = async (req: AuthRequest, res: Response) => {
 
     const { status, page = 1, limit = 10 } = req.query;
 
-    const query: any = { user: user._id };
-    if (status) {
+    const query: {
+      user: mongoose.Types.ObjectId;
+      status?: string;
+    } = { user: user._id as mongoose.Types.ObjectId };
+    if (status && typeof status === 'string') {
       query.status = status;
     }
 
@@ -175,7 +179,7 @@ export const addSupportResponse = async (req: AuthRequest, res: Response) => {
     support.responses.push({
       content,
       isAdmin: false,
-      createdBy: user._id as any,
+      createdBy: user._id as mongoose.Types.ObjectId,
       createdAt: new Date()
     });
 

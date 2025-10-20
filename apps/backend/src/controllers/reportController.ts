@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import mongoose from 'mongoose';
 import Report from '../models/Report';
 import { AuthRequest } from '../middleware/auth';
 
@@ -75,8 +76,11 @@ export const getMyReports = async (req: AuthRequest, res: Response) => {
 
     const { status, page = 1, limit = 10 } = req.query;
 
-    const query: any = { reportedBy: user._id };
-    if (status) {
+    const query: {
+      reportedBy: mongoose.Types.ObjectId;
+      status?: string;
+    } = { reportedBy: user._id as mongoose.Types.ObjectId };
+    if (status && typeof status === 'string') {
       query.status = status;
     }
 

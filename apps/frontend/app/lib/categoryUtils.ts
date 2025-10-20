@@ -28,7 +28,7 @@ export const categoryMap: { [key: string]: CategoryInfo } = {
   '기타': {
     emoji: '💼',
     name: '기타',
-    color: 'bg-gray-100 text-gray-800'
+    color: 'bg-gray-100 text-black'
   }
 }
 

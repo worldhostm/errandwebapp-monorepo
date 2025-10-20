@@ -74,16 +74,16 @@ export default function ErrandDetailModal({
           {/* 헤더 */}
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">{errand.title}</h2>
+              <h2 className="text-2xl font-bold text-black">{errand.title}</h2>
               {errand.requestedBy && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-black mt-1">
                   {errand.requestedBy.name}님의 심부름
                 </p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="text-black hover:text-black text-2xl"
             >
               ✕
             </button>
@@ -91,18 +91,18 @@ export default function ErrandDetailModal({
 
           {/* 심부름 설명 */}
           <div className="mb-6">
-            <p className="text-gray-700 leading-relaxed mb-4">{errand.description}</p>
+            <p className="text-black leading-relaxed mb-4">{errand.description}</p>
             
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">카테고리</span>
-                <span className="font-medium text-gray-900">{errand.category}</span>
+                <span className="text-black">카테고리</span>
+                <span className="font-medium text-black">{errand.category}</span>
               </div>
               
               {errand.deadline && (
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">마감일</span>
-                  <span className="font-medium text-gray-900">
+                  <span className="text-black">마감일</span>
+                  <span className="font-medium text-black">
                     {new Date(errand.deadline).toLocaleString('ko-KR', {
                       year: 'numeric',
                       month: 'short',
@@ -116,8 +116,8 @@ export default function ErrandDetailModal({
               
               {errand.distance && (
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">거리</span>
-                  <span className="font-medium text-gray-900">{errand.distance.toFixed(1)}km</span>
+                  <span className="text-black">거리</span>
+                  <span className="font-medium text-black">{errand.distance.toFixed(1)}km</span>
                 </div>
               )}
             </div>
@@ -172,7 +172,7 @@ export default function ErrandDetailModal({
                 
                 <button
                   onClick={handleChatClick}
-                  className="w-full py-3 px-4 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                  className="w-full py-3 px-4 rounded-lg border-2 border-gray-300 text-black font-semibold hover:bg-gray-50 transition-colors"
                 >
                   💬 채팅으로 문의하기
                 </button>
@@ -181,7 +181,7 @@ export default function ErrandDetailModal({
 
             {!currentUser && (
               <div className="text-center p-4 bg-gray-100 rounded-lg">
-                <p className="text-gray-600">로그인하면 심부름을 수락할 수 있습니다</p>
+                <p className="text-black">로그인하면 심부름을 수락할 수 있습니다</p>
               </div>
             )}
 
@@ -199,7 +199,7 @@ export default function ErrandDetailModal({
 
             <button
               onClick={onClose}
-              className="w-full py-2 px-4 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
+              className="w-full py-2 px-4 rounded-lg text-black hover:text-black transition-colors"
             >
               닫기
             </button>

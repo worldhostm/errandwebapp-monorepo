@@ -91,7 +91,7 @@ export default function NotificationModal({
         <div className="p-4 border-b border-gray-200">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold text-gray-900">알림</h3>
+              <h3 className="text-lg font-semibold text-black">알림</h3>
               {unreadCount > 0 && (
                 <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                   {unreadCount}
@@ -101,7 +101,7 @@ export default function NotificationModal({
             <div className="flex items-center gap-2">
               <button
                 onClick={handleRefresh}
-                className="text-gray-400 hover:text-gray-600 p-1 transition-colors"
+                className="text-black hover:text-black p-1 transition-colors"
                 title="새로고침"
                 disabled={isRefreshing}
               >
@@ -124,7 +124,7 @@ export default function NotificationModal({
               </button>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 p-1"
+                className="text-black hover:text-black p-1"
               >
                 ✕
               </button>
@@ -147,9 +147,9 @@ export default function NotificationModal({
         {/* 알림 목록 */}
         <div className="flex-1 overflow-y-auto">
           {notifications.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
+            <div className="p-8 text-center text-black">
               <div className="text-4xl mb-2">📭</div>
-              <p>알림이 없습니다</p>
+              <p className="text-black">알림이 없습니다</p>
             </div>
           ) : (
             <div className="p-2">
@@ -168,7 +168,7 @@ export default function NotificationModal({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <h4 className={`text-sm font-medium ${
-                          notification.isRead ? 'text-gray-700' : 'text-gray-900'
+                          notification.isRead ? 'text-black' : 'text-black'
                         }`}>
                           {notification.title}
                         </h4>
@@ -177,16 +177,16 @@ export default function NotificationModal({
                         )}
                       </div>
                       <p className={`text-sm mt-1 ${
-                        notification.isRead ? 'text-gray-500' : 'text-gray-700'
+                        notification.isRead ? 'text-black' : 'text-black'
                       }`}>
                         {notification.message}
                       </p>
                       {notification.relatedErrand && (
-                        <div className="mt-2 p-2 bg-white/50 rounded text-xs text-gray-600">
+                        <div className="mt-2 p-2 bg-white/50 rounded text-xs text-black">
                           관련 심부름: {notification.relatedErrand.title}
                         </div>
                       )}
-                      <div className="mt-2 text-xs text-gray-400">
+                      <div className="mt-2 text-xs text-black">
                         {formatRelativeTime(notification.createdAt)}
                       </div>
                     </div>
@@ -199,7 +199,7 @@ export default function NotificationModal({
 
         {/* 푸터 */}
         <div className="p-4 border-t border-gray-200 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-black">
             총 {notifications.length}개의 알림
           </p>
         </div>

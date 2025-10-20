@@ -151,4 +151,43 @@ export interface SearchParams {
         direction: 'asc' | 'desc';
     };
 }
+export type SupportType = 'inquiry' | 'report' | 'bug' | 'feature' | 'other';
+export type SupportStatus = 'pending' | 'in_progress' | 'resolved' | 'closed';
+export type ReportReason = 'inappropriate' | 'scam' | 'spam' | 'harassment' | 'other';
+export interface Support {
+    id: string;
+    type: SupportType;
+    subject: string;
+    description: string;
+    user: string | User;
+    status: SupportStatus;
+    priority: 'low' | 'medium' | 'high';
+    attachments?: string[];
+    relatedErrand?: string | Errand;
+    responses?: SupportResponse[];
+    createdAt: Date;
+    updatedAt: Date;
+    resolvedAt?: Date;
+}
+export interface SupportResponse {
+    id: string;
+    content: string;
+    isAdmin: boolean;
+    createdBy: string | User;
+    createdAt: Date;
+}
+export interface Report {
+    id: string;
+    reason: ReportReason;
+    description: string;
+    reportedUser?: string | User;
+    reportedErrand?: string | Errand;
+    reportedBy: string | User;
+    status: SupportStatus;
+    evidence?: string[];
+    adminNotes?: string;
+    createdAt: Date;
+    updatedAt: Date;
+    resolvedAt?: Date;
+}
 //# sourceMappingURL=index.d.ts.map

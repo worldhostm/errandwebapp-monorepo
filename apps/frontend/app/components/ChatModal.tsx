@@ -160,7 +160,7 @@ export default function ChatModal({
           </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-black hover:text-black"
           >
             ✕
           </button>
@@ -201,7 +201,7 @@ export default function ChatModal({
                     className={`p-3 rounded-lg ${
                       message.senderId === currentUserId
                         ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 text-gray-900'
+                        : 'bg-gray-100 text-black'
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>

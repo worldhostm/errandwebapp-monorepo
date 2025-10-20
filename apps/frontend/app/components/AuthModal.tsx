@@ -339,7 +339,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                   className={`flex-1 py-3 px-6 rounded-lg transition-colors ${
                     canProceedToNext()
                       ? 'bg-blue-500 text-white hover:bg-blue-600'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-gray-200 text-black cursor-not-allowed'
                   }`}
                 >
                   다음

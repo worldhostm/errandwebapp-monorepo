@@ -137,7 +137,7 @@ export default function CompletionVerificationModal({
             <button
               type="button"
               onClick={handleClose}
-              className="text-black hover:text-gray-600"
+              className="text-black hover:text-black"
             >
               ✕
             </button>
@@ -160,12 +160,12 @@ export default function CompletionVerificationModal({
                       className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors"
                     >
                       <span className="text-2xl">📷</span>
-                      <span>카메라로 촬영</span>
+                      <span className="text-black">카메라로 촬영</span>
                     </button>
                     
                     <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors cursor-pointer">
                       <span className="text-2xl">📁</span>
-                      <span>파일 업로드</span>
+                      <span className="text-black">파일 업로드</span>
                       <input
                         ref={fileInputRef}
                         type="file"

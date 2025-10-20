@@ -18,14 +18,14 @@ export default function UserTypeTabs({ activeTab, onTabChange }: UserTypeTabsPro
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'receiver'
                 ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-black hover:text-black hover:border-gray-300'
             }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-lg">🔍</span>
-              <span>심부름 찾기</span>
+              <span className="text-black">심부름 찾기</span>
             </div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-black mt-1">
               주변 심부름을 찾아보세요
             </div>
           </button>
@@ -35,14 +35,14 @@ export default function UserTypeTabs({ activeTab, onTabChange }: UserTypeTabsPro
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'performer'
                 ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-black hover:text-black hover:border-gray-300'
             }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-lg">🏃‍♂️</span>
-              <span>내 수행 심부름</span>
+              <span className="text-black">내 수행 심부름</span>
             </div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-black mt-1">
               수락한 심부름을 관리하세요
             </div>
           </button>
@@ -52,14 +52,14 @@ export default function UserTypeTabs({ activeTab, onTabChange }: UserTypeTabsPro
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'requester'
                 ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-black hover:text-black hover:border-gray-300'
             }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-lg">📝</span>
-              <span>내 의뢰 심부름</span>
+              <span className="text-black">내 의뢰 심부름</span>
             </div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-black mt-1">
               등록한 심부름을 관리하세요
             </div>
           </button>

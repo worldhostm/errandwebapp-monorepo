@@ -58,7 +58,7 @@ global.IntersectionObserver = class IntersectionObserver {
   disconnect() { return null }
   unobserve() { return null }
   takeRecords(): IntersectionObserverEntry[] { return [] }
-} as any
+} as unknown as typeof IntersectionObserver
 
 // Mock scrollIntoView for ChatModal tests
 Element.prototype.scrollIntoView = jest.fn()

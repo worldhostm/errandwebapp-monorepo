@@ -69,14 +69,14 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white p-6 border-b">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">프로필 설정</h2>
+            <h2 className="text-2xl font-bold text-black">프로필 설정</h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-xl"
+              className="text-black hover:text-black text-xl"
             >
               ✕
             </button>
@@ -89,17 +89,17 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
               className={`flex-1 py-2 px-4 text-center font-medium border-b-2 transition-colors ${
                 activeTab === 'profile'
                   ? 'text-blue-600 border-blue-500'
-                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                  : 'text-black border-transparent hover:text-black'
               }`}
             >
               👤 기본 정보
             </button>
             <button
               onClick={() => setActiveTab('verification')}
-              className={`flex-1 py-2 px-4 text-center font-medium border-b-2 transition-colors ${
+              className={`text-black flex-1 py-2 px-4 text-center font-medium border-b-2 transition-colors ${
                 activeTab === 'verification'
                   ? 'text-blue-600 border-blue-500'
-                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                  : 'text-black border-transparent hover:text-black'
               }`}
             >
               🔐 사용자 인증
@@ -111,7 +111,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
           {activeTab === 'profile' && (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-black mb-2">
                   프로필 사진
                 </label>
                 <div className="flex items-center gap-4">
@@ -136,7 +136,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
                       />
                       <label
                         htmlFor="profile-image-edit"
-                        className={`cursor-pointer px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm ${
+                        className={`cursor-pointer px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm text-black ${
                           imageUploading ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                       >
@@ -152,7 +152,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
                         </button>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-black">
                       5MB 이하, JPG/PNG 권장
                     </p>
                   </div>
@@ -160,28 +160,28 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-black mb-1">
                   이름
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   placeholder="이름을 입력하세요"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-black mb-1">
                   이메일
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   placeholder="이메일을 입력하세요"
                   required
                 />
@@ -191,7 +191,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdateProfile }:
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  className="flex-1 py-2 px-4 border border-gray-300 text-black rounded-md hover:bg-gray-50"
                 >
                   취소
                 </button>

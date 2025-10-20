@@ -97,7 +97,7 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
         <div className="bg-white rounded-lg p-8">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p>심부름 정보를 불러오는 중...</p>
+            <p className="text-black">심부름 정보를 불러오는 중...</p>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
       case 'pending': return 'bg-yellow-100 text-yellow-800'
       case 'reviewed': return 'bg-blue-100 text-blue-800'
       case 'resolved': return 'bg-green-100 text-green-800'
-      default: return 'bg-gray-100 text-gray-800'
+      default: return 'bg-gray-100 text-black'
     }
   }
 
@@ -129,12 +129,12 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-black">
               완료된 심부름 확인
             </h3>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-black hover:text-black"
             >
               ✕
             </button>
@@ -142,21 +142,21 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
 
           {/* 심부름 기본 정보 */}
           <div className="mb-6">
-            <h4 className="text-lg font-medium text-gray-900 mb-2">{errand.title}</h4>
-            <p className="text-gray-600 mb-4">{errand.description}</p>
+            <h4 className="text-lg font-medium text-black mb-2">{errand.title}</h4>
+            <p className="text-black mb-4">{errand.description}</p>
             
             <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">👤</span>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-black">
                     수행자: {errand.acceptedBy?.name || '알 수 없음'}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-black">
                     상태: <span className={`px-2 py-1 rounded text-xs ${
                       errand.status === 'completed' ? 'bg-green-100 text-green-800' :
                       errand.status === 'disputed' ? 'bg-red-100 text-red-800' :
-                      errand.status === 'paid' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                      errand.status === 'paid' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-black'
                     }`}>
                       {errand.status === 'completed' ? '완료' :
                        errand.status === 'disputed' ? '이의제기됨' :
@@ -176,7 +176,7 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
           {/* 완료 인증 정보 */}
           {errand.completionVerification && (
             <div className="mb-6">
-              <h4 className="text-lg font-medium text-gray-900 mb-4">완료 인증</h4>
+              <h4 className="text-lg font-medium text-black mb-4">완료 인증</h4>
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="mb-4">
                   <Image
@@ -188,12 +188,12 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
                   />
                 </div>
                 <div className="mb-3">
-                  <p className="font-medium text-gray-700 mb-2">완료 메시지:</p>
-                  <p className="text-gray-800 bg-white p-4 rounded border leading-relaxed">
+                  <p className="font-medium text-black mb-2">완료 메시지:</p>
+                  <p className="text-black bg-white p-4 rounded border leading-relaxed">
                     {errand.completionVerification.message}
                   </p>
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-black">
                   제출일: {new Date(errand.completionVerification.submittedAt).toLocaleString('ko-KR')}
                 </p>
               </div>
@@ -203,7 +203,7 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
           {/* 결제 상태 정보 */}
           {errand.status === 'completed' && !errand.dispute && paymentStatus && (
             <div className="mb-6">
-              <h4 className="text-lg font-medium text-gray-900 mb-4">결제 정보</h4>
+              <h4 className="text-lg font-medium text-black mb-4">결제 정보</h4>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 {paymentStatus.canProcess ? (
                   <div className="text-blue-800">
@@ -223,7 +223,7 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
                     </p>
                   </div>
                 ) : (
-                  <div className="text-gray-800">
+                  <div className="text-black">
                     <p className="text-sm">결제 대기 중입니다.</p>
                   </div>
                 )}
@@ -234,7 +234,7 @@ export default function CompletedErrandView({ errandId, onClose }: CompletedErra
           {/* 이의제기 정보 (있는 경우) */}
           {errand.dispute && (
             <div className="mb-6">
-              <h4 className="text-lg font-medium text-gray-900 mb-4">이의제기 현황</h4>
+              <h4 className="text-lg font-medium text-black mb-4">이의제기 현황</h4>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-sm font-medium text-red-700">이의제기됨</span>

@@ -64,7 +64,7 @@ export const getChatByErrand = async (req: AuthRequest, res: Response) => {
       }
 
       // Helper가 채팅 시작
-      console.log('Creating chat with participants:', participants.map((p: any) => p.toString()));
+      console.log('Creating chat with participants:', participants.map((p: mongoose.Types.ObjectId) => p.toString()));
       console.log('Current user:', userId);
 
       chat = new Chat({

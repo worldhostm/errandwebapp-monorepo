@@ -44,6 +44,15 @@ export default defineConfig({
 
     /* Browser viewport */
     viewport: { width: 1280, height: 720 },
+
+    /* Grant permissions for geolocation (location access) */
+    permissions: ['geolocation'],
+
+    /* Set geolocation to a default location */
+    geolocation: { latitude: 37.195317655506145, longitude: 127.1191887685064 },
+
+    /* Allow location access without prompt */
+    hasNotch: false,
   },
 
   /* Configure projects for major browsers */

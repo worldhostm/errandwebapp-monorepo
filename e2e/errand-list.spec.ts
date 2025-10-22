@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, handleGeolocationPrompt } from './fixtures';
 
 /**
  * Errand List Tests
@@ -7,13 +7,28 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Errand List', () => {
   test.beforeEach(async ({ page }) => {
+    // 페이지 로드 전 위치 권한 설정
+    await page.context().grantPermissions(['geolocation']);
+    await page.context().setGeolocation({
+      latitude: 37.195317655506145,
+      longitude: 127.1191887685064,
+    });
+
     // 테스트 사용자로 로그인
     await page.goto('/test');
+    await handleGeolocationPrompt(page);
+    await page.waitForLoadState('networkidle');
+
     const testUserButton = page.locator('button:has-text("테스트 사용자")').first();
     if (await testUserButton.isVisible()) {
       await testUserButton.click();
+      await page.waitForLoadState('networkidle');
     }
+
+    // 메인 페이지로 이동
     await page.goto('/');
+    await handleGeolocationPrompt(page);
+    await page.waitForLoadState('networkidle');
   });
 
   test('ERR-08: 주변 심부름 목록 표시', async ({ page }) => {

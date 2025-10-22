@@ -34,8 +34,8 @@ async function apiRequest<T>(
     const data = await response.json()
 
     if (!response.ok) {
-      console.error(`API 요청 실패: ${response.status} ${response.statusText}`)
-      console.error('에러 데이터:', data)
+      console.log(`API 요청 실패: ${response.status} ${response.statusText}`)
+      console.log('에러 데이터:', data)
       return {
         success: false,
         error: data.error || data.errors || 'API 요청에 실패했습니다.'

@@ -146,7 +146,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
         </div>
 
         {!isLoginMode && (
-          <div className="w-full bg-black rounded-full h-2 mb-8">
+          <div className="w-full bg-gray rounded-ful l h-2 mb-8">
             <div 
               className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -283,7 +283,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                   <p className="text-black text-sm">나중에도 언제든 변경할 수 있어요</p>
                 </div>
                 <div className="flex flex-col items-center space-y-4">
-                  <div className="w-24 h-24 border-2 border-black rounded-full flex items-center justify-center overflow-hidden bg-black">
+                  <div className="w-24 h-24 border-2 border-black rounded-full flex items-center justify-center overflow-hidden bg-gray">
                     {profileImage ? (
                       <Image
                         src={profileImage}

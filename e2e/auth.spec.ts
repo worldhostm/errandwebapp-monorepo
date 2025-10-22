@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, handleGeolocationPrompt, loginAsTestUser } from './fixtures';
 
 /**
  * Authentication Tests
@@ -7,7 +7,20 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Authentication', () => {
   test.beforeEach(async ({ page }) => {
+    // 페이지 로드 전 위치 권한 설정
+    await page.context().grantPermissions(['geolocation']);
+    await page.context().setGeolocation({
+      latitude: 37.195317655506145,
+      longitude: 127.1191887685064,
+    });
+
     await page.goto('/');
+
+    // 위치 권한 모달 자동 처리
+    await handleGeolocationPrompt(page);
+
+    // 페이지 로드 완료 대기
+    await page.waitForLoadState('networkidle');
   });
 
   test('AUTH-01: 랜딩 페이지 표시', async ({ page }) => {

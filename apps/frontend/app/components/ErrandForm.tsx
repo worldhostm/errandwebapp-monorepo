@@ -392,7 +392,7 @@ export default function ErrandForm({ onSubmit, onCancel }: ErrandFormProps) {
             </button>
           </div>
 
-          <div className="w-full bg-black rounded-full h-2 mb-8">
+          <div className="w-full rounded-full h-2 mb-8">
             <div 
               className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}

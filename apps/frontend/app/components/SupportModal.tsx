@@ -280,12 +280,12 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
                   <p className="text-black mt-4">로딩 중...</p>
                 </div>
-              ) : myTickets.length === 0 ? (
+              ) : myTickets?.length === 0 ? (
                 <div className="text-center py-12 text-black">
                   등록된 문의가 없습니다.
                 </div>
               ) : (
-                myTickets.map((ticket) => (
+                myTickets && myTickets.map((ticket) => (
                   <div
                     key={ticket.id}
                     className="border rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -373,12 +373,12 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
                   <p className="text-black mt-4">로딩 중...</p>
                 </div>
-              ) : myReports.length === 0 ? (
+              ) : myReports?.length === 0 ? (
                 <div className="text-center py-12 text-black">
                   접수된 신고가 없습니다.
                 </div>
               ) : (
-                myReports.map((report) => (
+                myReports?.map((report) => (
                   <div
                     key={report.id}
                     className="border rounded-lg p-4 hover:shadow-md transition-shadow"

@@ -42,14 +42,23 @@ export const getChatByErrand = async (req: AuthRequest, res: Response) => {
 
     // 1:1 채팅방 찾기: 요청자와 현재 사용자 간의 채팅
     // participants 배열이 정확히 두 명이고, 그 두 명이 requester와 현재 사용자인 채팅방
-    const participants = isRequester
-      ? [errand.requestedBy, errand.acceptedBy || user._id]  // 요청자가 보는 경우
-      : [errand.requestedBy, user._id];  // helper가 보는 경우
+    // Helper가 채팅을 시작할 때의 participants 설정
+    const otherUserId = isRequester ? errand.acceptedBy : user._id;
 
-    // participants 배열의 순서와 관계없이 찾기
+    if (!otherUserId) {
+      return res.status(400).json({
+        error: '채팅 상대방을 찾을 수 없습니다.'
+      });
+    }
+
+    // 항상 일관된 순서로 정렬 (작은 ID가 먼저)
+    const participants = [errand.requestedBy, otherUserId].sort((a, b) =>
+      a.toString().localeCompare(b.toString())
+    );
+
+    // 이미 존재하는 채팅방 찾기
     let chat = await Chat.findOne({
-      errand: errandId,
-      participants: { $all: participants, $size: 2 }
+      errand: errandId
     })
       .populate('participants', 'name email avatar')
       .populate('messages.sender', 'name email avatar');
@@ -64,21 +73,40 @@ export const getChatByErrand = async (req: AuthRequest, res: Response) => {
       }
 
       // Helper가 채팅 시작
-      console.log('Creating chat with participants:', participants.map((p: mongoose.Types.ObjectId) => p.toString()));
+      console.log('Creating chat with participants:', participants.map(p => (p as mongoose.Types.ObjectId).toString()));
       console.log('Current user:', userId);
 
-      chat = new Chat({
-        errand: errandId,
-        participants,
-        messages: []
-      });
+      try {
+        chat = new Chat({
+          errand: errandId,
+          participants,
+          messages: []
+        });
 
-      await chat.save();
+        await chat.save();
 
-      // 다시 populate해서 가져오기
-      chat = await Chat.findById(chat._id)
-        .populate('participants', 'name email avatar')
-        .populate('messages.sender', 'name email avatar');
+        // 다시 populate해서 가져오기
+        chat = await Chat.findById(chat._id)
+          .populate('participants', 'name email avatar')
+          .populate('messages.sender', 'name email avatar');
+      } catch (error: any) {
+        // 동시에 여러 요청이 들어온 경우 중복 키 에러가 발생할 수 있음
+        // 이미 생성된 채팅방을 찾아서 반환
+        if (error.code === 11000) {
+          console.log('Chat already exists, fetching existing chat');
+          chat = await Chat.findOne({
+            errand: errandId
+          })
+            .populate('participants', 'name email avatar')
+            .populate('messages.sender', 'name email avatar');
+
+          if (!chat) {
+            throw error;
+          }
+        } else {
+          throw error;
+        }
+      }
     }
 
     res.json({
@@ -100,24 +128,33 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 
     const { chatId } = req.params;
     const { content, messageType = 'text' } = req.body;
-    
+
     const chat = await Chat.findById(chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
 
-    // Check if user is a participant
-    console.log('SendMessage - User ID:', (user._id as mongoose.Types.ObjectId).toString());
-    console.log('SendMessage - Chat participants:', chat.participants.map(p => p.toString()));
-    
-    const isParticipant = chat.participants.some(participantId => 
-      participantId.toString() === (user._id as mongoose.Types.ObjectId).toString()
-    );
-    
-    console.log('SendMessage - Is participant:', isParticipant);
-    
-    if (!isParticipant) {
+    // 사용자가 이 채팅의 심부름과 관련된 사람인지 확인
+    const errand = await Errand.findById(chat.errand);
+    if (!errand) {
+      return res.status(404).json({ error: 'Associated errand not found' });
+    }
+
+    const userId = (user._id as mongoose.Types.ObjectId).toString();
+    const requesterId = errand.requestedBy.toString();
+    const acceptorId = errand.acceptedBy?.toString();
+
+    // 요청자 또는 수락자만 메시지를 보낼 수 있음
+    const isAuthorized = userId === requesterId || userId === acceptorId;
+
+    if (!isAuthorized) {
       return res.status(403).json({ error: 'Not authorized to send messages in this chat' });
+    }
+
+    // participants 배열에 추가 (만약 없다면)
+    if (!chat.participants.some(p => p.toString() === userId)) {
+      console.log('Adding user to chat participants');
+      chat.participants.push(user._id as mongoose.Types.ObjectId);
     }
 
     const newMessage = {
@@ -154,15 +191,32 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
     }
 
     const { chatId } = req.params;
-    
+
     const chat = await Chat.findById(chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
 
-    // Check if user is a participant
-    if (!chat.participants.includes(user._id as mongoose.Types.ObjectId)) {
+    // 사용자가 이 채팅의 심부름과 관련된 사람인지 확인
+    const errand = await Errand.findById(chat.errand);
+    if (!errand) {
+      return res.status(404).json({ error: 'Associated errand not found' });
+    }
+
+    const userId = (user._id as mongoose.Types.ObjectId).toString();
+    const requesterId = errand.requestedBy.toString();
+    const acceptorId = errand.acceptedBy?.toString();
+
+    // 요청자 또는 수락자만 접근 가능
+    const isAuthorized = userId === requesterId || userId === acceptorId;
+
+    if (!isAuthorized) {
       return res.status(403).json({ error: 'Not authorized to access this chat' });
+    }
+
+    // participants 배열에 추가 (만약 없다면)
+    if (!chat.participants.some(p => p.toString() === userId)) {
+      chat.participants.push(user._id as mongoose.Types.ObjectId);
     }
 
     // Mark messages as read for this user

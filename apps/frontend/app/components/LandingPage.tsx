@@ -65,7 +65,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
         {/* Hero Image/Illustration */}
         <div className="mt-16 relative h-96 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl shadow-xl overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundImage: 'url(/bureeme.jpg)', backgroundSize: 'cover', backgroundPosition: 'top' }}>
+          <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundImage: 'url(/bureeme2.jpg)', backgroundSize: 'cover', backgroundPosition: 'top' }}>
             <div className="text-center">
               <p className="text-2xl font-semibold text-white">주변 이웃과 함께하는 심부름 플랫폼</p>
             </div>
@@ -86,7 +86,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 */}
-          <div className="bg-blue-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+          <div className="bg-blue-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
             <div className="text-5xl mb-4">📍</div>
             <h3 className="text-2xl font-bold text-black mb-3">
               위치 기반 매칭
@@ -98,7 +98,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Feature 2 */}
-          <div className="bg-green-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+          <div className="text-center bg-green-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <div className="text-5xl mb-4">💰</div>
             <h3 className="text-2xl font-bold text-black mb-3">
               합리적인 보상
@@ -110,7 +110,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Feature 3 */}
-          <div className="bg-purple-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+          <div className="text-center bg-purple-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <div className="text-5xl mb-4">💬</div>
             <h3 className="text-2xl font-bold text-black mb-3">
               실시간 채팅
@@ -147,22 +147,13 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                   1
                 </div>
                 <div>
-                  <h4 className="font-semibold text-black mb-1">회원가입 및 로그인</h4>
-                  <p className="text-black text-sm">간단한 정보만으로 가입하고 시작하세요</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                  2
-                </div>
-                <div>
                   <h4 className="font-semibold text-black mb-1">심부름 등록</h4>
                   <p className="text-black text-sm">필요한 심부름의 내용, 위치, 보상을 입력하세요</p>
                 </div>
               </div>
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                  3
+                  2
                 </div>
                 <div>
                   <h4 className="font-semibold text-black mb-1">수행자와 연결</h4>
@@ -227,29 +218,12 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                 {/* Slide 1 */}
                 <div className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.33%]">
                   <div className="bg-white rounded-xl shadow-lg p-6 mx-2 h-full">
-                    <div className="aspect-video bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mb-4 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-6xl mb-2">📱</div>
-                        <p className="text-sm font-semibold text-black">앱 실행 화면</p>
-                      </div>
+                    <div 
+                    className="aspect-video bg-gradient-to-br from-green-100 to-green-200 rounded-lg mb-4 flex items-center justify-center"
+                    style={{ backgroundImage: 'url(/finderrands.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    >
                     </div>
-                    <h4 className="text-xl font-bold text-black mb-2">1. 회원가입</h4>
-                    <p className="text-black">
-                      간단한 정보 입력으로 회원가입을 완료하세요. 이메일 인증 후 바로 서비스를 이용할 수 있습니다.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Slide 2 */}
-                <div className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.33%]">
-                  <div className="bg-white rounded-xl shadow-lg p-6 mx-2 h-full">
-                    <div className="aspect-video bg-gradient-to-br from-green-100 to-green-200 rounded-lg mb-4 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-6xl mb-2">🗺️</div>
-                        <p className="text-sm font-semibold text-black">지도 화면</p>
-                      </div>
-                    </div>
-                    <h4 className="text-xl font-bold text-black mb-2">2. 심부름 찾기</h4>
+                    <h4 className="text-xl font-bold text-black mb-2">1. 심부름 찾기</h4>
                     <p className="text-black">
                       지도에서 내 주변의 심부름을 확인하세요. 카테고리별로 필터링하여 원하는 심부름을 쉽게 찾을 수 있습니다.
                     </p>
@@ -259,13 +233,12 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                 {/* Slide 3 */}
                 <div className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.33%]">
                   <div className="bg-white rounded-xl shadow-lg p-6 mx-2 h-full">
-                    <div className="aspect-video bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg mb-4 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-6xl mb-2">📝</div>
-                        <p className="text-sm font-semibold text-black">등록 화면</p>
-                      </div>
+                    <div 
+                    className="aspect-video bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg mb-4 flex items-center justify-center"
+                    style={{ backgroundImage: 'url(/category.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    >
                     </div>
-                    <h4 className="text-xl font-bold text-black mb-2">3. 심부름 등록</h4>
+                    <h4 className="text-xl font-bold text-black mb-2">2. 심부름 등록</h4>
                     <p className="text-black">
                       필요한 심부름을 등록하세요. 카테고리, 위치, 보상금을 설정하면 주변 사용자에게 알림이 전송됩니다.
                     </p>
@@ -281,7 +254,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                         <p className="text-sm font-semibold text-black">채팅 화면</p>
                       </div>
                     </div>
-                    <h4 className="text-xl font-bold text-black mb-2">4. 실시간 소통</h4>
+                    <h4 className="text-xl font-bold text-black mb-2">3. 실시간 소통</h4>
                     <p className="text-black">
                       수락된 심부름은 실시간 채팅으로 소통하세요. 세부 사항을 조율하고 진행 상황을 공유할 수 있습니다.
                     </p>
@@ -297,7 +270,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                         <p className="text-sm font-semibold text-black">완료 화면</p>
                       </div>
                     </div>
-                    <h4 className="text-xl font-bold text-black mb-2">5. 심부름 완료</h4>
+                    <h4 className="text-xl font-bold text-black mb-2">4. 심부름 완료</h4>
                     <p className="text-black">
                       심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.
                     </p>
@@ -313,7 +286,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                         <p className="text-sm font-semibold text-black">리뷰 화면</p>
                       </div>
                     </div>
-                    <h4 className="text-xl font-bold text-black mb-2">6. 리뷰 작성</h4>
+                    <h4 className="text-xl font-bold text-black mb-2">5. 리뷰 작성</h4>
                     <p className="text-black">
                       서로에게 리뷰를 남겨주세요. 좋은 리뷰는 더 많은 기회로 이어집니다.
                     </p>
@@ -344,7 +317,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
             {/* Dots Indicator */}
             <div className="flex justify-center gap-2 mt-6">
-              {[0, 1, 2, 3, 4, 5].map((index) => (
+              {[0, 1, 2, 3, 4].map((index) => (
                 <button
                   key={index}
                   onClick={() => emblaApi?.scrollTo(index)}

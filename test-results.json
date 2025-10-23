@@ -9,8 +9,10 @@
     "globalTimeout": 0,
     "grep": {},
     "grepInvert": null,
-    "maxFailures": 0,
-    "metadata": {},
+    "maxFailures": 1,
+    "metadata": {
+      "actualWorkers": 1
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -40,7 +42,9 @@
         "outputDir": "C:/Users/csm/workspace/errandwebapp/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "C:/Users/csm/workspace/errandwebapp/e2e",
@@ -48,7 +52,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 60000
+        "timeout": 0
       }
     ],
     "shard": null,
@@ -81,22 +85,71 @@
           "specs": [
             {
               "title": "AUTH-01: 랜딩 페이지 표시",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 69451,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: '부름이' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '부름이' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: '부름이' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '부름이' })\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts:29:59",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                          "column": 59,
+                          "line": 29
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 27 |\u001b[39m     \u001b[90m// 비로그인 상태에서 랜딩 페이지가 표시되는지 확인\u001b[39m\n \u001b[90m 28 |\u001b[39m     \u001b[90m// 로고 링크 (헤더의 첫 번째 \"부름이\")\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 29 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'부름이'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 30 |\u001b[39m     \u001b[90m// 로그인 버튼\u001b[39m\n \u001b[90m 31 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그인'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 32 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                            "column": 59,
+                            "line": 29
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: '부름이' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '부름이' })\u001b[22m\n\n\n\u001b[0m \u001b[90m 27 |\u001b[39m     \u001b[90m// 비로그인 상태에서 랜딩 페이지가 표시되는지 확인\u001b[39m\n \u001b[90m 28 |\u001b[39m     \u001b[90m// 로고 링크 (헤더의 첫 번째 \"부름이\")\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 29 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'부름이'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 30 |\u001b[39m     \u001b[90m// 로그인 버튼\u001b[39m\n \u001b[90m 31 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그인'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 32 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts:29:59\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-23T16:25:57.937Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\auth-Authentication-AUTH-01-랜딩-페이지-표시-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\auth-Authentication-AUTH-01-랜딩-페이지-표시-chromium\\video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                        "column": 59,
+                        "line": 29
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "d748ac400d08b85935ef-ab5564c67840397bfc5a",
               "file": "auth.spec.ts",
-              "line": 13,
+              "line": 26,
               "column": 7
             },
             {
@@ -105,7 +158,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -116,7 +169,7 @@
               ],
               "id": "d748ac400d08b85935ef-ba4098ad8cfc690470b2",
               "file": "auth.spec.ts",
-              "line": 19,
+              "line": 34,
               "column": 7
             },
             {
@@ -125,7 +178,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -136,7 +189,7 @@
               ],
               "id": "d748ac400d08b85935ef-4f7db585a4d139d8b284",
               "file": "auth.spec.ts",
-              "line": 28,
+              "line": 43,
               "column": 7
             },
             {
@@ -145,7 +198,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -156,7 +209,7 @@
               ],
               "id": "d748ac400d08b85935ef-5f6261b64bf390c032ea",
               "file": "auth.spec.ts",
-              "line": 41,
+              "line": 56,
               "column": 7
             },
             {
@@ -165,7 +218,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -176,7 +229,7 @@
               ],
               "id": "d748ac400d08b85935ef-48d6d44c7d54b8e142d0",
               "file": "auth.spec.ts",
-              "line": 57,
+              "line": 73,
               "column": 7
             },
             {
@@ -185,7 +238,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -196,7 +249,7 @@
               ],
               "id": "d748ac400d08b85935ef-facd1ff8c9cad51567f2",
               "file": "auth.spec.ts",
-              "line": 65,
+              "line": 81,
               "column": 7
             },
             {
@@ -205,7 +258,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -216,7 +269,7 @@
               ],
               "id": "d748ac400d08b85935ef-9d0c3e87eb773f063fd5",
               "file": "auth.spec.ts",
-              "line": 84,
+              "line": 101,
               "column": 7
             }
           ]
@@ -242,7 +295,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -253,7 +306,7 @@
               ],
               "id": "3570db692f4a0e1734ee-0410fcfc1df851cf6ebd",
               "file": "errand-form.spec.ts",
-              "line": 19,
+              "line": 34,
               "column": 7
             },
             {
@@ -262,7 +315,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -273,7 +326,7 @@
               ],
               "id": "3570db692f4a0e1734ee-486e5299dc3c8228b3cf",
               "file": "errand-form.spec.ts",
-              "line": 29,
+              "line": 44,
               "column": 7
             },
             {
@@ -282,7 +335,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -293,7 +346,7 @@
               ],
               "id": "3570db692f4a0e1734ee-8f779d212a4caf3de5b6",
               "file": "errand-form.spec.ts",
-              "line": 45,
+              "line": 60,
               "column": 7
             },
             {
@@ -302,7 +355,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -313,7 +366,7 @@
               ],
               "id": "3570db692f4a0e1734ee-7ba76a974a6e4f98601e",
               "file": "errand-form.spec.ts",
-              "line": 63,
+              "line": 78,
               "column": 7
             },
             {
@@ -322,7 +375,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -333,7 +386,7 @@
               ],
               "id": "3570db692f4a0e1734ee-8e0df70757f5ba46a4f6",
               "file": "errand-form.spec.ts",
-              "line": 87,
+              "line": 102,
               "column": 7
             },
             {
@@ -342,7 +395,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -353,7 +406,7 @@
               ],
               "id": "3570db692f4a0e1734ee-cff8b844c53df45e6f2f",
               "file": "errand-form.spec.ts",
-              "line": 100,
+              "line": 115,
               "column": 7
             },
             {
@@ -362,7 +415,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -373,7 +426,7 @@
               ],
               "id": "3570db692f4a0e1734ee-23c590c9e1572024476b",
               "file": "errand-form.spec.ts",
-              "line": 119,
+              "line": 134,
               "column": 7
             },
             {
@@ -382,7 +435,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -393,7 +446,7 @@
               ],
               "id": "3570db692f4a0e1734ee-27fbef107d24e02411f4",
               "file": "errand-form.spec.ts",
-              "line": 134,
+              "line": 149,
               "column": 7
             },
             {
@@ -402,7 +455,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -413,7 +466,7 @@
               ],
               "id": "3570db692f4a0e1734ee-537473cc7239ed14230b",
               "file": "errand-form.spec.ts",
-              "line": 152,
+              "line": 167,
               "column": 7
             },
             {
@@ -422,7 +475,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -433,7 +486,7 @@
               ],
               "id": "3570db692f4a0e1734ee-0b1481566e7cfefc1efe",
               "file": "errand-form.spec.ts",
-              "line": 174,
+              "line": 189,
               "column": 7
             }
           ]
@@ -459,7 +512,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -470,7 +523,7 @@
               ],
               "id": "9b819c0838c415745295-32d0f51d7200ce9ff047",
               "file": "errand-list.spec.ts",
-              "line": 19,
+              "line": 34,
               "column": 7
             },
             {
@@ -479,7 +532,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -490,7 +543,7 @@
               ],
               "id": "9b819c0838c415745295-4d35aeaa72dbc548b35d",
               "file": "errand-list.spec.ts",
-              "line": 30,
+              "line": 45,
               "column": 7
             },
             {
@@ -499,7 +552,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -510,7 +563,7 @@
               ],
               "id": "9b819c0838c415745295-845d5adbd76cc8843146",
               "file": "errand-list.spec.ts",
-              "line": 37,
+              "line": 52,
               "column": 7
             },
             {
@@ -519,7 +572,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -530,7 +583,7 @@
               ],
               "id": "9b819c0838c415745295-7c5cfe1afeb519bcf0c7",
               "file": "errand-list.spec.ts",
-              "line": 59,
+              "line": 74,
               "column": 7
             },
             {
@@ -539,7 +592,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -550,7 +603,7 @@
               ],
               "id": "9b819c0838c415745295-bab85898c231a0c22b79",
               "file": "errand-list.spec.ts",
-              "line": 77,
+              "line": 92,
               "column": 7
             },
             {
@@ -559,7 +612,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -570,7 +623,7 @@
               ],
               "id": "9b819c0838c415745295-d392e1dc13a45c7ec0aa",
               "file": "errand-list.spec.ts",
-              "line": 102,
+              "line": 117,
               "column": 7
             },
             {
@@ -579,7 +632,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -590,7 +643,7 @@
               ],
               "id": "9b819c0838c415745295-ec18eb6cd76f0e425988",
               "file": "errand-list.spec.ts",
-              "line": 123,
+              "line": 138,
               "column": 7
             },
             {
@@ -599,7 +652,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -610,7 +663,7 @@
               ],
               "id": "9b819c0838c415745295-1a21d1ac44c33c16e4bf",
               "file": "errand-list.spec.ts",
-              "line": 136,
+              "line": 151,
               "column": 7
             },
             {
@@ -619,7 +672,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -630,7 +683,224 @@
               ],
               "id": "9b819c0838c415745295-706b1d0af923499d0e48",
               "file": "errand-list.spec.ts",
-              "line": 162,
+              "line": 177,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "full-process.spec.ts",
+      "file": "full-process.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Full Process Flow",
+          "file": "full-process.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [
+            {
+              "title": "PROCESS-01: 사용자 로그인 및 메인 페이지 접근",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-f04e5e201e23b9983c37",
+              "file": "full-process.spec.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-02: 심부름 등록 (의뢰자 플로우)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-749c0b20740db4d9016c",
+              "file": "full-process.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-03: 심부름 목록 조회 및 필터링",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-ce741a6ada239fb35a14",
+              "file": "full-process.spec.ts",
+              "line": 99,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-04: 심부름 상세 조회",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-eb65bd15f437c50f3ef9",
+              "file": "full-process.spec.ts",
+              "line": 132,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-05: 심부름 수락 (시행자 플로우)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-7468d653f51324f775c9",
+              "file": "full-process.spec.ts",
+              "line": 160,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-06: 채팅 기능",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-e41eab668355005b89d6",
+              "file": "full-process.spec.ts",
+              "line": 195,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-07: 완료 검증",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-8b2a16a26577654c83cd",
+              "file": "full-process.spec.ts",
+              "line": 238,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-08: 사용자 프로필 관리",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-6d3acedd9d1618ba24f2",
+              "file": "full-process.spec.ts",
+              "line": 282,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-09: 거래 내역 조회",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-635b5274dcf07a30f974",
+              "file": "full-process.spec.ts",
+              "line": 309,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-10: 로그아웃",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-79d2eb403834d5517668",
+              "file": "full-process.spec.ts",
+              "line": 333,
               "column": 7
             }
           ]
@@ -656,7 +926,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -667,7 +937,7 @@
               ],
               "id": "2d8799038d2916f69765-2adc09ed146ca1e39464",
               "file": "map.spec.ts",
-              "line": 19,
+              "line": 34,
               "column": 7
             },
             {
@@ -676,7 +946,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -687,7 +957,7 @@
               ],
               "id": "2d8799038d2916f69765-ba42ace1e6368d62fdb4",
               "file": "map.spec.ts",
-              "line": 26,
+              "line": 41,
               "column": 7
             },
             {
@@ -696,7 +966,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -707,7 +977,7 @@
               ],
               "id": "2d8799038d2916f69765-c1745193033e87bf5f6f",
               "file": "map.spec.ts",
-              "line": 39,
+              "line": 54,
               "column": 7
             },
             {
@@ -716,7 +986,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -727,7 +997,7 @@
               ],
               "id": "2d8799038d2916f69765-6ac22543fd538ec307f4",
               "file": "map.spec.ts",
-              "line": 56,
+              "line": 71,
               "column": 7
             },
             {
@@ -736,7 +1006,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -747,7 +1017,7 @@
               ],
               "id": "2d8799038d2916f69765-3bb4b6ff1ebfe346e47a",
               "file": "map.spec.ts",
-              "line": 70,
+              "line": 85,
               "column": 7
             },
             {
@@ -756,7 +1026,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -767,7 +1037,7 @@
               ],
               "id": "2d8799038d2916f69765-b03208408c8c73e2007c",
               "file": "map.spec.ts",
-              "line": 85,
+              "line": 100,
               "column": 7
             },
             {
@@ -776,7 +1046,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -787,7 +1057,7 @@
               ],
               "id": "2d8799038d2916f69765-1bb497bc700cd54badce",
               "file": "map.spec.ts",
-              "line": 112,
+              "line": 127,
               "column": 7
             },
             {
@@ -796,7 +1066,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -807,7 +1077,7 @@
               ],
               "id": "2d8799038d2916f69765-1b3f257de9dab37f75d5",
               "file": "map.spec.ts",
-              "line": 129,
+              "line": 144,
               "column": 7
             },
             {
@@ -816,7 +1086,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -827,7 +1097,7 @@
               ],
               "id": "2d8799038d2916f69765-43efcc5cbad719c2ab3e",
               "file": "map.spec.ts",
-              "line": 152,
+              "line": 167,
               "column": 7
             }
           ]
@@ -853,7 +1123,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -864,7 +1134,7 @@
               ],
               "id": "5d2868f7d23420c27cca-8c8519202c0d95dbce55",
               "file": "navigation.spec.ts",
-              "line": 9,
+              "line": 18,
               "column": 7
             },
             {
@@ -873,7 +1143,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -884,7 +1154,7 @@
               ],
               "id": "5d2868f7d23420c27cca-3dfe7793b9b6947c59fc",
               "file": "navigation.spec.ts",
-              "line": 14,
+              "line": 24,
               "column": 7
             },
             {
@@ -893,7 +1163,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -904,7 +1174,7 @@
               ],
               "id": "5d2868f7d23420c27cca-8c8c24a4e89a26efe3da",
               "file": "navigation.spec.ts",
-              "line": 24,
+              "line": 35,
               "column": 7
             },
             {
@@ -913,7 +1183,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -924,7 +1194,7 @@
               ],
               "id": "5d2868f7d23420c27cca-466627b2b1bf708308bc",
               "file": "navigation.spec.ts",
-              "line": 34,
+              "line": 46,
               "column": 7
             },
             {
@@ -933,7 +1203,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -944,7 +1214,7 @@
               ],
               "id": "5d2868f7d23420c27cca-7e7f1440db6c4382f39c",
               "file": "navigation.spec.ts",
-              "line": 44,
+              "line": 57,
               "column": 7
             },
             {
@@ -953,7 +1223,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -964,7 +1234,7 @@
               ],
               "id": "5d2868f7d23420c27cca-a6c6852c1fafb8207262",
               "file": "navigation.spec.ts",
-              "line": 53,
+              "line": 67,
               "column": 7
             },
             {
@@ -973,7 +1243,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -984,7 +1254,7 @@
               ],
               "id": "5d2868f7d23420c27cca-d6db57762bfd1dc15417",
               "file": "navigation.spec.ts",
-              "line": 61,
+              "line": 76,
               "column": 7
             }
           ]
@@ -992,7 +1262,7 @@
         {
           "title": "Logged In Navigation",
           "file": "navigation.spec.ts",
-          "line": 75,
+          "line": 91,
           "column": 6,
           "specs": [
             {
@@ -1001,7 +1271,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -1012,7 +1282,7 @@
               ],
               "id": "5d2868f7d23420c27cca-416c9f27ff3bc1bc88fe",
               "file": "navigation.spec.ts",
-              "line": 86,
+              "line": 117,
               "column": 7
             },
             {
@@ -1021,7 +1291,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -1032,7 +1302,7 @@
               ],
               "id": "5d2868f7d23420c27cca-f119d60bd5941cfeda04",
               "file": "navigation.spec.ts",
-              "line": 102,
+              "line": 133,
               "column": 7
             },
             {
@@ -1041,7 +1311,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -1052,7 +1322,7 @@
               ],
               "id": "5d2868f7d23420c27cca-5437d13a97f1972145be",
               "file": "navigation.spec.ts",
-              "line": 115,
+              "line": 146,
               "column": 7
             },
             {
@@ -1061,7 +1331,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -1072,7 +1342,7 @@
               ],
               "id": "5d2868f7d23420c27cca-50b02285ab4fc304064e",
               "file": "navigation.spec.ts",
-              "line": 128,
+              "line": 159,
               "column": 7
             }
           ]
@@ -1080,13 +1350,17 @@
       ]
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "message": "\u001b[31mTesting stopped early after 1 maximum allowed failures.\u001b[39m"
+    }
+  ],
   "stats": {
-    "startTime": "2025-10-22T13:44:50.827Z",
-    "duration": 81.24800000000005,
+    "startTime": "2025-10-23T16:25:46.779Z",
+    "duration": 82074.957,
     "expected": 0,
-    "skipped": 46,
-    "unexpected": 0,
+    "skipped": 55,
+    "unexpected": 1,
     "flaky": 0
   }
 }

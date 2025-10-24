@@ -48,16 +48,29 @@ test.describe('Authentication', () => {
     // 회원가입 버튼 클릭
     await page.getByRole('button', { name: '회원가입' }).click();
 
-    // Step 1: 이름 필드 확인
-    await expect(page.locator('input[placeholder*="이름"]')).toBeVisible({ timeout: 5000 });
+    // Step 1: 이름 필드 확인 및 입력
+    const nameInput = page.locator('input[placeholder*="이름"]');
+    await expect(nameInput).toBeVisible({ timeout: 5000 });
+    await nameInput.fill('테스트사용자');
 
     // Step 2: 다음 버튼 클릭하여 이메일 단계로 이동
-    await page.getByRole('button', { name: '다음' }).click();
-    await expect(page.locator('input[placeholder*="example@email.com"]')).toBeVisible({ timeout: 5000 });
+    const nextButton = page.locator('button:not([aria-label])').filter({ hasText: '다음' }).first();
+    await nextButton.click();
+
+    const emailInput = page.locator('input[placeholder*="example@email.com"]');
+    await expect(emailInput).toBeVisible({ timeout: 5000 });
+    await emailInput.fill('test@example.com');
 
     // Step 3: 다음 버튼 클릭하여 비밀번호 단계로 이동
-    await page.getByRole('button', { name: '다음' }).click();
-    await expect(page.locator('input[type="password"]')).toBeVisible({ timeout: 5000 });
+    await nextButton.click();
+
+    const passwordInputs = page.locator('input[type="password"]');
+    await expect(passwordInputs.first()).toBeVisible({ timeout: 5000 });
+
+    // 비밀번호와 비밀번호 확인에 123123 입력
+    const allPasswordFields = await page.locator('input[type="password"]').all();
+    await allPasswordFields[0].fill('123123');
+    await allPasswordFields[1].fill('123123');
   });
 
   test('AUTH-04: 빈 필드로 로그인 시도 (클라이언트 검증)', async ({ page }) => {

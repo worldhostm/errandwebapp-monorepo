@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
+- generic [active] [ref=e1]:
   - generic [ref=e2]:
     - banner [ref=e3]:
       - generic [ref=e5]:
@@ -202,23 +202,7 @@
                 - listitem [ref=e206]: "이메일: support@burum.com"
                 - listitem [ref=e207]: "운영시간: 평일 9:00 - 18:00"
           - paragraph [ref=e209]: © 2024 부름이. All rights reserved.
-    - generic [ref=e211]:
-      - generic [ref=e212]:
-        - generic [ref=e213]:
-          - heading "회원가입" [level=2] [ref=e214]
-          - generic [ref=e215]: 단계 1 / 4
-        - button "✕" [ref=e216]
-      - generic [ref=e219]:
-        - generic [ref=e220]:
-          - generic [ref=e221]:
-            - heading "반가워요!" [level=3] [ref=e222]
-            - paragraph [ref=e223]: 어떤 이름으로 불러드릴까요?
-          - textbox "이름을 입력해주세요" [active] [ref=e225]
-        - button "다음" [disabled] [ref=e227]
-      - paragraph [ref=e229]:
-        - text: 이미 계정이 있으신가요?
-        - button "로그인" [ref=e230]
-  - button "Open Next.js Dev Tools" [ref=e236] [cursor=pointer]:
-    - img [ref=e237]
-  - alert [ref=e240]
+  - button "Open Next.js Dev Tools" [ref=e215] [cursor=pointer]:
+    - img [ref=e216]
+  - alert [ref=e219]
 ```

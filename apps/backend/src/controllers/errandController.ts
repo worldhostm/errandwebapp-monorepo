@@ -392,22 +392,51 @@ export const cancelErrand = async (req: AuthRequest, res: Response) => {
     }
 
     const { id } = req.params;
-    
+
     const errand = await Errand.findById(id);
     if (!errand) {
       return res.status(404).json({ error: 'Errand not found' });
     }
 
-    // Only the person who requested the errand can cancel it
-    if (errand.requestedBy.toString() !== (user._id as mongoose.Types.ObjectId).toString()) {
+    const userId = (user._id as mongoose.Types.ObjectId).toString();
+    const isRequester = errand.requestedBy.toString() === userId;
+    const isAcceptor = errand.acceptedBy?.toString() === userId;
+
+    // Both requester and acceptor can cancel
+    if (!isRequester && !isAcceptor) {
       return res.status(403).json({ error: 'Not authorized to cancel this errand' });
+    }
+
+    // Requester can always cancel (unless completed/cancelled)
+    // Acceptor can only cancel if errand is 'accepted' or 'in_progress'
+    if (isAcceptor && !['accepted', 'in_progress'].includes(errand.status)) {
+      return res.status(400).json({ error: 'Can only cancel errands that are accepted or in progress' });
     }
 
     if (['completed', 'cancelled'].includes(errand.status)) {
       return res.status(400).json({ error: 'Cannot cancel a completed or already cancelled errand' });
     }
 
-    errand.status = 'cancelled';
+    if (isRequester) {
+      // Requester cancellation: mark as cancelled
+      errand.status = 'cancelled';
+    } else if (isAcceptor) {
+      // Acceptor cancellation: revert to pending so another person can accept
+      errand.acceptedBy = undefined;
+      errand.status = 'pending';
+
+      // Notify requester that acceptor cancelled
+      const Notification = mongoose.model('Notification');
+      await Notification.create({
+        userId: errand.requestedBy,
+        type: 'errand_cancelled_by_acceptor',
+        errandId: errand._id,
+        message: `Someone cancelled the accepted errand: ${errand.category}`,
+        read: false,
+        createdAt: new Date()
+      });
+    }
+
     await errand.save();
 
     res.json({

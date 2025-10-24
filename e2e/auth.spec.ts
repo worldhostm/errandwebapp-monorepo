@@ -14,7 +14,8 @@ test.describe('Authentication', () => {
       longitude: 127.1191887685064,
     });
 
-    // await page.goto('/');
+    // 홈 페이지로 이동
+    await page.goto('/');
 
     // 위치 권한 모달 자동 처리
     await handleGeolocationPrompt(page);
@@ -44,13 +45,19 @@ test.describe('Authentication', () => {
     // 로그인 모달 열기
     await page.getByRole('button', { name: '로그인' }).click();
 
-    // 회원가입 탭 클릭
-    await page.getByRole('tab', { name: '회원가입' }).click();
+    // 회원가입 버튼 클릭
+    await page.getByRole('button', { name: '회원가입' }).click();
 
-    // 회원가입 필드 확인
-    await expect(page.locator('input[placeholder*="이름"]')).toBeVisible();
-    await expect(page.locator('input[type="email"]')).toBeVisible();
-    await expect(page.locator('input[type="password"]')).toBeVisible();
+    // Step 1: 이름 필드 확인
+    await expect(page.locator('input[placeholder*="이름"]')).toBeVisible({ timeout: 5000 });
+
+    // Step 2: 다음 버튼 클릭하여 이메일 단계로 이동
+    await page.getByRole('button', { name: '다음' }).click();
+    await expect(page.locator('input[placeholder*="example@email.com"]')).toBeVisible({ timeout: 5000 });
+
+    // Step 3: 다음 버튼 클릭하여 비밀번호 단계로 이동
+    await page.getByRole('button', { name: '다음' }).click();
+    await expect(page.locator('input[type="password"]')).toBeVisible({ timeout: 5000 });
   });
 
   test('AUTH-04: 빈 필드로 로그인 시도 (클라이언트 검증)', async ({ page }) => {

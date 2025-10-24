@@ -136,7 +136,7 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
   const handleStartErrand = async (errandId: string) => {
     try {
       const response = await errandApi.updateErrandStatus(errandId, 'in_progress')
-      
+
       if (response.success) {
         alert('심부름을 시작했습니다!')
         fetchMyAcceptedErrands() // 목록 새로고침
@@ -146,6 +146,27 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
     } catch (error) {
       console.error('시작 처리 오류:', error)
       alert('시작 처리 중 오류가 발생했습니다.')
+    }
+  }
+
+  // 심부름 취소 처리
+  const handleCancelErrand = async (errandId: string, errandTitle: string) => {
+    const confirmed = window.confirm(`"${errandTitle}" 심부름을 취소하시겠습니까?\n\n취소하면 의뢰자가 다른 사람을 찾을 수 있습니다.`)
+
+    if (!confirmed) return
+
+    try {
+      const response = await errandApi.cancelErrand(errandId)
+
+      if (response.success) {
+        alert('심부름이 취소되었습니다.')
+        fetchMyAcceptedErrands() // 목록 새로고침
+      } else {
+        alert(response.error || '취소 처리에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('취소 처리 오류:', error)
+      alert('취소 처리 중 오류가 발생했습니다.')
     }
   }
 
@@ -314,53 +335,69 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
                 </div>
 
                 {/* 액션 버튼들 */}
-                <div className="flex gap-2">
+                <div className="space-y-2">
                   {errand.status === 'accepted' && (
                     <>
-                      <button 
-                        onClick={() => handleStartErrand(errand.id)}
-                        className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
-                      >
-                        시작하기
-                      </button>
-                      {errand.requesterUser && (
-                        <button 
-                          onClick={() => handleChatOpen(errand)}
-                          className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleStartErrand(errand.id)}
+                          className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
                         >
-                          채팅하기
+                          시작하기
                         </button>
-                      )}
+                        {errand.requesterUser && (
+                          <button
+                            onClick={() => handleChatOpen(errand)}
+                            className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                          >
+                            채팅하기
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleCancelErrand(errand.id, errand.title)}
+                        className="w-full bg-red-50 text-red-600 py-2 rounded hover:bg-red-100 text-sm border border-red-200"
+                      >
+                        취소하기
+                      </button>
                     </>
                   )}
-                  
+
                   {errand.status === 'in_progress' && (
                     <>
-                      <button 
-                        onClick={() => handleCompleteErrand(errand)}
-                        className="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600 text-sm"
-                      >
-                        완료 인증
-                      </button>
-                      {errand.requesterUser && (
-                        <button 
-                          onClick={() => handleChatOpen(errand)}
-                          className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleCompleteErrand(errand)}
+                          className="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600 text-sm"
                         >
-                          채팅하기
+                          완료 인증
                         </button>
-                      )}
+                        {errand.requesterUser && (
+                          <button
+                            onClick={() => handleChatOpen(errand)}
+                            className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 text-sm"
+                          >
+                            채팅하기
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleCancelErrand(errand.id, errand.title)}
+                        className="w-full bg-red-50 text-red-600 py-2 rounded hover:bg-red-100 text-sm border border-red-200"
+                      >
+                        취소하기
+                      </button>
                     </>
                   )}
-                  
+
                   {errand.status === 'completed' && (
-                    <div className="flex-1 text-center py-2 text-sm text-green-600 font-medium">
+                    <div className="text-center py-2 text-sm text-green-600 font-medium">
                       ✅ 완료된 심부름입니다
                     </div>
                   )}
-                  
+
                   {errand.status === 'disputed' && (
-                    <div className="flex-1 text-center py-2 text-sm text-red-600 font-medium">
+                    <div className="text-center py-2 text-sm text-red-600 font-medium">
                       ⚠️ 이의제기된 심부름입니다
                     </div>
                   )}

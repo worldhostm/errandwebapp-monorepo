@@ -1,0 +1,224 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - link "부름이" [ref=e7] [cursor=pointer]:
+            - /url: /
+          - link "📖 사용 가이드" [ref=e8] [cursor=pointer]:
+            - /url: /guide
+            - generic [ref=e9]: 📖
+            - generic [ref=e10]: 사용 가이드
+        - generic [ref=e11]:
+          - button "로그인" [ref=e12]
+          - link "테스트 로그인" [ref=e13] [cursor=pointer]:
+            - /url: /test
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - heading "간편한 심부름, 부름이와 함께" [level=1] [ref=e17]:
+            - text: 간편한 심부름,
+            - text: 부름이와 함께
+          - paragraph [ref=e18]:
+            - text: 바쁜 일상 속 필요한 심부름을 주변 사람들과 연결해드립니다.
+            - text: 간단한 일로 부수입을 얻거나, 필요한 도움을 빠르게 받아보세요.
+          - generic [ref=e19]:
+            - button "지금 시작하기" [ref=e20]
+            - link "더 알아보기 ↓" [ref=e21] [cursor=pointer]:
+              - /url: "#features"
+              - generic [ref=e22]: 더 알아보기
+              - generic [ref=e23]: ↓
+        - paragraph [ref=e27]: 주변 이웃과 함께하는 심부름 플랫폼
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - heading "부름이가 특별한 이유" [level=2] [ref=e30]
+          - paragraph [ref=e31]: 편리하고 안전한 심부름 중개 서비스
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: 📍
+            - heading "위치 기반 매칭" [level=3] [ref=e35]
+            - paragraph [ref=e36]: 지도에서 내 주변 심부름을 한눈에 확인하고, 가까운 곳의 심부름을 선택할 수 있습니다.
+          - generic [ref=e37]:
+            - generic [ref=e38]: 💰
+            - heading "합리적인 보상" [level=3] [ref=e39]
+            - paragraph [ref=e40]: 간단한 심부름으로 부수입을 얻거나, 필요한 일을 합리적인 가격에 요청할 수 있습니다.
+          - generic [ref=e41]:
+            - generic [ref=e42]: 💬
+            - heading "실시간 채팅" [level=3] [ref=e43]
+            - paragraph [ref=e44]: 실시간 채팅으로 심부름 요청자와 수행자가 원활하게 소통할 수 있습니다.
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - heading "이용 방법" [level=2] [ref=e47]
+          - paragraph [ref=e48]: 간단한 3단계로 시작하세요
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - heading "📝 심부름 요청하기" [level=3] [ref=e51]:
+              - generic [ref=e52]: 📝
+              - text: 심부름 요청하기
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - generic [ref=e55]: "1"
+                - generic [ref=e56]:
+                  - heading "심부름 등록" [level=4] [ref=e57]
+                  - paragraph [ref=e58]: 필요한 심부름의 내용, 위치, 보상을 입력하세요
+              - generic [ref=e59]:
+                - generic [ref=e60]: "2"
+                - generic [ref=e61]:
+                  - heading "수행자와 연결" [level=4] [ref=e62]
+                  - paragraph [ref=e63]: 수락한 수행자와 채팅으로 소통하고 심부름을 완료하세요
+          - generic [ref=e64]:
+            - heading "🏃 심부름 수행하기" [level=3] [ref=e65]:
+              - generic [ref=e66]: 🏃
+              - text: 심부름 수행하기
+            - generic [ref=e67]:
+              - generic [ref=e68]:
+                - generic [ref=e69]: "1"
+                - generic [ref=e70]:
+                  - heading "주변 심부름 찾기" [level=4] [ref=e71]
+                  - paragraph [ref=e72]: 지도에서 내 위치 근처의 심부름을 확인하세요
+              - generic [ref=e73]:
+                - generic [ref=e74]: "2"
+                - generic [ref=e75]:
+                  - heading "원하는 심부름 수락" [level=4] [ref=e76]
+                  - paragraph [ref=e77]: 내가 할 수 있는 심부름을 선택하고 수락하세요
+              - generic [ref=e78]:
+                - generic [ref=e79]: "3"
+                - generic [ref=e80]:
+                  - heading "심부름 완료 및 보상" [level=4] [ref=e81]
+                  - paragraph [ref=e82]: 심부름을 완료하고 보상을 받으세요
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - heading "상세 사용법" [level=3] [ref=e85]
+            - paragraph [ref=e86]: 이미지로 쉽게 알아보는 부름이 사용 가이드
+          - generic [ref=e87]:
+            - generic [ref=e89]:
+              - generic [ref=e91]:
+                - heading "1. 심부름 찾기" [level=4] [ref=e93]
+                - paragraph [ref=e94]: 지도에서 내 주변의 심부름을 확인하세요. 카테고리별로 필터링하여 원하는 심부름을 쉽게 찾을 수 있습니다.
+              - generic [ref=e96]:
+                - heading "2. 심부름 등록" [level=4] [ref=e98]
+                - paragraph [ref=e99]: 필요한 심부름을 등록하세요. 카테고리, 위치, 보상금을 설정하면 주변 사용자에게 알림이 전송됩니다.
+              - generic [ref=e101]:
+                - generic [ref=e103]:
+                  - generic [ref=e104]: 💬
+                  - paragraph [ref=e105]: 채팅 화면
+                - heading "3. 실시간 소통" [level=4] [ref=e106]
+                - paragraph [ref=e107]: 수락된 심부름은 실시간 채팅으로 소통하세요. 세부 사항을 조율하고 진행 상황을 공유할 수 있습니다.
+              - generic [ref=e109]:
+                - generic [ref=e111]:
+                  - generic [ref=e112]: ✅
+                  - paragraph [ref=e113]: 완료 화면
+                - heading "4. 심부름 완료" [level=4] [ref=e114]
+                - paragraph [ref=e115]: 심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.
+              - generic [ref=e117]:
+                - generic [ref=e119]:
+                  - generic [ref=e120]: ⭐
+                  - paragraph [ref=e121]: 리뷰 화면
+                - heading "5. 리뷰 작성" [level=4] [ref=e122]
+                - paragraph [ref=e123]: 서로에게 리뷰를 남겨주세요. 좋은 리뷰는 더 많은 기회로 이어집니다.
+            - button "이전 슬라이드" [ref=e124]:
+              - img [ref=e125]
+            - button "다음 슬라이드" [ref=e127]:
+              - img [ref=e128]
+            - generic [ref=e130]:
+              - button "슬라이드 1로 이동" [ref=e131]
+              - button "슬라이드 2로 이동" [ref=e132]
+              - button "슬라이드 3로 이동" [ref=e133]
+              - button "슬라이드 4로 이동" [ref=e134]
+              - button "슬라이드 5로 이동" [ref=e135]
+      - generic [ref=e136]:
+        - heading "이런 분들께 추천합니다" [level=2] [ref=e138]
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: 👨‍💼
+            - heading "바쁜 직장인" [level=4] [ref=e142]
+            - paragraph [ref=e143]: 업무로 바쁜 시간, 간단한 심부름을 맡기고 시간을 절약하세요
+          - generic [ref=e144]:
+            - generic [ref=e145]: 🎓
+            - heading "대학생" [level=4] [ref=e146]
+            - paragraph [ref=e147]: 틈틈이 간단한 심부름으로 용돈을 벌어보세요
+          - generic [ref=e148]:
+            - generic [ref=e149]: 🏠
+            - heading "집에 계신 분" [level=4] [ref=e150]
+            - paragraph [ref=e151]: 외출이 어려울 때 필요한 물품을 배달받으세요
+          - generic [ref=e152]:
+            - generic [ref=e153]: 🚶
+            - heading "이웃 도우미" [level=4] [ref=e154]
+            - paragraph [ref=e155]: 주변 이웃을 도우며 보람과 수익을 함께 얻으세요
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - heading "다양한 카테고리" [level=2] [ref=e158]
+          - paragraph [ref=e159]: 일상의 다양한 심부름을 부름이에서
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e162]: 🛒
+            - paragraph [ref=e163]: 장보기
+          - generic [ref=e164]:
+            - generic [ref=e165]: 📦
+            - paragraph [ref=e166]: 택배
+          - generic [ref=e167]:
+            - generic [ref=e168]: 🍔
+            - paragraph [ref=e169]: 음식 배달
+          - generic [ref=e170]:
+            - generic [ref=e171]: 🏥
+            - paragraph [ref=e172]: 약 수령
+          - generic [ref=e173]:
+            - generic [ref=e174]: 🐕
+            - paragraph [ref=e175]: 반려동물
+          - generic [ref=e176]:
+            - generic [ref=e177]: 🧹
+            - paragraph [ref=e178]: 청소
+          - generic [ref=e179]:
+            - generic [ref=e180]: 🚗
+            - paragraph [ref=e181]: 운전 대행
+          - generic [ref=e182]:
+            - generic [ref=e183]: ✨
+            - paragraph [ref=e184]: 기타
+      - generic [ref=e186]:
+        - heading "지금 바로 시작하세요" [level=2] [ref=e187]
+        - paragraph [ref=e188]: 간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다
+        - button "무료로 시작하기" [ref=e189]
+      - contentinfo [ref=e190]:
+        - generic [ref=e191]:
+          - generic [ref=e192]:
+            - generic [ref=e193]:
+              - heading "부름이" [level=3] [ref=e194]
+              - paragraph [ref=e195]: 이웃과 함께하는 스마트한 심부름 플랫폼
+            - generic [ref=e196]:
+              - heading "서비스" [level=4] [ref=e197]
+              - list [ref=e198]:
+                - listitem [ref=e199]:
+                  - link "이용 방법" [ref=e200] [cursor=pointer]:
+                    - /url: "#how-it-works"
+                - listitem [ref=e201]:
+                  - link "사용 가이드" [ref=e202] [cursor=pointer]:
+                    - /url: /guide
+            - generic [ref=e203]:
+              - heading "고객 지원" [level=4] [ref=e204]
+              - list [ref=e205]:
+                - listitem [ref=e206]: "이메일: support@burum.com"
+                - listitem [ref=e207]: "운영시간: 평일 9:00 - 18:00"
+          - paragraph [ref=e209]: © 2024 부름이. All rights reserved.
+    - generic [ref=e211]:
+      - generic [ref=e212]:
+        - generic [ref=e213]:
+          - heading "회원가입" [level=2] [ref=e214]
+          - generic [ref=e215]: 단계 1 / 4
+        - button "✕" [ref=e216]
+      - generic [ref=e219]:
+        - generic [ref=e220]:
+          - generic [ref=e221]:
+            - heading "반가워요!" [level=3] [ref=e222]
+            - paragraph [ref=e223]: 어떤 이름으로 불러드릴까요?
+          - textbox "이름을 입력해주세요" [active] [ref=e225]
+        - button "다음" [disabled] [ref=e227]
+      - paragraph [ref=e229]:
+        - text: 이미 계정이 있으신가요?
+        - button "로그인" [ref=e230]
+  - button "Open Next.js Dev Tools" [ref=e236] [cursor=pointer]:
+    - img [ref=e237]
+  - alert [ref=e240]
+```

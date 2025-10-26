@@ -49,8 +49,15 @@ export const register = async (req: Request, res: Response) => {
         isVerified: user.isVerified
       }
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Registration error:', error);
+
+    // Handle MongoDB duplicate key error (E11000)
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern || {})[0];
+      return res.status(400).json({ error: `User already exists with this ${field}` });
+    }
+
     res.status(500).json({ error: 'Server error during registration' });
   }
 };

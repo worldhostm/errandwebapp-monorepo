@@ -50,9 +50,6 @@ export default defineConfig({
 
     /* Set geolocation to a default location */
     geolocation: { latitude: 37.195317655506145, longitude: 127.1191887685064 },
-
-    /* Allow location access without prompt */
-    hasNotch: false,
   },
 
   /* Configure projects for major browsers */

@@ -41,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 apps/frontend/.next/
 node_modules/
+
+playwright-report/data

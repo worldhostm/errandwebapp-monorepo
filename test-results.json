@@ -99,12 +99,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2393,
+                      "duration": 1768,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-26T15:13:30.103Z",
+                      "startTime": "2025-10-26T15:33:20.190Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2050,
+                      "duration": 1453,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-26T15:13:33.568Z",
+                      "startTime": "2025-10-26T15:33:22.229Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -167,7 +167,7 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 25481,
+                      "duration": 24413,
                       "error": {
                         "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n",
                         "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts:88:62",
@@ -195,7 +195,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-26T15:13:35.638Z",
+                      "startTime": "2025-10-26T15:33:23.694Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -218,6 +218,3059 @@
               "file": "auth.spec.ts",
               "line": 44,
               "column": 7
+            },
+            {
+              "title": "AUTH-03-B: 회원가입 탭 전환 (회원가입 → 로그인)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1862,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:33:49.563Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-d77264ac9c70f2848034",
+              "file": "auth.spec.ts",
+              "line": 91,
+              "column": 7
+            },
+            {
+              "title": "AUTH-04: 빈 필드로 로그인 시도 (클라이언트 검증)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1510,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:33:51.616Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-5f6261b64bf390c032ea",
+              "file": "auth.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "AUTH-05: 테스트 로그인 페이지 접근",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1887,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:33:53.138Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-48d6d44c7d54b8e142d0",
+              "file": "auth.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "AUTH-06: 정상 로그인 플로우 (실제 API)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "TEST_EMAIL and TEST_PASSWORD environment variables required",
+                      "location": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                        "line": 139,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 1538,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:33:55.039Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "TEST_EMAIL and TEST_PASSWORD environment variables required",
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                            "line": 139,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-facd1ff8c9cad51567f2",
+              "file": "auth.spec.ts",
+              "line": 137,
+              "column": 7
+            },
+            {
+              "title": "AUTH-06-B: 잘못된 자격증명으로 로그인 시도",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 72669,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Dialog type: alert, message: Invalid credentials\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:33:56.588Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\auth-Authentication-AUTH-06-B-잘못된-자격증명으로-로그인-시도-chromium\\video.webm"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-6ae14386df2811fb4786",
+              "file": "auth.spec.ts",
+              "line": 168,
+              "column": 7
+            },
+            {
+              "title": "AUTH-07: 로그아웃",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7694,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts:210:62",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                          "column": 62,
+                          "line": 210
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 208 |\u001b[39m\n \u001b[90m 209 |\u001b[39m     \u001b[90m// 로그인 상태 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 210 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그아웃'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 211 |\u001b[39m\n \u001b[90m 212 |\u001b[39m     \u001b[90m// 로그아웃 버튼 클릭\u001b[39m\n \u001b[90m 213 |\u001b[39m     \u001b[36mconst\u001b[39m logoutButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그아웃'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                            "column": 62,
+                            "line": 210
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n\n  208 |\n  209 |     // 로그인 상태 확인\n> 210 |     await expect(page.getByRole('button', { name: '로그아웃' })).toBeVisible({ timeout: 5000 });\n      |                                                              ^\n  211 |\n  212 |     // 로그아웃 버튼 클릭\n  213 |     const logoutButton = page.getByRole('button', { name: '로그아웃' });\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts:210:62"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:35:10.701Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\auth-Authentication-AUTH-07-로그아웃-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\auth-Authentication-AUTH-07-로그아웃-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\auth-Authentication-AUTH-07-로그아웃-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\auth.spec.ts",
+                        "column": 62,
+                        "line": 210
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-9d0c3e87eb773f063fd5",
+              "file": "auth.spec.ts",
+              "line": 196,
+              "column": 7
+            },
+            {
+              "title": "AUTH-08: 회원가입 시 비밀번호 불일치 에러",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2845,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:35:19.958Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-73b9cbb03c9bdff505bc",
+              "file": "auth.spec.ts",
+              "line": 225,
+              "column": 7
+            },
+            {
+              "title": "AUTH-09: 회원가입 시 유효한 이메일 형식 검증",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1951,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:35:22.974Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-4eb573b14ef584a259cb",
+              "file": "auth.spec.ts",
+              "line": 267,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "errand-form.spec.ts",
+      "file": "errand-form.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Errand Registration Form",
+          "file": "errand-form.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ERR-01: 심부름 등록 버튼 클릭",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12660,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:38:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m\n \u001b[90m 37 |\u001b[39m     \u001b[90m// 심부름 등록 버튼 클릭\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m\n \u001b[90m 40 |\u001b[39m     \u001b[90m// 폼 모달이 열리는지 확인\u001b[39m\n \u001b[90m 41 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=심부름 등록하기'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 38
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  36 |\n  37 |     // 심부름 등록 버튼 클릭\n> 38 |     await page.click('button:has-text(\"심부름 등록\")');\n     |                ^\n  39 |\n  40 |     // 폼 모달이 열리는지 확인\n  41 |     await expect(page.locator('text=심부름 등록하기')).toBeVisible({ timeout: 5000 });\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:38:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:35:24.945Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-01-심부름-등록-버튼-클릭-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-01-심부름-등록-버튼-클릭-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-01-심부름-등록-버튼-클릭-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-0410fcfc1df851cf6ebd",
+              "file": "errand-form.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "ERR-02: 폼 필드 표시 확인",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12914,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:46:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 46
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 44 |\u001b[39m   test(\u001b[32m'ERR-02: 폼 필드 표시 확인'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 45 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 46 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 47 |\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[90m// 필수 필드 확인\u001b[39m\n \u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[placeholder*=\"제목\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 46
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  44 |   test('ERR-02: 폼 필드 표시 확인', async ({ page }) => {\n  45 |     await page.waitForLoadState('networkidle');\n> 46 |     await page.click('button:has-text(\"심부름 등록\")');\n     |                ^\n  47 |\n  48 |     // 필수 필드 확인\n  49 |     await expect(page.locator('input[placeholder*=\"제목\"]')).toBeVisible();\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:46:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:35:38.996Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-02-폼-필드-표시-확인-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-02-폼-필드-표시-확인-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-02-폼-필드-표시-확인-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 46
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-486e5299dc3c8228b3cf",
+              "file": "errand-form.spec.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "ERR-03: 카테고리 선택",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13252,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:62:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 62
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 60 |\u001b[39m   test(\u001b[32m'ERR-03: 카테고리 선택'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 62 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m     \u001b[90m// 쇼핑 카테고리 선택\u001b[39m\n \u001b[90m 65 |\u001b[39m     \u001b[36mconst\u001b[39m shoppingButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"🛒\")'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 62
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  60 |   test('ERR-03: 카테고리 선택', async ({ page }) => {\n  61 |     await page.waitForLoadState('networkidle');\n> 62 |     await page.click('button:has-text(\"심부름 등록\")');\n     |                ^\n  63 |\n  64 |     // 쇼핑 카테고리 선택\n  65 |     const shoppingButton = page.locator('button:has-text(\"🛒\")');\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:62:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:35:53.581Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-03-카테고리-선택-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-03-카테고리-선택-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-03-카테고리-선택-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 62
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-8f779d212a4caf3de5b6",
+              "file": "errand-form.spec.ts",
+              "line": 60,
+              "column": 7
+            },
+            {
+              "title": "ERR-04: 필수 필드 없이 제출 시도",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12896,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:80:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 80
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 78 |\u001b[39m   test(\u001b[32m'ERR-04: 필수 필드 없이 제출 시도'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 80 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m\n \u001b[90m 83 |\u001b[39m     \u001b[90m// 등록 버튼 찾기\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 80
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  78 |   test('ERR-04: 필수 필드 없이 제출 시도', async ({ page }) => {\n  79 |     await page.waitForLoadState('networkidle');\n> 80 |     await page.click('button:has-text(\"심부름 등록\")');\n     |                ^\n  81 |     await page.waitForTimeout(1000);\n  82 |\n  83 |     // 등록 버튼 찾기\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:80:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:36:08.428Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-04-필수-필드-없이-제출-시도-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-04-필수-필드-없이-제출-시도-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-04-필수-필드-없이-제출-시도-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 80
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-7ba76a974a6e4f98601e",
+              "file": "errand-form.spec.ts",
+              "line": 78,
+              "column": 7
+            },
+            {
+              "title": "ERR-05: 보상금 입력",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13030,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:104:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 104
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 102 |\u001b[39m   test(\u001b[32m'ERR-05: 보상금 입력'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 103 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 104 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 105 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 106 |\u001b[39m\n \u001b[90m 107 |\u001b[39m     \u001b[90m// 보상금 입력\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 104
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  102 |   test('ERR-05: 보상금 입력', async ({ page }) => {\n  103 |     await page.waitForLoadState('networkidle');\n> 104 |     await page.click('button:has-text(\"심부름 등록\")');\n      |                ^\n  105 |     await page.waitForTimeout(1000);\n  106 |\n  107 |     // 보상금 입력\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:104:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:36:22.889Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-05-보상금-입력-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-05-보상금-입력-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-05-보상금-입력-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 104
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-8e0df70757f5ba46a4f6",
+              "file": "errand-form.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "ERR-06: 마감 시간 설정",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12951,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:117:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 117
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 115 |\u001b[39m   test(\u001b[32m'ERR-06: 마감 시간 설정'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 116 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 117 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 118 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 119 |\u001b[39m\n \u001b[90m 120 |\u001b[39m     \u001b[90m// 마감 시간 입력 필드 찾기\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 117
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  115 |   test('ERR-06: 마감 시간 설정', async ({ page }) => {\n  116 |     await page.waitForLoadState('networkidle');\n> 117 |     await page.click('button:has-text(\"심부름 등록\")');\n      |                ^\n  118 |     await page.waitForTimeout(1000);\n  119 |\n  120 |     // 마감 시간 입력 필드 찾기\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:117:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:36:37.579Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-06-마감-시간-설정-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-06-마감-시간-설정-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-06-마감-시간-설정-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 117
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-cff8b844c53df45e6f2f",
+              "file": "errand-form.spec.ts",
+              "line": 115,
+              "column": 7
+            },
+            {
+              "title": "ERR-07: 폼 취소",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13150,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:136:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 136
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 134 |\u001b[39m   test(\u001b[32m'ERR-07: 폼 취소'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 135 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 136 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 137 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 138 |\u001b[39m\n \u001b[90m 139 |\u001b[39m     \u001b[90m// 취소 버튼 클릭\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 136
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  134 |   test('ERR-07: 폼 취소', async ({ page }) => {\n  135 |     await page.waitForLoadState('networkidle');\n> 136 |     await page.click('button:has-text(\"심부름 등록\")');\n      |                ^\n  137 |     await page.waitForTimeout(1000);\n  138 |\n  139 |     // 취소 버튼 클릭\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:136:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:36:52.146Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-07-폼-취소-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-07-폼-취소-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-07-폼-취소-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 136
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-23c590c9e1572024476b",
+              "file": "errand-form.spec.ts",
+              "line": 134,
+              "column": 7
+            },
+            {
+              "title": "ERR-08: 지도에서 위치 선택 UI 확인",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12992,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:151:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 151
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 149 |\u001b[39m   test(\u001b[32m'ERR-08: 지도에서 위치 선택 UI 확인'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 150 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 151 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 152 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m2000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 153 |\u001b[39m\n \u001b[90m 154 |\u001b[39m     \u001b[90m// 지도 컨테이너가 있는지 확인\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 151
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  149 |   test('ERR-08: 지도에서 위치 선택 UI 확인', async ({ page }) => {\n  150 |     await page.waitForLoadState('networkidle');\n> 151 |     await page.click('button:has-text(\"심부름 등록\")');\n      |                ^\n  152 |     await page.waitForTimeout(2000);\n  153 |\n  154 |     // 지도 컨테이너가 있는지 확인\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:151:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:37:06.871Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-08-지도에서-위치-선택-UI-확인-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-08-지도에서-위치-선택-UI-확인-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-08-지도에서-위치-선택-UI-확인-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 151
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-27fbef107d24e02411f4",
+              "file": "errand-form.spec.ts",
+              "line": 149,
+              "column": 7
+            },
+            {
+              "title": "ERR-09: 주소 검색 기능",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12952,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:169:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                          "column": 16,
+                          "line": 169
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 167 |\u001b[39m   test(\u001b[32m'ERR-09: 주소 검색 기능'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 168 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 169 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 170 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m2000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 171 |\u001b[39m\n \u001b[90m 172 |\u001b[39m     \u001b[90m// 주소 검색 입력\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "column": 16,
+                            "line": 169
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  167 |   test('ERR-09: 주소 검색 기능', async ({ page }) => {\n  168 |     await page.waitForLoadState('networkidle');\n> 169 |     await page.click('button:has-text(\"심부름 등록\")');\n      |                ^\n  170 |     await page.waitForTimeout(2000);\n  171 |\n  172 |     // 주소 검색 입력\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts:169:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:37:21.431Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-09-주소-검색-기능-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-09-주소-검색-기능-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-form-Errand-Registration-Form-ERR-09-주소-검색-기능-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "column": 16,
+                        "line": 169
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-537473cc7239ed14230b",
+              "file": "errand-form.spec.ts",
+              "line": 167,
+              "column": 7
+            },
+            {
+              "title": "ERR-10: 완전한 심부름 등록 플로우",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                        "line": 190,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 2687,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:37:36.001Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-form.spec.ts",
+                            "line": 190,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3570db692f4a0e1734ee-0b1481566e7cfefc1efe",
+              "file": "errand-form.spec.ts",
+              "line": 189,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "errand-list.spec.ts",
+      "file": "errand-list.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Errand List",
+          "file": "errand-list.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ERR-08: 주변 심부름 목록 표시",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12797,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#map-container')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#map-container')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#map-container')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#map-container')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts:42:50",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts",
+                          "column": 50,
+                          "line": 42
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m     \u001b[90m// 지도가 로드되는지 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#map-container'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'ERR-09: 심부름 개수 표시'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts",
+                            "column": 50,
+                            "line": 42
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#map-container')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#map-container')\u001b[22m\n\n\n  40 |\n  41 |     // 지도가 로드되는지 확인\n> 42 |     await expect(page.locator('#map-container')).toBeVisible();\n     |                                                  ^\n  43 |   });\n  44 |\n  45 |   test('ERR-09: 심부름 개수 표시', async ({ page }) => {\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts:42:50"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:37:38.889Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-list-Errand-List-ERR-08-주변-심부름-목록-표시-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-list-Errand-List-ERR-08-주변-심부름-목록-표시-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-list-Errand-List-ERR-08-주변-심부름-목록-표시-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts",
+                        "column": 50,
+                        "line": 42
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9b819c0838c415745295-32d0f51d7200ce9ff047",
+              "file": "errand-list.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "ERR-09: 심부름 개수 표시",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 18143,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=/\\\\d+개/')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=/\\\\d+개/')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=/\\\\d+개/')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=/\\\\d+개/')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts:49:48",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts",
+                          "column": 48,
+                          "line": 49
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 47 |\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[90m// 심부름 개수가 표시되는지 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/\\\\d+개/'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 51 |\u001b[39m\n \u001b[90m 52 |\u001b[39m   test(\u001b[32m'ERR-10: 심부름 카드 기본 정보 표시'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts",
+                            "column": 48,
+                            "line": 49
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=/\\\\d+개/')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=/\\\\d+개/')\u001b[22m\n\n\n  47 |\n  48 |     // 심부름 개수가 표시되는지 확인\n> 49 |     await expect(page.locator('text=/\\\\d+개/')).toBeVisible({ timeout: 15000 });\n     |                                                ^\n  50 |   });\n  51 |\n  52 |   test('ERR-10: 심부름 카드 기본 정보 표시', async ({ page }) => {\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts:49:48"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:37:53.161Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-list-Errand-List-ERR-09-심부름-개수-표시-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-list-Errand-List-ERR-09-심부름-개수-표시-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\errand-list-Errand-List-ERR-09-심부름-개수-표시-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\errand-list.spec.ts",
+                        "column": 48,
+                        "line": 49
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9b819c0838c415745295-4d35aeaa72dbc548b35d",
+              "file": "errand-list.spec.ts",
+              "line": 45,
+              "column": 7
+            },
+            {
+              "title": "ERR-10: 심부름 카드 기본 정보 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2653,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "심부름 카드가 없습니다 (주변에 심부름이 없을 수 있음)\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:12.902Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-845d5adbd76cc8843146",
+              "file": "errand-list.spec.ts",
+              "line": 52,
+              "column": 7
+            },
+            {
+              "title": "ERR-11: 새로고침 버튼 작동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2449,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:15.746Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-7c5cfe1afeb519bcf0c7",
+              "file": "errand-list.spec.ts",
+              "line": 74,
+              "column": 7
+            },
+            {
+              "title": "ERR-12: 사용자 탭 전환",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2503,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:18.210Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-bab85898c231a0c22b79",
+              "file": "errand-list.spec.ts",
+              "line": 92,
+              "column": 7
+            },
+            {
+              "title": "ERR-13: 심부름 카드 클릭 시 지도 이동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:20.724Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-d392e1dc13a45c7ec0aa",
+              "file": "errand-list.spec.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "ERR-14: 현재 위치로 버튼",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4586,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:25.313Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-ec18eb6cd76f0e425988",
+              "file": "errand-list.spec.ts",
+              "line": 138,
+              "column": 7
+            },
+            {
+              "title": "ERR-15: 카테고리 아이콘 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4488,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:29.912Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-1a21d1ac44c33c16e4bf",
+              "file": "errand-list.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "ERR-16: 심부름 상태 배지 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4510,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:34.414Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9b819c0838c415745295-706b1d0af923499d0e48",
+              "file": "errand-list.spec.ts",
+              "line": 177,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "full-process.spec.ts",
+      "file": "full-process.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Full Process Flow",
+          "file": "full-process.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [
+            {
+              "title": "PROCESS-01: 사용자 로그인 및 메인 페이지 접근",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 8067,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts:38:62",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts",
+                          "column": 62,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m\n \u001b[90m 37 |\u001b[39m     \u001b[90m// 로그인 상태 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그아웃'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'✅ PROCESS-01: 로그인 및 메인 페이지 접근 성공'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 40 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts",
+                            "column": 62,
+                            "line": 38
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n\n  36 |\n  37 |     // 로그인 상태 확인\n> 38 |     await expect(page.getByRole('button', { name: '로그아웃' })).toBeVisible({ timeout: 5000 });\n     |                                                              ^\n  39 |     console.log('✅ PROCESS-01: 로그인 및 메인 페이지 접근 성공');\n  40 |   });\n  41 |\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts:38:62"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:38.953Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\full-process-Full-Process--8d169-CESS-01-사용자-로그인-및-메인-페이지-접근-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\full-process-Full-Process--8d169-CESS-01-사용자-로그인-및-메인-페이지-접근-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\full-process-Full-Process--8d169-CESS-01-사용자-로그인-및-메인-페이지-접근-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts",
+                        "column": 62,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-f04e5e201e23b9983c37",
+              "file": "full-process.spec.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-02: 심부름 등록 (의뢰자 플로우)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3755,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ 심부름 등록 버튼을 찾을 수 없음, 다른 방법 시도\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-02: 심부름 등록 폼을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:48.396Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-749c0b20740db4d9016c",
+              "file": "full-process.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-03: 심부름 목록 조회 및 필터링",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3053,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "📋 심부름 목록 개수: 0\n"
+                        },
+                        {
+                          "text": "✅ PROCESS-03: 심부름 목록 조회 및 필터링 완료\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:52.327Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-ce741a6ada239fb35a14",
+              "file": "full-process.spec.ts",
+              "line": 99,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-04: 심부름 상세 조회",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3174,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-04: 심부름 목록에 항목이 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:55.391Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-eb65bd15f437c50f3ef9",
+              "file": "full-process.spec.ts",
+              "line": 132,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-05: 심부름 수락 (시행자 플로우)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3033,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-05: 심부름 목록에 항목이 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:38:58.576Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-7468d653f51324f775c9",
+              "file": "full-process.spec.ts",
+              "line": 160,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-06: 채팅 기능",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3016,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-06: 채팅 기능을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:01.620Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-e41eab668355005b89d6",
+              "file": "full-process.spec.ts",
+              "line": 195,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-07: 완료 검증",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2992,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-07: 진행 중인 심부름을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:04.645Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-8b2a16a26577654c83cd",
+              "file": "full-process.spec.ts",
+              "line": 238,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-08: 사용자 프로필 관리",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2960,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-08: 프로필 버튼을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:07.647Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-6d3acedd9d1618ba24f2",
+              "file": "full-process.spec.ts",
+              "line": 282,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-09: 거래 내역 조회",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2966,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        },
+                        {
+                          "text": "⚠️ PROCESS-09: 거래 내역 버튼을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:10.617Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-635b5274dcf07a30f974",
+              "file": "full-process.spec.ts",
+              "line": 309,
+              "column": 7
+            },
+            {
+              "title": "PROCESS-10: 로그아웃",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 8060,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts:342:62",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts",
+                          "column": 62,
+                          "line": 342
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 340 |\u001b[39m\n \u001b[90m 341 |\u001b[39m     \u001b[90m// 로그인 상태 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 342 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그아웃'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 343 |\u001b[39m\n \u001b[90m 344 |\u001b[39m     \u001b[90m// 로그아웃 버튼 클릭\u001b[39m\n \u001b[90m 345 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'로그아웃'\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts",
+                            "column": 62,
+                            "line": 342
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '로그아웃' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '로그아웃' })\u001b[22m\n\n\n  340 |\n  341 |     // 로그인 상태 확인\n> 342 |     await expect(page.getByRole('button', { name: '로그아웃' })).toBeVisible({ timeout: 5000 });\n      |                                                              ^\n  343 |\n  344 |     // 로그아웃 버튼 클릭\n  345 |     await page.getByRole('button', { name: '로그아웃' }).click();\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts:342:62"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "⚠️ 테스트 사용자 버튼을 찾을 수 없음\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:13.593Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\full-process-Full-Process-Flow-PROCESS-10-로그아웃-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\full-process-Full-Process-Flow-PROCESS-10-로그아웃-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\full-process-Full-Process-Flow-PROCESS-10-로그아웃-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\full-process.spec.ts",
+                        "column": 62,
+                        "line": 342
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9591030ec99c2f4cbe1f-79d2eb403834d5517668",
+              "file": "full-process.spec.ts",
+              "line": 333,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "map.spec.ts",
+      "file": "map.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Map and Location",
+          "file": "map.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "MAP-01: 지도 컨테이너 표시",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12952,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#map-container')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#map-container')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#map-container')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#map-container')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts:38:50",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts",
+                          "column": 50,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m\n \u001b[90m 37 |\u001b[39m     \u001b[90m// 지도 컨테이너 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#map-container'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'MAP-02: 지도 로드 확인'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts",
+                            "column": 50,
+                            "line": 38
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#map-container')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#map-container')\u001b[22m\n\n\n  36 |\n  37 |     // 지도 컨테이너 확인\n> 38 |     await expect(page.locator('#map-container')).toBeVisible();\n     |                                                  ^\n  39 |   });\n  40 |\n  41 |   test('MAP-02: 지도 로드 확인', async ({ page }) => {\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts:38:50"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:23.060Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\map-Map-and-Location-MAP-01-지도-컨테이너-표시-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\map-Map-and-Location-MAP-01-지도-컨테이너-표시-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\map-Map-and-Location-MAP-01-지도-컨테이너-표시-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts",
+                        "column": 50,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-2adc09ed146ca1e39464",
+              "file": "map.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "MAP-02: 지도 로드 확인",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5747,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:37.584Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-ba42ace1e6368d62fdb4",
+              "file": "map.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "MAP-03: 현재 위치로 버튼",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4575,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:43.535Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-c1745193033e87bf5f6f",
+              "file": "map.spec.ts",
+              "line": 54,
+              "column": 7
+            },
+            {
+              "title": "MAP-04: 지도 줌 컨트롤",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5483,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Map zoom control exists: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:48.123Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-6ac22543fd538ec307f4",
+              "file": "map.spec.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "MAP-05: 심부름 마커 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5571,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Map markers found: \u001b[33m0\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:53.619Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-3bb4b6ff1ebfe346e47a",
+              "file": "map.spec.ts",
+              "line": 85,
+              "column": 7
+            },
+            {
+              "title": "MAP-06: 테스트 마커 기능 (test-user)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2423,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:39:59.202Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-b03208408c8c73e2007c",
+              "file": "map.spec.ts",
+              "line": 100,
+              "column": 7
+            },
+            {
+              "title": "MAP-07: 예시 위치 버튼 (test-user)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2359,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:01.634Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-1bb497bc700cd54badce",
+              "file": "map.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "MAP-08: 잘못된 좌표 입력 검증",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2381,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:04.003Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-1b3f257de9dab37f75d5",
+              "file": "map.spec.ts",
+              "line": 144,
+              "column": 7
+            },
+            {
+              "title": "MAP-09: 지도 이동 시 심부름 조회",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15799,
+                      "error": {
+                        "message": "TimeoutError: locator.textContent: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=/\\\\d+개 심부름/')\u001b[22m\n",
+                        "stack": "TimeoutError: locator.textContent: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=/\\\\d+개 심부름/')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts:172:65",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts",
+                          "column": 65,
+                          "line": 172
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 170 |\u001b[39m\n \u001b[90m 171 |\u001b[39m     \u001b[90m// 초기 심부름 개수 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 172 |\u001b[39m     \u001b[36mconst\u001b[39m initialCount \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/\\\\d+개 심부름/'\u001b[39m)\u001b[33m.\u001b[39mtextContent()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 173 |\u001b[39m\n \u001b[90m 174 |\u001b[39m     \u001b[90m// 지도를 이동시키는 시뮬레이션 (실제로는 지도 드래그가 어려우므로 확인만)\u001b[39m\n \u001b[90m 175 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'Initial errand count:'\u001b[39m\u001b[33m,\u001b[39m initialCount)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts",
+                            "column": 65,
+                            "line": 172
+                          },
+                          "message": "TimeoutError: locator.textContent: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=/\\\\d+개 심부름/')\u001b[22m\n\n\n  170 |\n  171 |     // 초기 심부름 개수 확인\n> 172 |     const initialCount = await page.locator('text=/\\\\d+개 심부름/').textContent();\n      |                                                                 ^\n  173 |\n  174 |     // 지도를 이동시키는 시뮬레이션 (실제로는 지도 드래그가 어려우므로 확인만)\n  175 |     console.log('Initial errand count:', initialCount);\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts:172:65"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:06.395Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\map-Map-and-Location-MAP-09-지도-이동-시-심부름-조회-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\map-Map-and-Location-MAP-09-지도-이동-시-심부름-조회-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\map-Map-and-Location-MAP-09-지도-이동-시-심부름-조회-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\map.spec.ts",
+                        "column": 65,
+                        "line": 172
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2d8799038d2916f69765-43efcc5cbad719c2ab3e",
+              "file": "map.spec.ts",
+              "line": 167,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "navigation.spec.ts",
+      "file": "navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Navigation and UI",
+          "file": "navigation.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "NAV-01: 홈페이지 로드",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1156,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:23.591Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-8c8519202c0d95dbce55",
+              "file": "navigation.spec.ts",
+              "line": 18,
+              "column": 7
+            },
+            {
+              "title": "NAV-02: 헤더 요소 확인",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 896,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:29:44",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                          "column": 44,
+                          "line": 29
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 27 |\u001b[39m\n \u001b[90m 28 |\u001b[39m     \u001b[90m// 로고 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 29 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=부름이'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 30 |\u001b[39m\n \u001b[90m 31 |\u001b[39m     \u001b[90m// 사용 가이드 링크 확인\u001b[39m\n \u001b[90m 32 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'a:has-text(\"사용 가이드\")'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                            "column": 44,
+                            "line": 29
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n\n\n  27 |\n  28 |     // 로고 확인\n> 29 |     await expect(page.locator('text=부름이')).toBeVisible();\n     |                                            ^\n  30 |\n  31 |     // 사용 가이드 링크 확인\n  32 |     await expect(page.locator('a:has-text(\"사용 가이드\")')).toBeVisible();\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:29:44"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:24.940Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-02-헤더-요소-확인-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-02-헤더-요소-확인-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-02-헤더-요소-확인-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                        "column": 44,
+                        "line": 29
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-3dfe7793b9b6947c59fc",
+              "file": "navigation.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "NAV-03: 사용 가이드 페이지 이동",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1194,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:27.218Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-8c8c24a4e89a26efe3da",
+              "file": "navigation.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "NAV-04: 로고 클릭 시 홈으로 이동",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11165,
+                      "error": {
+                        "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"부름이\")')\u001b[22m\n\u001b[2m    - locator resolved to <a href=\"/\" class=\"inline-block mb-2 min-[400px]:mb-3 sm:mb-4\">…</a>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    19 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                        "stack": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"부름이\")')\u001b[22m\n\u001b[2m    - locator resolved to <a href=\"/\" class=\"inline-block mb-2 min-[400px]:mb-3 sm:mb-4\">…</a>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    19 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:51:16",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                          "column": 16,
+                          "line": 51
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 49 |\u001b[39m\n \u001b[90m 50 |\u001b[39m     \u001b[90m// 로고 클릭\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 51 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'a:has-text(\"부름이\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 52 |\u001b[39m\n \u001b[90m 53 |\u001b[39m     \u001b[90m// 홈페이지로 돌아왔는지 확인\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                            "column": 16,
+                            "line": 51
+                          },
+                          "message": "TimeoutError: page.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"부름이\")')\u001b[22m\n\u001b[2m    - locator resolved to <a href=\"/\" class=\"inline-block mb-2 min-[400px]:mb-3 sm:mb-4\">…</a>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    19 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  49 |\n  50 |     // 로고 클릭\n> 51 |     await page.click('a:has-text(\"부름이\")');\n     |                ^\n  52 |\n  53 |     // 홈페이지로 돌아왔는지 확인\n  54 |     await expect(page).toHaveURL('/');\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:51:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:28.577Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-04-로고-클릭-시-홈으로-이동-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-04-로고-클릭-시-홈으로-이동-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-04-로고-클릭-시-홈으로-이동-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                        "column": 16,
+                        "line": 51
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-466627b2b1bf708308bc",
+              "file": "navigation.spec.ts",
+              "line": 46,
+              "column": 7
+            },
+            {
+              "title": "NAV-05: 반응형 레이아웃 - 모바일",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1063,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:64:44",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                          "column": 44,
+                          "line": 64
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 62 |\u001b[39m\n \u001b[90m 63 |\u001b[39m     \u001b[90m// 헤더가 여전히 보이는지 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 64 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=부름이'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 65 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 66 |\u001b[39m\n \u001b[90m 67 |\u001b[39m   test(\u001b[32m'NAV-06: 반응형 레이아웃 - 태블릿'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                            "column": 44,
+                            "line": 64
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n\n\n  62 |\n  63 |     // 헤더가 여전히 보이는지 확인\n> 64 |     await expect(page.locator('text=부름이')).toBeVisible();\n     |                                            ^\n  65 |   });\n  66 |\n  67 |   test('NAV-06: 반응형 레이아웃 - 태블릿', async ({ page }) => {\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:64:44"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:41.187Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-05-반응형-레이아웃---모바일-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-05-반응형-레이아웃---모바일-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-05-반응형-레이아웃---모바일-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                        "column": 44,
+                        "line": 64
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-7e7f1440db6c4382f39c",
+              "file": "navigation.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "NAV-06: 반응형 레이아웃 - 태블릿",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 21,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1194,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:73:44",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                          "column": 44,
+                          "line": 73
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 71 |\u001b[39m     \u001b[36mawait\u001b[39m handleGeolocationPrompt(page)\u001b[33m;\u001b[39m\n \u001b[90m 72 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 73 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=부름이'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 74 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 75 |\u001b[39m\n \u001b[90m 76 |\u001b[39m   test(\u001b[32m'NAV-07: 다크모드 지원 여부'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                            "column": 44,
+                            "line": 73
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=부름이')\nExpected: visible\nError: strict mode violation: locator('text=부름이') resolved to 10 elements:\n    1) <a href=\"/\" class=\"text-xl font-bold text-blue-600 hover:text-blue-700\">부름이</a> aka getByRole('link', { name: '부름이' })\n    2) <span class=\"text-blue-600\">부름이</span> aka getByRole('heading', { name: '간편한 심부름, 부름이와 함께' }).locator('span')\n    3) <h2 class=\"text-4xl font-bold text-black mb-4\">부름이가 특별한 이유</h2> aka getByRole('heading', { name: '부름이가 특별한 이유' })\n    4) <p class=\"text-lg text-black\">이미지로 쉽게 알아보는 부름이 사용 가이드</p> aka getByText('이미지로 쉽게 알아보는 부름이 사용 가이드')\n    5) <p class=\"text-black\">심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다.</p> aka getByText('심부름이 완료되면 확인 버튼을 눌러주세요. 상호 리뷰를 통해 신뢰도를 쌓을 수 있습니다')\n    6) <p class=\"text-xl text-black\">일상의 다양한 심부름을 부름이에서</p> aka getByText('일상의 다양한 심부름을 부름이에서')\n    7) <p class=\"text-xl mb-8 opacity-90\">간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다</p> aka getByText('간편한 회원가입으로 부름이의 모든 서비스를 이용할 수 있습니다')\n    8) <h3 class=\"text-2xl font-bold mb-4\">부름이</h3> aka getByRole('heading', { name: '부름이', exact: true })\n    9) <p class=\"text-black\">© 2024 부름이. All rights reserved.</p> aka getByText('© 2024 부름이. All rights')\n    10) <title>부름이 - 주변 심부름으로 부수입 벌기</title> aka getByText('부름이 - 주변 심부름으로 부수입 벌기')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=부름이')\u001b[22m\n\n\n  71 |     await handleGeolocationPrompt(page);\n  72 |\n> 73 |     await expect(page.locator('text=부름이')).toBeVisible();\n     |                                            ^\n  74 |   });\n  75 |\n  76 |   test('NAV-07: 다크모드 지원 여부', async ({ page }) => {\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:73:44"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:43.804Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-06-반응형-레이아웃---태블릿-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-06-반응형-레이아웃---태블릿-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Navigation-and-UI-NAV-06-반응형-레이아웃---태블릿-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                        "column": 44,
+                        "line": 73
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-a6c6852c1fafb8207262",
+              "file": "navigation.spec.ts",
+              "line": 67,
+              "column": 7
+            },
+            {
+              "title": "NAV-07: 다크모드 지원 여부",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1105,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Dark mode toggle exists: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:46.589Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-d6db57762bfd1dc15417",
+              "file": "navigation.spec.ts",
+              "line": 76,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Logged In Navigation",
+          "file": "navigation.spec.ts",
+          "line": 91,
+          "column": 6,
+          "specs": [
+            {
+              "title": "NAV-08: 로그인 후 헤더 요소",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12750,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button:has-text(\"심부름 등록\")')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button:has-text(\"심부름 등록\")')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:121:61",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                          "column": 61,
+                          "line": 121
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 119 |\u001b[39m\n \u001b[90m 120 |\u001b[39m     \u001b[90m// 심부름 등록 버튼\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 121 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"심부름 등록\")'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 122 |\u001b[39m\n \u001b[90m 123 |\u001b[39m     \u001b[90m// 알림 벨\u001b[39m\n \u001b[90m 124 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=🔔'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                            "column": 61,
+                            "line": 121
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button:has-text(\"심부름 등록\")')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 등록\")')\u001b[22m\n\n\n  119 |\n  120 |     // 심부름 등록 버튼\n> 121 |     await expect(page.locator('button:has-text(\"심부름 등록\")')).toBeVisible();\n      |                                                             ^\n  122 |\n  123 |     // 알림 벨\n  124 |     await expect(page.locator('text=🔔')).toBeVisible();\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:121:61"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:40:47.884Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Logged-In-Navigation-NAV-08-로그인-후-헤더-요소-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Logged-In-Navigation-NAV-08-로그인-후-헤더-요소-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Logged-In-Navigation-NAV-08-로그인-후-헤더-요소-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                        "column": 61,
+                        "line": 121
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-416c9f27ff3bc1bc88fe",
+              "file": "navigation.spec.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "NAV-09: 프로필 클릭",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2622,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:41:02.105Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-f119d60bd5941cfeda04",
+              "file": "navigation.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "NAV-10: 알림 벨 클릭",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2392,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:41:04.934Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-5437d13a97f1972145be",
+              "file": "navigation.spec.ts",
+              "line": 146,
+              "column": 7
+            },
+            {
+              "title": "NAV-11: 탭 전환",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12862,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button:has-text(\"심부름 받기\")')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 받기\")')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button:has-text(\"심부름 받기\")')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 받기\")')\u001b[22m\n\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:163:61",
+                        "location": {
+                          "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                          "column": 61,
+                          "line": 163
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 161 |\u001b[39m\n \u001b[90m 162 |\u001b[39m     \u001b[90m// 탭이 표시되는지 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"심부름 받기\")'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 164 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"심부름 수행\")'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 165 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"심부름 요청\")'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 166 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                            "column": 61,
+                            "line": 163
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button:has-text(\"심부름 받기\")')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button:has-text(\"심부름 받기\")')\u001b[22m\n\n\n  161 |\n  162 |     // 탭이 표시되는지 확인\n> 163 |     await expect(page.locator('button:has-text(\"심부름 받기\")')).toBeVisible();\n      |                                                             ^\n  164 |     await expect(page.locator('button:has-text(\"심부름 수행\")')).toBeVisible();\n  165 |     await expect(page.locator('button:has-text(\"심부름 요청\")')).toBeVisible();\n  166 |\n    at C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts:163:61"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-26T15:41:07.341Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Logged-In-Navigation-NAV-11-탭-전환-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Logged-In-Navigation-NAV-11-탭-전환-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\csm\\workspace\\errandwebapp\\test-results\\navigation-Logged-In-Navigation-NAV-11-탭-전환-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\csm\\workspace\\errandwebapp\\e2e\\navigation.spec.ts",
+                        "column": 61,
+                        "line": 163
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d2868f7d23420c27cca-50b02285ab4fc304064e",
+              "file": "navigation.spec.ts",
+              "line": 159,
+              "column": 7
             }
           ]
         }
@@ -226,11 +3279,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-26T15:13:27.305Z",
-    "duration": 34626.766,
-    "expected": 2,
-    "skipped": 0,
-    "unexpected": 1,
+    "startTime": "2025-10-26T15:33:18.583Z",
+    "duration": 481758.14,
+    "expected": 34,
+    "skipped": 2,
+    "unexpected": 24,
     "flaky": 0
   }
 }

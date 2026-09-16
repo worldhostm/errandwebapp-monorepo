@@ -414,7 +414,7 @@ export default function MyAcceptedErrands({ user }: MyAcceptedErrandsProps) {
           isOpen={showChat}
           onClose={() => setShowChat(false)}
           errandTitle={selectedErrandForChat.title}
-          errandId={String(selectedErrandForChat._id)}
+          errandId={selectedErrandForChat.id}
           currentUserId={user.id}
         />
       )}

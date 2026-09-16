@@ -1,5 +1,6 @@
 import express from 'express';
 import { register, login, getProfile, updateProfile, sendEmailVerification, verifyEmailCode, resendVerificationCode, changePassword } from '../controllers/authController';
+import { naverLogin, naverCallback } from '../controllers/naverAuthController';
 import { auth } from '../middleware/auth';
 import { validateRegistration, validateLogin } from '../middleware/validation';
 
@@ -28,5 +29,11 @@ router.post('/resend-verification', resendVerificationCode);
 
 // POST /api/auth/change-password
 router.post('/change-password', auth, changePassword);
+
+// GET /api/auth/naver - 네이버 OAuth 시작
+router.get('/naver', naverLogin);
+
+// GET /api/auth/naver/callback - 네이버 OAuth 콜백
+router.get('/naver/callback', naverCallback);
 
 export default router;

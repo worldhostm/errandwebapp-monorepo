@@ -13,6 +13,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   name: string;
+  naverId?: string;
   phone?: string;
   avatar?: string;
   location?: {
@@ -100,6 +101,11 @@ const UserSchema = new Schema<IUser>({
     default: 0,
     min: 0,
     max: 3
+  },
+  naverId: {
+    type: String,
+    sparse: true,
+    unique: true
   }
 }, {
   timestamps: true

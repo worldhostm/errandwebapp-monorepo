@@ -20,6 +20,7 @@ import { processErrands } from '../lib/mapUtils'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { authApi, errandApi, notificationApi } from '../lib/api'
 import { checkLocationPermission, requestLocationWithPermission } from '../lib/locationUtils'
+import { STORAGE_KEYS, LOCATIONS, TIMING, MAP } from '../lib/constants'
 import type { ErrandLocation, ErrandFormData, Notification } from '../lib/types'
 import { convertErrandToErrandLocation, User } from '../lib/types'
 import { errandCache } from '../lib/errandCache'
@@ -43,7 +44,7 @@ export default function HomeClient() {
 
   // 로그인 상태 확인
   useEffect(() => {
-    const token = localStorage.getItem('authToken')
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
     if (token) {
       // JWT 토큰이 있으면 프로필 정보 가져오기
       authApi.getProfile().then(response => {
@@ -51,13 +52,13 @@ export default function HomeClient() {
           setUser(response.data.user)
         } else {
           // 토큰이 유효하지 않으면 제거
-          localStorage.removeItem('authToken')
+          localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
         }
       })
     }
 
     // 테스트 사용자도 확인 (개발용)
-    const testUser = localStorage.getItem('testUser')
+    const testUser = localStorage.getItem(STORAGE_KEYS.TEST_USER)
     if (testUser && !token) {
       setUser(JSON.parse(testUser))
     }
@@ -88,6 +89,21 @@ export default function HomeClient() {
 
   // 위치 권한 확인 및 요청 함수
   const checkAndRequestLocation = async () => {
+    // 동의 이력이 유효 기간 이내면 모달 없이 바로 요청
+    const savedAt = localStorage.getItem(STORAGE_KEYS.LOCATION_PERMISSION_GRANTED_AT)
+    const alreadyConsented = savedAt && Date.now() - Number(savedAt) < TIMING.LOCATION_CONSENT_TTL
+
+    if (alreadyConsented) {
+      const result = await requestLocationWithPermission()
+      if (result.success && result.location) {
+        setUserLocation(result.location)
+      } else {
+        console.warn('위치 가져오기 실패, 기본 위치(청계동 근처)로 설정합니다.')
+        setUserLocation(LOCATIONS.DEFAULT)
+      }
+      return
+    }
+
     const permission = await checkLocationPermission()
 
     if (permission === 'granted') {
@@ -97,7 +113,7 @@ export default function HomeClient() {
         setUserLocation(result.location)
       } else {
         console.warn('위치 가져오기 실패, 기본 위치(청계동 근처)로 설정합니다.')
-        setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
+        setUserLocation(LOCATIONS.DEFAULT)
       }
     } else if (permission === 'prompt' || permission === 'denied') {
       // 권한이 필요하면 팝업 표시
@@ -105,7 +121,7 @@ export default function HomeClient() {
     } else {
       // 위치 서비스 미지원
       console.warn('이 브라우저는 위치 서비스를 지원하지 않습니다. 기본 위치(청계동 근처)로 설정합니다.')
-      setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
+      setUserLocation(LOCATIONS.DEFAULT)
     }
   }
 
@@ -136,7 +152,7 @@ export default function HomeClient() {
 
       // 캐시에서 먼저 확인 (bounds가 있을 때만)
       if (bounds) {
-        const cachedData = errandCache.get(center, bounds, 100000)
+        const cachedData = errandCache.get(center, bounds, MAP.CACHE_BOUNDS_RADIUS)
         if (cachedData) {
           console.log(`🎯 캐시에서 ${cachedData.length}개 심부름 조회`)
           setFilteredErrands(cachedData)
@@ -151,10 +167,10 @@ export default function HomeClient() {
       if (bounds) {
         console.log(`📡 Bounds API 호출 (반경 제한 없음): errandApi.getNearbyErrands with bounds`)
         // bounds가 있으면 반경을 크게 잡아서 bounds 내의 모든 심부름을 가져옴
-        apiCall = errandApi.getNearbyErrands(lng, lat, 100000, 'pending', undefined, bounds)
+        apiCall = errandApi.getNearbyErrands(lng, lat, MAP.CACHE_BOUNDS_RADIUS, 'pending', undefined, bounds)
       } else {
         console.log(`📡 반경 API 호출: errandApi.getNearbyErrands(${lng}, ${lat}, 10000, 'pending')`)
-        apiCall = errandApi.getNearbyErrands(lng, lat, 10000, 'pending')
+        apiCall = errandApi.getNearbyErrands(lng, lat, MAP.DEFAULT_SEARCH_RADIUS, 'pending')
       }
 
       const response = await apiCall
@@ -194,7 +210,7 @@ export default function HomeClient() {
 
         // 캐시에 저장 (bounds가 있을 때만)
         if (currentMapBounds) {
-          errandCache.set(center, currentMapBounds, 100000, finalErrands)
+          errandCache.set(center, currentMapBounds, MAP.CACHE_BOUNDS_RADIUS, finalErrands)
         }
 
         // 결과가 있든 없든 항상 설정 (빈 배열이어도 설정)
@@ -248,7 +264,7 @@ export default function HomeClient() {
 
       if (response.success && response.data) {
         // JWT 토큰 저장
-        localStorage.setItem('authToken', response.data.token)
+        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.token)
         setUser(response.data.user)
         setShowAuthModal(false)
         console.log('로그인 성공:', response.data.user)
@@ -267,7 +283,7 @@ export default function HomeClient() {
 
       if (response.success && response.data) {
         // JWT 토큰 저장
-        localStorage.setItem('authToken', response.data.token)
+        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.token)
 
         // 프로필 이미지가 있으면 업데이트
         let user = response.data.user
@@ -292,7 +308,7 @@ export default function HomeClient() {
 
   const handleUpdateProfile = async (updatedUser: User) => {
     try {
-      const token = localStorage.getItem('authToken')
+      const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
 
       if (token) {
         // JWT 토큰이 있으면 서버에 업데이트
@@ -308,9 +324,9 @@ export default function HomeClient() {
       } else {
         // 테스트 사용자인 경우 로컬에만 저장
         setUser(updatedUser)
-        const testUser = localStorage.getItem('testUser')
+        const testUser = localStorage.getItem(STORAGE_KEYS.TEST_USER)
         if (testUser) {
-          localStorage.setItem('testUser', JSON.stringify(updatedUser))
+          localStorage.setItem(STORAGE_KEYS.TEST_USER, JSON.stringify(updatedUser))
         }
       }
     } catch (error) {
@@ -322,8 +338,8 @@ export default function HomeClient() {
   const handleLogout = () => {
     setUser(null)
     // JWT 토큰과 테스트 사용자 데이터 삭제
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('testUser')
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
+    localStorage.removeItem(STORAGE_KEYS.TEST_USER)
     // 알림 관련 상태 초기화
     setNotifications([])
     setUnreadCount(0)
@@ -401,7 +417,7 @@ export default function HomeClient() {
     if (user) {
       fetchUnreadCount()
       // 5분마다 읽지 않은 알림 개수 체크
-      const interval = setInterval(fetchUnreadCount, 5 * 60 * 1000)
+      const interval = setInterval(fetchUnreadCount, TIMING.NOTIFICATION_POLL_INTERVAL)
       return () => clearInterval(interval)
     }
   }, [user, fetchUnreadCount])
@@ -458,10 +474,10 @@ export default function HomeClient() {
             mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
           }
 
-          // 3초 후 선택 상태 해제
+          // 선택 상태 해제
           setTimeout(() => {
             setSelectedErrandId(null)
-          }, 3000)
+          }, TIMING.ERRAND_SELECTION_HIGHLIGHT)
         }
 
         // 새로 등록된 심부름을 보이기 위해 해당 위치 기준 조회
@@ -512,7 +528,7 @@ export default function HomeClient() {
         // 잠시 후 내 수행 심부름 탭으로 자동 이동 (백엔드 업데이트 시간 확보)
         setTimeout(() => {
           setActiveTab('performer')
-        }, 500)
+        }, TIMING.TAB_SWITCH_DELAY)
 
         console.log(`심부름 ${errandId} 수락 성공:`, response.data.errand)
       } else {
@@ -523,7 +539,7 @@ export default function HomeClient() {
         if (response.error && response.error.includes('이미 수행 중인 심부름이 있습니다')) {
           setTimeout(() => {
             setActiveTab('performer')
-          }, 1000)
+          }, TIMING.TAB_SWITCH_DELAY_ERROR)
         }
       }
     } catch (error) {
@@ -574,7 +590,7 @@ export default function HomeClient() {
     // 애니메이션이 끝나면 선택 상태 초기화
     setTimeout(() => {
       setSelectedErrandId(null)
-    }, 2000)
+    }, TIMING.ERRAND_CARD_ANIMATION)
   }
 
   const handleMoveToCurrentLocation = () => {
@@ -1153,13 +1169,14 @@ export default function HomeClient() {
             <div className="flex space-x-3">
               <button
                 onClick={async () => {
+                  localStorage.setItem(STORAGE_KEYS.LOCATION_PERMISSION_GRANTED_AT, String(Date.now()))
                   setShowLocationPermissionModal(false)
                   const result = await requestLocationWithPermission()
                   if (result.success && result.location) {
                     setUserLocation(result.location)
                   } else {
                     console.warn('위치 가져오기 실패, 기본 위치(서울시청)로 설정합니다.')
-                    setUserLocation({ lat: 37.5665, lng: 126.9780 })
+                    setUserLocation(LOCATIONS.SEOUL_CITY_HALL)
                   }
                 }}
                 className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -1170,7 +1187,7 @@ export default function HomeClient() {
                 onClick={() => {
                   setShowLocationPermissionModal(false)
                   console.log('사용자가 위치 권한을 거부했습니다. 기본 위치(청계동 근처)로 설정합니다.')
-                  setUserLocation({ lat: 37.1982115590239, lng: 127.118473726893 })
+                  setUserLocation(LOCATIONS.DEFAULT)
                 }}
                 className="flex-1 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
               >

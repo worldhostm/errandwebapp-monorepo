@@ -1,4 +1,6 @@
 import { ApiResponse, User, Errand, ErrandStatus, VerificationStatus } from '@errandwebapp/shared'
+import { API_PATHS } from './apiPaths'
+import { STORAGE_KEYS } from './constants'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 
@@ -17,7 +19,7 @@ async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const token = localStorage.getItem('authToken')
+  const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
   
   const config: RequestInit = {
     headers: {
@@ -58,25 +60,25 @@ async function apiRequest<T>(
 // 인증 관련 API
 export const authApi = {
   async login(email: string, password: string) {
-    return apiRequest<{ token: string; user: User }>('/auth/login', {
+    return apiRequest<{ token: string; user: User }>(API_PATHS.AUTH.LOGIN, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
   },
 
   async register(email: string, password: string, name: string) {
-    return apiRequest<{ token: string; user: User }>('/auth/register', {
+    return apiRequest<{ token: string; user: User }>(API_PATHS.AUTH.REGISTER, {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     })
   },
 
   async getProfile() {
-    return apiRequest<{ user: User }>('/auth/profile')
+    return apiRequest<{ user: User }>(API_PATHS.AUTH.PROFILE)
   },
 
   async updateProfile(userData: Partial<User>) {
-    return apiRequest<{ user: User }>('/auth/profile', {
+    return apiRequest<{ user: User }>(API_PATHS.AUTH.PROFILE, {
       method: 'PUT',
       body: JSON.stringify(userData),
     })
@@ -110,13 +112,13 @@ export const errandApi = {
       }),
     })
     
-    return apiRequest<{ errands: Errand[] }>(`/errands/nearby?${params}`, {
+    return apiRequest<{ errands: Errand[] }>(`${API_PATHS.ERRANDS.NEARBY}?${params}`, {
       signal
     })
   },
 
   async getErrandById(id: string) {
-    return apiRequest<{ errand: Errand }>(`/errands/${id}`)
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.BY_ID(id))
   },
 
   async createErrand(errandData: {
@@ -131,20 +133,20 @@ export const errandApi = {
     category: string
     deadline?: Date | string
   }) {
-    return apiRequest<{ errand: Errand }>('/errands', {
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.CREATE, {
       method: 'POST',
       body: JSON.stringify(errandData),
     })
   },
 
   async acceptErrand(id: string) {
-    return apiRequest<{ errand: Errand }>(`/errands/${id}/accept`, {
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.ACCEPT(id), {
       method: 'POST',
     })
   },
 
   async updateErrandStatus(id: string, status: ErrandStatus) {
-    return apiRequest<{ errand: Errand }>(`/errands/${id}/status`, {
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.STATUS(id), {
       method: 'PUT',
       body: JSON.stringify({ status }),
     })
@@ -155,31 +157,31 @@ export const errandApi = {
       ...(type && { type }),
       ...(status && { status }),
     })
-    
-    return apiRequest<{ errands: Errand[] }>(`/errands/user?${params}`)
+
+    return apiRequest<{ errands: Errand[] }>(`${API_PATHS.ERRANDS.USER}?${params}`)
   },
 
   async cancelErrand(id: string) {
-    return apiRequest<{ message: string }>(`/errands/${id}`, {
+    return apiRequest<{ message: string }>(API_PATHS.ERRANDS.BY_ID(id), {
       method: 'DELETE',
     })
   },
 
   // 내가 등록한 심부름 목록 조회
   async getMyErrands() {
-    return apiRequest<{ errands: Errand[] }>('/errands/user?type=requested')
+    return apiRequest<{ errands: Errand[] }>(`${API_PATHS.ERRANDS.USER}?type=requested`)
   },
 
   // 심부름 삭제
   async deleteErrand(id: string) {
-    return apiRequest<{ message: string }>(`/errands/${id}`, {
+    return apiRequest<{ message: string }>(API_PATHS.ERRANDS.BY_ID(id), {
       method: 'DELETE',
     })
   },
 
   // 완료 인증과 함께 심부름 완료
   async completeErrandWithVerification(id: string, image: string, message: string) {
-    return apiRequest<{ errand: Errand }>(`/errands/${id}/complete-verification`, {
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.COMPLETE_VERIFICATION(id), {
       method: 'POST',
       body: JSON.stringify({ image, message }),
     })
@@ -187,12 +189,12 @@ export const errandApi = {
 
   // 완료 인증 정보를 포함한 심부름 조회
   async getErrandWithVerification(id: string) {
-    return apiRequest<{ errand: Errand }>(`/errands/${id}/verification`)
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.VERIFICATION(id))
   },
 
   // 이의제기 제출
   async reportDispute(id: string, reason: string, description: string) {
-    return apiRequest<{ errand: Errand }>(`/errands/${id}/dispute`, {
+    return apiRequest<{ errand: Errand }>(API_PATHS.ERRANDS.DISPUTE(id), {
       method: 'POST',
       body: JSON.stringify({ reason, description }),
     })
@@ -200,15 +202,15 @@ export const errandApi = {
 
   // 사용자의 활성 심부름 상태 확인
   async checkActiveErrand() {
-    return apiRequest<{ 
-      hasActiveErrand: boolean; 
+    return apiRequest<{
+      hasActiveErrand: boolean;
       activeErrand?: {
         id: string;
         title: string;
         status: string;
         requestedBy: { name: string; email: string; }
-      } 
-    }>('/errands/check-active')
+      }
+    }>(API_PATHS.ERRANDS.CHECK_ACTIVE)
   },
 }
 
@@ -222,12 +224,12 @@ export const paymentApi = {
       hasDispute: boolean
       hoursUntilPayment: number | null
       lastUpdated: string
-    }>(`/payments/${errandId}/status`)
+    }>(API_PATHS.PAYMENTS.STATUS(errandId))
   },
 
   // 수동 결제 처리
   async manualPayment(errandId: string) {
-    return apiRequest<{ message: string }>(`/payments/${errandId}/manual`, {
+    return apiRequest<{ message: string }>(API_PATHS.PAYMENTS.MANUAL(errandId), {
       method: 'POST'
     })
   },
@@ -240,12 +242,12 @@ export const paymentApi = {
         activeJobs: number
         paymentJobRunning: boolean
       }
-    }>('/payments/scheduler/status')
+    }>(API_PATHS.PAYMENTS.SCHEDULER_STATUS)
   },
 
   // 수동 결제 체크 트리거
   async triggerPaymentCheck() {
-    return apiRequest<{ message: string }>('/payments/scheduler/trigger', {
+    return apiRequest<{ message: string }>(API_PATHS.PAYMENTS.SCHEDULER_TRIGGER, {
       method: 'POST'
     })
   }
@@ -256,7 +258,7 @@ export const notificationApi = {
   // 사용자 알림 목록 조회
   async getNotifications(unreadOnly?: boolean) {
     const params = unreadOnly ? '?unreadOnly=true' : ''
-    return apiRequest<{ 
+    return apiRequest<{
       notifications: import('@errandwebapp/shared').Notification[]
       unreadCount: number
       pagination: {
@@ -265,31 +267,31 @@ export const notificationApi = {
         total: number;
         pages: number;
       }
-    }>(`/notifications${params}`)
+    }>(`${API_PATHS.NOTIFICATIONS.LIST}${params}`)
   },
 
   // 읽지 않은 알림 개수 조회
   async getUnreadCount() {
-    return apiRequest<{ unreadCount: number }>('/notifications/unread-count')
+    return apiRequest<{ unreadCount: number }>(API_PATHS.NOTIFICATIONS.UNREAD_COUNT)
   },
 
   // 알림을 읽음 처리
   async markAsRead(notificationId: string) {
-    return apiRequest<{ 
+    return apiRequest<{
       notification: {
         id: string;
         title: string;
         message: string;
         isRead: boolean;
       }
-    }>(`/notifications/${notificationId}/read`, {
+    }>(API_PATHS.NOTIFICATIONS.MARK_READ(notificationId), {
       method: 'PUT',
     })
   },
 
   // 모든 알림을 읽음 처리
   async markAllAsRead() {
-    return apiRequest<{ message: string }>('/notifications/read-all', {
+    return apiRequest<{ message: string }>(API_PATHS.NOTIFICATIONS.READ_ALL, {
       method: 'PUT',
     })
   },
@@ -314,7 +316,7 @@ export const chatApi = {
           isRead: boolean;
         }[];
       }
-    }>(`/chat/errand/${errandId}`)
+    }>(API_PATHS.CHAT.BY_ERRAND(errandId))
   },
 
   // 메시지 전송
@@ -328,7 +330,7 @@ export const chatApi = {
         createdAt: string;
         isRead: boolean;
       }
-    }>(`/chat/${chatId}/message`, {
+    }>(API_PATHS.CHAT.MESSAGE(chatId), {
       method: 'POST',
       body: JSON.stringify({ content })
     })
@@ -336,7 +338,7 @@ export const chatApi = {
 
   // 메시지 읽음 처리
   async markMessagesAsRead(chatId: string) {
-    return apiRequest<{ message: string }>(`/chat/${chatId}/read`, {
+    return apiRequest<{ message: string }>(API_PATHS.CHAT.MARK_READ(chatId), {
       method: 'PUT'
     })
   }
@@ -346,7 +348,7 @@ export const chatApi = {
 export const verificationApi = {
   // 전화번호 인증 요청
   async requestPhoneVerification(phone: string) {
-    return apiRequest<{ verificationId: string }>('/verification/phone/request', {
+    return apiRequest<{ verificationId: string }>(API_PATHS.VERIFICATION.PHONE_REQUEST, {
       method: 'POST',
       body: JSON.stringify({ phone })
     })
@@ -357,7 +359,7 @@ export const verificationApi = {
     return apiRequest<{
       success: true;
       message: string;
-    }>('/verification/phone/verify', {
+    }>(API_PATHS.VERIFICATION.PHONE_VERIFY, {
       method: 'POST',
       body: JSON.stringify({ verificationId, code })
     })
@@ -369,7 +371,7 @@ export const verificationApi = {
       success: true;
       message: string;
       data: { verificationToken: string };
-    }>('/verification/email/request', {
+    }>(API_PATHS.VERIFICATION.EMAIL_REQUEST, {
       method: 'POST'
     })
   },
@@ -379,7 +381,7 @@ export const verificationApi = {
     return apiRequest<{
       success: true;
       message: string;
-    }>('/verification/identity/request', {
+    }>(API_PATHS.VERIFICATION.IDENTITY_REQUEST, {
       method: 'POST',
       body: JSON.stringify({ documents })
     })
@@ -390,7 +392,7 @@ export const verificationApi = {
     return apiRequest<{
       success: true;
       message: string;
-    }>('/verification/address/request', {
+    }>(API_PATHS.VERIFICATION.ADDRESS_REQUEST, {
       method: 'POST',
       body: JSON.stringify({ address, documents })
     })
@@ -401,7 +403,7 @@ export const verificationApi = {
     return apiRequest<{
       success: true;
       data: VerificationStatus;
-    }>('/verification/status')
+    }>(API_PATHS.VERIFICATION.STATUS)
   }
 }
 
@@ -424,7 +426,7 @@ export const supportApi = {
         status: string
         createdAt: string
       }
-    }>('/support', {
+    }>(API_PATHS.SUPPORT.LIST, {
       method: 'POST',
       body: JSON.stringify(supportData)
     })
@@ -459,7 +461,7 @@ export const supportApi = {
         total: number
         pages: number
       }
-    }>(`/support?${params}`)
+    }>(`${API_PATHS.SUPPORT.LIST}?${params}`)
   },
 
   // 특정 문의 조회
@@ -482,7 +484,7 @@ export const supportApi = {
           createdAt: string
         }>
       }
-    }>(`/support/${id}`)
+    }>(API_PATHS.SUPPORT.BY_ID(id))
   },
 
   // 문의에 답변 추가
@@ -496,7 +498,7 @@ export const supportApi = {
           createdAt: string
         }>
       }
-    }>(`/support/${id}/response`, {
+    }>(API_PATHS.SUPPORT.RESPONSE(id), {
       method: 'POST',
       body: JSON.stringify({ content })
     })
@@ -504,7 +506,7 @@ export const supportApi = {
 
   // 문의 삭제
   async deleteSupport(id: string) {
-    return apiRequest<{ message: string }>(`/support/${id}`, {
+    return apiRequest<{ message: string }>(API_PATHS.SUPPORT.BY_ID(id), {
       method: 'DELETE'
     })
   }
@@ -528,7 +530,7 @@ export const reportApi = {
         status: string
         createdAt: string
       }
-    }>('/report', {
+    }>(API_PATHS.REPORT.LIST, {
       method: 'POST',
       body: JSON.stringify(reportData)
     })
@@ -557,7 +559,7 @@ export const reportApi = {
         total: number
         pages: number
       }
-    }>(`/report?${params}`)
+    }>(`${API_PATHS.REPORT.LIST}?${params}`)
   },
 
   // 특정 신고 조회
@@ -574,12 +576,12 @@ export const reportApi = {
         reportedUser?: { id: string; name: string }
         reportedErrand?: { id: string; title: string }
       }
-    }>(`/report/${id}`)
+    }>(API_PATHS.REPORT.BY_ID(id))
   },
 
   // 신고 취소
   async deleteReport(id: string) {
-    return apiRequest<{ message: string }>(`/report/${id}`, {
+    return apiRequest<{ message: string }>(API_PATHS.REPORT.BY_ID(id), {
       method: 'DELETE'
     })
   }

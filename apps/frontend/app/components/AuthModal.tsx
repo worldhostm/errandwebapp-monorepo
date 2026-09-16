@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { handleImageUpload } from '../lib/imageUtils'
+import { AUTH, NAVER_COLORS, TIMING } from '../lib/constants'
 
 interface AuthModalProps {
   isOpen: boolean
@@ -15,7 +16,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
   const [isLoginMode, setIsLoginMode] = useState(true)
   const [currentStep, setCurrentStep] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
-  const totalSteps = 4
+  const totalSteps = AUTH.REGISTER_STEPS
   
   const [formData, setFormData] = useState({
     email: '',
@@ -46,7 +47,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
       setTimeout(() => {
         setCurrentStep(prev => prev + 1)
         setIsTransitioning(false)
-      }, 300)
+      }, TIMING.STEP_TRANSITION)
     }
   }
 
@@ -56,7 +57,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
       setTimeout(() => {
         setCurrentStep(prev => prev - 1)
         setIsTransitioning(false)
-      }, 300)
+      }, TIMING.STEP_TRANSITION)
     }
   }
 
@@ -64,7 +65,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
     switch (currentStep) {
       case 1: return formData.name.trim() !== ''
       case 2: return formData.email.trim() !== '' && formData.email.includes('@')
-      case 3: return formData.password.length >= 6 && formData.password === formData.confirmPassword
+      case 3: return formData.password.length >= AUTH.MIN_PASSWORD_LENGTH && formData.password === formData.confirmPassword
       case 4: return true // 프로필 사진은 선택사항
       default: return false
     }
@@ -182,7 +183,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                 className="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="비밀번호를 입력하세요"
                 required
-                minLength={6}
+                minLength={AUTH.MIN_PASSWORD_LENGTH}
               />
             </div>
 
@@ -254,7 +255,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                       onKeyPress={handleKeyPress}
                       className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                       placeholder="비밀번호"
-                      minLength={6}
+                      minLength={AUTH.MIN_PASSWORD_LENGTH}
                       autoFocus
                     />
                   </div>
@@ -266,7 +267,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
                       onKeyPress={handleKeyPress}
                       className="w-full px-4 py-4 text-lg border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-black"
                       placeholder="비밀번호 확인"
-                      minLength={6}
+                      minLength={AUTH.MIN_PASSWORD_LENGTH}
                     />
                   </div>
                   {formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword && (
@@ -375,8 +376,19 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }: Auth
               또는 소셜 계정으로 로그인
             </p>
             <div className="space-y-2">
-              <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black hover:text-white flex items-center justify-center gap-2 text-black transition-colors">
-                <span>🟢</span>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/naver`
+                }}
+                style={{ backgroundColor: NAVER_COLORS.BASE }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = NAVER_COLORS.HOVER)}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = NAVER_COLORS.BASE)}
+                className="w-full py-2 px-4 text-white rounded-md flex items-center justify-center gap-2 font-medium transition-colors"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                  <path d="M13.527 14.152L10.34 9H7v12h3.473V15.848L13.66 21H17V9h-3.473z"/>
+                </svg>
                 네이버로 로그인
               </button>
               <button className="w-full py-2 px-4 border border-black rounded-md hover:bg-black hover:text-white flex items-center justify-center gap-2 text-black transition-colors">

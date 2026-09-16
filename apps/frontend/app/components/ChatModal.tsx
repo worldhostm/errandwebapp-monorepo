@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import type { LocalMessage } from '../lib/types'
 import { chatApi } from '../lib/api'
+import { getSocket } from '../lib/socket'
+import type { Socket } from 'socket.io-client'
 
 interface ChatModalProps {
   isOpen: boolean
@@ -12,12 +14,22 @@ interface ChatModalProps {
   currentUserId: string
 }
 
-export default function ChatModal({ 
-  isOpen, 
-  onClose, 
-  errandTitle, 
+type RawMessage = {
+  _id?: string
+  id?: string
+  senderId?: string
+  sender: { _id?: string; name: string }
+  content: string
+  timestamp?: string
+  createdAt?: string
+}
+
+export default function ChatModal({
+  isOpen,
+  onClose,
+  errandTitle,
   errandId,
-  currentUserId 
+  currentUserId
 }: ChatModalProps) {
   const [messages, setMessages] = useState<LocalMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
@@ -26,6 +38,7 @@ export default function ChatModal({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const socketRef = useRef<Socket | null>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -35,66 +48,96 @@ export default function ChatModal({
     scrollToBottom()
   }, [messages])
 
+  const toLocalMessage = (msg: RawMessage): LocalMessage => ({
+    id: msg._id || msg.id || '',
+    senderId: msg.sender._id || msg.senderId || '',
+    senderName: msg.sender.name,
+    content: msg.content,
+    timestamp: new Date(msg.timestamp || msg.createdAt || new Date()),
+    type: 'text'
+  })
+
   const loadChatData = useCallback(async () => {
     setLoading(true)
     setError(null)
-    
+
     try {
       const response = await chatApi.getChatByErrand(errandId)
-      
+
       if (response.success && response.data) {
         const chat = response.data.chat
-        setChatId((chat as unknown as { _id: string })._id || chat.id)
-        
-        // 상대방 정보 찾기
+        const resolvedChatId = (chat as unknown as { _id: string })._id || chat.id
+        setChatId(resolvedChatId)
+
         const otherParticipant = chat.participants.find(p => {
-          // MongoDB _id 또는 id 필드를 안전하게 비교
-          const participant = p as { _id?: string; id?: string; name: string } // 백엔드에서 오는 데이터의 타입이 일치하지 않을 수 있음
+          const participant = p as { _id?: string; id?: string; name: string }
           const participantId = participant._id?.toString() || participant.id?.toString()
           return participantId && participantId !== currentUserId
         })
-        
+
         if (otherParticipant) {
           const participant = otherParticipant as { _id?: string; id?: string; name: string }
-          setOtherUser({ 
-            id: participant._id?.toString() || participant.id?.toString() || 'unknown', 
+          setOtherUser({
+            id: participant._id?.toString() || participant.id?.toString() || 'unknown',
             name: participant.name || '상대방'
           })
         } else {
-          // 다른 참여자가 없으면 기본값 설정
-          setOtherUser({ 
-            id: 'unknown', 
-            name: '상대방' 
-          })
+          setOtherUser({ id: 'unknown', name: '상대방' })
         }
-        
-        // 메시지 변환
-        const convertedMessages: LocalMessage[] = chat.messages.map(msg => ({
-          id: (msg as { _id?: string; id: string })._id || msg.id,
-          senderId: msg.senderId,
-          senderName: msg.sender.name,
-          content: msg.content,
-          timestamp: new Date((msg as { timestamp?: string }).timestamp || msg.createdAt),
-          type: 'text'
-        }))
-        
+
+        const convertedMessages: LocalMessage[] = chat.messages.map(msg =>
+          toLocalMessage(msg as unknown as RawMessage)
+        )
         setMessages(convertedMessages)
-        
-        // 메시지 읽음 처리
+
         if (chat.messages.some(msg => !msg.isRead && msg.senderId !== currentUserId)) {
-          await chatApi.markMessagesAsRead((chat as unknown as { _id: string })._id || chat.id)
+          await chatApi.markMessagesAsRead(resolvedChatId)
+        }
+
+        // 소켓 채팅방 입장
+        if (socketRef.current && resolvedChatId) {
+          socketRef.current.emit('join_chat', resolvedChatId)
         }
       } else {
-        console.error('채팅 로드 실패:', response.error)
         setError(response.error || '채팅을 불러올 수 없습니다.')
       }
-    } catch (error) {
-      console.error('채팅 로드 오류:', error)
+    } catch {
       setError('채팅을 불러오는 중 오류가 발생했습니다.')
     } finally {
       setLoading(false)
     }
   }, [errandId, currentUserId])
+
+  // 소켓 연결 및 new_message 수신
+  useEffect(() => {
+    if (!isOpen) return
+
+    const token = localStorage.getItem('authToken')
+    if (!token) return
+
+    const socket = getSocket(token)
+    socketRef.current = socket
+
+    const handleNewMessage = (data: { chatId: string; message: RawMessage }) => {
+      const msgSenderId = data.message.sender._id || data.message.senderId
+      // 내가 보낸 메시지는 REST 응답으로 이미 추가했으므로 소켓 이벤트는 무시
+      if (msgSenderId === currentUserId) return
+      const msgId = data.message._id || data.message.id
+      setMessages(prev => {
+        if (msgId && prev.some(m => m.id === msgId)) return prev
+        return [...prev, toLocalMessage(data.message)]
+      })
+    }
+
+    // 핸들러 중복 등록 방지: 기존 핸들러 전부 제거 후 등록
+    socket.off('new_message')
+    socket.on('new_message', handleNewMessage)
+
+    return () => {
+      socket.off('new_message', handleNewMessage)
+      if (chatId) socket.emit('leave_chat', chatId)
+    }
+  }, [isOpen, chatId, currentUserId])
 
   // 채팅 데이터 로드
   useEffect(() => {
@@ -108,42 +151,27 @@ export default function ChatModal({
     if (!newMessage.trim() || !chatId) return
 
     const messageContent = newMessage.trim()
-    setNewMessage('') // 즉시 입력창 클리어
-    
+    setNewMessage('')
+
     try {
       const response = await chatApi.sendMessage(chatId, messageContent)
-      
+
       if (response.success && response.data) {
-        const message = response.data.message as { _id?: string; id: string; senderId: string; sender: { name: string }; content: string; timestamp?: string; createdAt?: string }
-        const newMsg: LocalMessage = {
-          id: message._id || message.id,
-          senderId: message.senderId,
-          senderName: message.sender.name,
-          content: message.content,
-          timestamp: new Date(message.timestamp || message.createdAt || new Date()),
-          type: 'text'
-        }
-        
-        setMessages(prev => [...prev, newMsg])
+        const msg = response.data.message as RawMessage
+        setMessages(prev => [...prev, toLocalMessage(msg)])
       } else {
         alert(response.error || '메시지 전송에 실패했습니다.')
-        setNewMessage(messageContent) // 실패 시 메시지 복원
+        setNewMessage(messageContent)
       }
-    } catch (error) {
-      console.error('메시지 전송 오류:', error)
+    } catch {
       alert('메시지 전송 중 오류가 발생했습니다.')
-      setNewMessage(messageContent) // 실패 시 메시지 복원
+      setNewMessage(messageContent)
     }
   }
 
   const formatTime = (timestamp: Date) => {
-    if (!timestamp || isNaN(timestamp.getTime())) {
-      return '--:--'
-    }
-    return timestamp.toLocaleTimeString('ko-KR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    if (!timestamp || isNaN(timestamp.getTime())) return '--:--'
+    return timestamp.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
   }
 
   if (!isOpen) return null
@@ -158,10 +186,7 @@ export default function ChatModal({
             </h3>
             <p className="text-sm text-black truncate">{errandTitle}</p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-black hover:text-black"
-          >
+          <button onClick={onClose} className="text-black hover:text-black">
             ✕
           </button>
         </div>
@@ -189,12 +214,12 @@ export default function ChatModal({
               <p className="text-black">채팅을 시작해보세요!</p>
             </div>
           ) : (
-            messages.map((message) => (
+            messages
+              .filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i)
+              .map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.senderId === currentUserId ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex ${message.senderId === currentUserId ? 'justify-end' : 'justify-start'}`}
               >
                 <div className="max-w-[70%]">
                   <div
@@ -221,14 +246,6 @@ export default function ChatModal({
         </div>
 
         <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200">
-          {/* 디버깅 정보 */}
-          {(loading || error || !chatId) && (
-            <div className="mb-2 p-2 bg-yellow-100 rounded text-xs">
-              <div>상태: {loading ? '로딩 중' : error ? '에러' : !chatId ? 'chatId 없음' : '정상'}</div>
-              <div>chatId: {chatId || '없음'}</div>
-              {error && <div>에러: {error}</div>}
-            </div>
-          )}
           <div className="flex gap-2">
             <input
               type="text"

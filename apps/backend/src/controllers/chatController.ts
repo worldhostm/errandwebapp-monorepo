@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Chat from '../models/Chat';
 import Errand from '../models/Errand';
 import { AuthRequest } from '../middleware/auth';
+import { getIO } from '../services/socketInstance';
 
 export const getChatByErrand = async (req: AuthRequest, res: Response) => {
   try {
@@ -134,27 +135,13 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Chat not found' });
     }
 
-    // 사용자가 이 채팅의 심부름과 관련된 사람인지 확인
-    const errand = await Errand.findById(chat.errand);
-    if (!errand) {
-      return res.status(404).json({ error: 'Associated errand not found' });
-    }
-
     const userId = (user._id as mongoose.Types.ObjectId).toString();
-    const requesterId = errand.requestedBy.toString();
-    const acceptorId = errand.acceptedBy?.toString();
 
-    // 요청자 또는 수락자만 메시지를 보낼 수 있음
-    const isAuthorized = userId === requesterId || userId === acceptorId;
+    // 채팅방 participants에 속한 사용자만 메시지 전송 가능
+    const isAuthorized = chat.participants.some(p => p.toString() === userId);
 
     if (!isAuthorized) {
       return res.status(403).json({ error: 'Not authorized to send messages in this chat' });
-    }
-
-    // participants 배열에 추가 (만약 없다면)
-    if (!chat.participants.some(p => p.toString() === userId)) {
-      console.log('Adding user to chat participants');
-      chat.participants.push(user._id as mongoose.Types.ObjectId);
     }
 
     const newMessage = {
@@ -172,6 +159,16 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
     await chat.populate('messages.sender', 'name email avatar');
     
     const populatedMessage = chat.messages[chat.messages.length - 1];
+
+    // Socket.IO로 채팅방의 다른 참여자에게 실시간 전송
+    try {
+      getIO().to(`chat_${chatId}`).emit('new_message', {
+        chatId,
+        message: populatedMessage
+      });
+    } catch {
+      // io 미초기화 시 무시 (REST 응답은 정상 반환)
+    }
 
     res.status(201).json({
       success: true,
@@ -197,26 +194,12 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Chat not found' });
     }
 
-    // 사용자가 이 채팅의 심부름과 관련된 사람인지 확인
-    const errand = await Errand.findById(chat.errand);
-    if (!errand) {
-      return res.status(404).json({ error: 'Associated errand not found' });
-    }
-
     const userId = (user._id as mongoose.Types.ObjectId).toString();
-    const requesterId = errand.requestedBy.toString();
-    const acceptorId = errand.acceptedBy?.toString();
 
-    // 요청자 또는 수락자만 접근 가능
-    const isAuthorized = userId === requesterId || userId === acceptorId;
+    const isAuthorized = chat.participants.some(p => p.toString() === userId);
 
     if (!isAuthorized) {
       return res.status(403).json({ error: 'Not authorized to access this chat' });
-    }
-
-    // participants 배열에 추가 (만약 없다면)
-    if (!chat.participants.some(p => p.toString() === userId)) {
-      chat.participants.push(user._id as mongoose.Types.ObjectId);
     }
 
     // Mark messages as read for this user

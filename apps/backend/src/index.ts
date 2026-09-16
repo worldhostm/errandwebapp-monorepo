@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import createApp from './app';
 import { setupSocketIO } from './services/socketService';
+import { setIO } from './services/socketInstance';
 import { SchedulerService } from './services/schedulerService';
 
 dotenv.config();
@@ -21,6 +22,7 @@ const PORT = process.env.PORT || 8090;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/errandwebapp';
 
 // Setup Socket.IO
+setIO(io);
 setupSocketIO(io);
 
 // Connect to MongoDB and start server

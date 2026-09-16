@@ -37,6 +37,7 @@ export interface LocalMessage {
   content: string
   timestamp: Date
   type: 'text' | 'image'
+  isRead?: boolean
 }
 
 export interface ErrandFormData {

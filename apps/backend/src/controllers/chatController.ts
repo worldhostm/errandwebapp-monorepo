@@ -256,6 +256,16 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
 
     await chat.save();
 
+    // 채팅방 참여자들에게 읽음 처리 알림
+    try {
+      getIO().to(`chat_${chatId}`).emit('messages_read', {
+        chatId,
+        readerId: userId
+      });
+    } catch {
+      // 소켓 미초기화 시 무시
+    }
+
     res.json({
       success: true,
       message: 'Messages marked as read'

@@ -22,6 +22,7 @@ type RawMessage = {
   content: string
   timestamp?: string
   createdAt?: string
+  isRead?: boolean
 }
 
 export default function ChatModal({
@@ -54,7 +55,8 @@ export default function ChatModal({
     senderName: msg.sender.name,
     content: msg.content,
     timestamp: new Date(msg.timestamp || msg.createdAt || new Date()),
-    type: 'text'
+    type: 'text',
+    isRead: msg.isRead ?? false
   })
 
   const loadChatData = useCallback(async () => {
@@ -128,12 +130,23 @@ export default function ChatModal({
       })
     }
 
+    // 상대방이 채팅을 읽으면 내가 보낸 메시지를 읽음으로 업데이트
+    const handleMessagesRead = (data: { chatId: string; readerId: string }) => {
+      if (data.readerId === currentUserId) return
+      setMessages(prev => prev.map(m =>
+        m.senderId === currentUserId ? { ...m, isRead: true } : m
+      ))
+    }
+
     // 핸들러 중복 등록 방지: 기존 핸들러 전부 제거 후 등록
     socket.off('new_message')
     socket.on('new_message', handleNewMessage)
+    socket.off('messages_read')
+    socket.on('messages_read', handleMessagesRead)
 
     return () => {
       socket.off('new_message', handleNewMessage)
+      socket.off('messages_read', handleMessagesRead)
       if (chatId) socket.emit('leave_chat', chatId)
     }
   }, [isOpen, chatId, currentUserId])
@@ -231,10 +244,15 @@ export default function ChatModal({
                     <p className="text-sm">{message.content}</p>
                   </div>
                   <div
-                    className={`text-xs text-black mt-1 ${
-                      message.senderId === currentUserId ? 'text-right' : 'text-left'
+                    className={`flex items-center gap-1 text-xs text-black mt-1 ${
+                      message.senderId === currentUserId ? 'justify-end' : 'justify-start'
                     }`}
                   >
+                    {message.senderId === currentUserId && (
+                      <span className={message.isRead ? 'text-blue-500' : 'text-gray-400'}>
+                        {message.isRead ? '읽음' : '전송됨'}
+                      </span>
+                    )}
                     {formatTime(message.timestamp)}
                   </div>
                 </div>

@@ -173,12 +173,14 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   const handleChatOpen = (errand: MyErrand) => {
     setSelectedErrandForChat(errand)
     setShowChat(true)
-    // 채팅 열면 해당 심부름 카운트 초기화 (낙관적 업데이트)
+    // 낙관적 업데이트: 즉시 배지 제거
     setChatUnreadCounts(prev => {
       const next = { ...prev }
       delete next[errand.id]
       return next
     })
+    // 채팅 열릴 때 서버 기준으로도 갱신 (ChatModal이 markAsRead 완료 후 반영)
+    setTimeout(() => fetchChatUnreadCounts(), 1000)
   }
 
   // 완료된 심부름 상세보기 열기

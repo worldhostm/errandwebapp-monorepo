@@ -90,9 +90,8 @@ export default function ChatModal({
         )
         setMessages(convertedMessages)
 
-        if (chat.messages.some(msg => !msg.isRead && msg.senderId !== currentUserId)) {
-          await chatApi.markMessagesAsRead(resolvedChatId)
-        }
+        // 채팅 열면 항상 읽음 처리
+        await chatApi.markMessagesAsRead(resolvedChatId)
 
         // 소켓 채팅방 입장
         if (socketRef.current && resolvedChatId) {

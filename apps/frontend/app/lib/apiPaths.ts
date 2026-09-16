@@ -36,6 +36,7 @@ export const API_PATHS = {
     BY_ERRAND: (errandId: string) => `/chat/errand/${errandId}`,
     MESSAGE: (chatId: string) => `/chat/${chatId}/message`,
     MARK_READ: (chatId: string) => `/chat/${chatId}/read`,
+    UNREAD_COUNTS: '/chat/unread-counts',
   },
   VERIFICATION: {
     PHONE_REQUEST: '/verification/phone/request',

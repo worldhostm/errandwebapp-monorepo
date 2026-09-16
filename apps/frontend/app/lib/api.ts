@@ -341,6 +341,11 @@ export const chatApi = {
     return apiRequest<{ message: string }>(API_PATHS.CHAT.MARK_READ(chatId), {
       method: 'PUT'
     })
+  },
+
+  // 심부름별 미읽음 채팅 카운트
+  async getUnreadCounts() {
+    return apiRequest<{ counts: Record<string, number> }>(API_PATHS.CHAT.UNREAD_COUNTS)
   }
 }
 

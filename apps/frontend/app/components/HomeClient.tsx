@@ -19,6 +19,7 @@ import { getDefaultProfileImage } from '../lib/imageUtils'
 import { processErrands } from '../lib/mapUtils'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { authApi, errandApi, notificationApi } from '../lib/api'
+import { getSocket } from '../lib/socket'
 import { checkLocationPermission, requestLocationWithPermission } from '../lib/locationUtils'
 import { STORAGE_KEYS, LOCATIONS, TIMING, MAP } from '../lib/constants'
 import { PIN_COLORS, getPinColorIndex } from '../lib/mapUtils'
@@ -379,6 +380,11 @@ export default function HomeClient() {
     fetchNotifications()
   }
 
+  const handleNotificationChatOpen = (errandId: string, errandTitle: string) => {
+    setSelectedErrandForChat({ id: errandId, title: errandTitle } as ErrandLocation)
+    setShowChat(true)
+  }
+
   const handleMarkAsRead = async (notificationId: string) => {
     try {
       const response = await notificationApi.markAsRead(notificationId)
@@ -422,6 +428,26 @@ export default function HomeClient() {
       return () => clearInterval(interval)
     }
   }, [user, fetchUnreadCount])
+
+  // 소켓으로 실시간 알림 수신 (new_notification)
+  useEffect(() => {
+    if (!user) return
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
+    if (!token) return
+
+    const socket = getSocket(token)
+
+    const handleNewNotification = (data: { unreadCount: number }) => {
+      setUnreadCount(data.unreadCount)
+    }
+
+    socket.off('new_notification')
+    socket.on('new_notification', handleNewNotification)
+
+    return () => {
+      socket.off('new_notification', handleNewNotification)
+    }
+  }, [user])
 
   const handleErrandSubmit = async (formData: ErrandFormData) => {
     if (!formData.lat || !formData.lng) {
@@ -1153,6 +1179,7 @@ export default function HomeClient() {
           onMarkAsRead={handleMarkAsRead}
           onMarkAllAsRead={handleMarkAllAsRead}
           onRefresh={fetchNotifications}
+          onChatOpen={handleNotificationChatOpen}
         />
       )}
 

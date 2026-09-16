@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import { errandApi } from '../lib/api'
+import { errandApi, chatApi } from '../lib/api'
 import { getCategoryInfo } from '../lib/categoryUtils'
 import { getDefaultProfileImage } from '../lib/imageUtils'
 import type { User, ErrandLocation, ErrandStatus, Errand } from '../lib/types'
@@ -28,6 +28,7 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'pending' | 'accepted' | 'in_progress' | 'completed' | 'disputed'>('all')
   const [showChat, setShowChat] = useState(false)
   const [selectedErrandForChat, setSelectedErrandForChat] = useState<MyErrand | null>(null)
+  const [chatUnreadCounts, setChatUnreadCounts] = useState<Record<string, number>>({})
   const [showCompletedErrandView, setShowCompletedErrandView] = useState(false)
   const [selectedCompletedErrandId, setSelectedCompletedErrandId] = useState<string>('')
 
@@ -150,10 +151,34 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
     }
   }
 
+  // 미읽음 채팅 카운트 조회
+  const fetchChatUnreadCounts = useCallback(async () => {
+    try {
+      const response = await chatApi.getUnreadCounts()
+      if (response.success && response.data) {
+        setChatUnreadCounts(response.data.counts)
+      }
+    } catch {
+      // 실패 시 무시
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      fetchChatUnreadCounts()
+    }
+  }, [user, fetchChatUnreadCounts])
+
   // 채팅 열기
   const handleChatOpen = (errand: MyErrand) => {
     setSelectedErrandForChat(errand)
     setShowChat(true)
+    // 채팅 열면 해당 심부름 카운트 초기화 (낙관적 업데이트)
+    setChatUnreadCounts(prev => {
+      const next = { ...prev }
+      delete next[errand.id]
+      return next
+    })
   }
 
   // 완료된 심부름 상세보기 열기
@@ -325,47 +350,42 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
 
                 {/* 액션 버튼들 */}
                 <div className="flex gap-2">
-                  {errand.status === 'accepted' && errand.acceptedByUser && (
-                    <button 
-                      onClick={() => handleChatOpen(errand)}
-                      className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
-                    >
-                      채팅하기
-                    </button>
-                  )}
-                  
-                  {errand.status === 'in_progress' && (
-                    <>
-                      <button 
-                        onClick={() => handleChatOpen(errand)}
-                        className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
-                      >
-                        채팅하기
-                      </button>
-                      <button 
-                        onClick={() => handleStatusUpdate(errand.id, 'completed')}
-                        className="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600 text-sm"
-                      >
-                        완료 확인
-                      </button>
-                    </>
-                  )}
-                  
+                  <button
+                    onClick={() => handleChatOpen(errand)}
+                    className="flex-1 relative bg-blue-500 text-white py-2 rounded hover:bg-blue-600 text-sm"
+                  >
+                    채팅하기
+                    {chatUnreadCounts[errand.id] > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                        {chatUnreadCounts[errand.id] > 99 ? '99+' : chatUnreadCounts[errand.id]}
+                      </span>
+                    )}
+                  </button>
+
                   {errand.status === 'pending' && (
-                    <button 
+                    <button
                       onClick={() => handleDeleteErrand(errand.id)}
                       className="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600 text-sm"
                     >
                       삭제하기
                     </button>
                   )}
-                  
+
+                  {errand.status === 'in_progress' && (
+                    <button
+                      onClick={() => handleStatusUpdate(errand.id, 'completed')}
+                      className="flex-1 bg-green-500 text-white py-2 rounded hover:bg-green-600 text-sm"
+                    >
+                      완료 확인
+                    </button>
+                  )}
+
                   {(errand.status === 'completed' || errand.status === 'disputed') && (
-                    <button 
+                    <button
                       onClick={() => handleViewCompletedErrand(errand.id)}
                       className={`flex-1 text-white py-2 rounded text-sm ${
-                        errand.status === 'completed' 
-                          ? 'bg-green-500 hover:bg-green-600' 
+                        errand.status === 'completed'
+                          ? 'bg-green-500 hover:bg-green-600'
                           : 'bg-red-500 hover:bg-red-600'
                       }`}
                     >
@@ -383,7 +403,10 @@ export default function MyErrandHistory({ user }: MyErrandHistoryProps) {
       {showChat && selectedErrandForChat && (
         <ChatModal
           isOpen={showChat}
-          onClose={() => setShowChat(false)}
+          onClose={() => {
+            setShowChat(false)
+            fetchChatUnreadCounts()
+          }}
           errandTitle={selectedErrandForChat.title}
           errandId={selectedErrandForChat.id}
           currentUserId={user.id}

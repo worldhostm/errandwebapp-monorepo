@@ -11,6 +11,7 @@ interface NotificationModalProps {
   onMarkAsRead: (notificationId: string) => void
   onMarkAllAsRead: () => void
   onRefresh: () => void
+  onChatOpen?: (errandId: string, errandTitle: string) => void
 }
 
 export default function NotificationModal({
@@ -20,7 +21,8 @@ export default function NotificationModal({
   unreadCount,
   onMarkAsRead,
   onMarkAllAsRead,
-  onRefresh
+  onRefresh,
+  onChatOpen
 }: NotificationModalProps) {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const getNotificationIcon = (type: string) => {
@@ -28,6 +30,7 @@ export default function NotificationModal({
       case 'errand_completed': return '✅'
       case 'errand_accepted': return '👋'
       case 'errand_disputed': return '⚠️'
+      case 'chat_message': return '💬'
       case 'system': return '🔔'
       default: return '📢'
     }
@@ -38,6 +41,7 @@ export default function NotificationModal({
       case 'errand_completed': return 'bg-green-50 border-green-200'
       case 'errand_accepted': return 'bg-blue-50 border-blue-200'
       case 'errand_disputed': return 'bg-red-50 border-red-200'
+      case 'chat_message': return 'bg-indigo-50 border-indigo-200'
       case 'system': return 'bg-gray-50 border-gray-200'
       default: return 'bg-gray-50 border-gray-200'
     }
@@ -59,6 +63,10 @@ export default function NotificationModal({
   const handleNotificationClick = (notification: Notification) => {
     if (!notification.isRead) {
       onMarkAsRead(notification.id)
+    }
+    if (notification.type === 'chat_message' && notification.relatedErrand && onChatOpen) {
+      onClose()
+      onChatOpen(notification.relatedErrand.id, notification.relatedErrand.title)
     }
   }
 

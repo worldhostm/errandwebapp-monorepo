@@ -441,11 +441,23 @@ export default function HomeClient() {
       setUnreadCount(data.unreadCount)
     }
 
+    // 채팅 읽음 처리 시 알림 카운트 + 목록 업데이트
+    const handleNotificationsUpdated = (data: { unreadCount: number }) => {
+      setUnreadCount(data.unreadCount)
+      // 알림 모달이 열려 있으면 목록도 갱신
+      setNotifications(prev =>
+        prev.map(n => n.type === 'chat_message' ? { ...n, isRead: true } : n)
+      )
+    }
+
     socket.off('new_notification')
     socket.on('new_notification', handleNewNotification)
+    socket.off('notifications_updated')
+    socket.on('notifications_updated', handleNotificationsUpdated)
 
     return () => {
       socket.off('new_notification', handleNewNotification)
+      socket.off('notifications_updated', handleNotificationsUpdated)
     }
   }, [user])
 

@@ -157,10 +157,10 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
       // io 미초기화 시 무시 (REST 응답은 정상 반환)
     }
 
-    // 수신자에게 알림 생성 + 소켓 push
+    // 수신자에게 알림 생성 + 소켓 push (자신에게는 알림 생성 안 함)
     try {
       const receiverId = chat.participants.find(p => p.toString() !== userId);
-      if (receiverId) {
+      if (receiverId && receiverId.toString() !== userId) {
         const notification = await createNotification(
           receiverId as mongoose.Types.ObjectId,
           '새 메시지',
@@ -264,6 +264,24 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
       });
     } catch {
       // 소켓 미초기화 시 무시
+    }
+
+    // 이 채팅의 심부름과 관련된 chat_message 알림도 읽음 처리
+    try {
+      const NotificationModel = (await import('../models/Notification')).default;
+      await NotificationModel.updateMany(
+        { userId: user._id, type: 'chat_message', relatedErrand: chat.errand, isRead: false },
+        { isRead: true }
+      );
+      // 업데이트된 미읽음 알림 카운트를 소켓으로 전달
+      const unreadCount = await NotificationModel.countDocuments({ userId: user._id, isRead: false });
+      try {
+        getIO().to(`user_${userId}`).emit('notifications_updated', { unreadCount });
+      } catch {
+        // 소켓 미초기화 시 무시
+      }
+    } catch {
+      // 알림 읽음 처리 실패 무시
     }
 
     res.json({

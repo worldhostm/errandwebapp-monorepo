@@ -26,37 +26,12 @@ export const getChatByErrand = async (req: AuthRequest, res: Response) => {
     const isRequester = requesterId === userId;
     const isAcceptor = errand.acceptedBy && errand.acceptedBy.toString() === userId;
 
-    // 요청자가 자신의 심부름에 채팅 시도하는 경우 차단
-    if (isRequester && !errand.acceptedBy) {
-      return res.status(403).json({
-        error: '자신이 등록한 심부름에는 채팅을 시작할 수 없습니다. 다른 사용자가 채팅을 시작하면 대화할 수 있습니다.'
-      });
-    }
-
-    // 심부름 요청자 또는 관련 사용자만 접근 가능
-    const canAccess = isRequester ||
-                     (errand.status === 'pending') ||
-                     (isAcceptor);
+    // 심부름 요청자, 수락자, 또는 pending 상태(채팅 시작 가능)인 경우만 접근 허용
+    const canAccess = isRequester || isAcceptor || errand.status === 'pending';
 
     if (!canAccess) {
       return res.status(403).json({ error: 'Not authorized to access this chat' });
     }
-
-    // 1:1 채팅방 찾기: 요청자와 현재 사용자 간의 채팅
-    // participants 배열이 정확히 두 명이고, 그 두 명이 requester와 현재 사용자인 채팅방
-    // Helper가 채팅을 시작할 때의 participants 설정
-    const otherUserId = isRequester ? errand.acceptedBy : user._id;
-
-    if (!otherUserId) {
-      return res.status(400).json({
-        error: '채팅 상대방을 찾을 수 없습니다.'
-      });
-    }
-
-    // 항상 일관된 순서로 정렬 (작은 ID가 먼저)
-    const participants = [errand.requestedBy, otherUserId].sort((a, b) =>
-      a.toString().localeCompare(b.toString())
-    );
 
     // 이미 존재하는 채팅방 찾기
     let chat = await Chat.findOne({
@@ -73,6 +48,17 @@ export const getChatByErrand = async (req: AuthRequest, res: Response) => {
           error: '채팅방이 아직 생성되지 않았습니다. 다른 사용자가 먼저 채팅을 시작해야 합니다.'
         });
       }
+
+      // Helper가 채팅 시작 - participants 구성
+      const otherUserId = user._id;
+      if (!otherUserId) {
+        return res.status(400).json({ error: '채팅 상대방을 찾을 수 없습니다.' });
+      }
+
+      // 항상 일관된 순서로 정렬 (작은 ID가 먼저)
+      const participants = [errand.requestedBy, otherUserId].sort((a, b) =>
+        a.toString().localeCompare(b.toString())
+      );
 
       // Helper가 채팅 시작
       console.log('Creating chat with participants:', participants.map(p => (p as mongoose.Types.ObjectId).toString()));

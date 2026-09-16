@@ -4,6 +4,7 @@ import Chat from '../models/Chat';
 import Errand from '../models/Errand';
 import { AuthRequest } from '../middleware/auth';
 import { getIO } from '../services/socketInstance';
+import { createNotification } from './notificationController';
 
 export const getChatByErrand = async (req: AuthRequest, res: Response) => {
   try {
@@ -170,6 +171,34 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
       // io 미초기화 시 무시 (REST 응답은 정상 반환)
     }
 
+    // 수신자에게 알림 생성 + 소켓 push
+    try {
+      const receiverId = chat.participants.find(p => p.toString() !== userId);
+      if (receiverId) {
+        const notification = await createNotification(
+          receiverId as mongoose.Types.ObjectId,
+          '새 메시지',
+          `${(user as { name?: string }).name || '상대방'}님이 메시지를 보냈습니다: ${content.length > 50 ? content.substring(0, 50) + '...' : content}`,
+          'chat_message',
+          chat.errand as mongoose.Types.ObjectId
+        );
+        try {
+          const unreadCount = await (await import('../models/Notification')).default.countDocuments({
+            userId: receiverId,
+            isRead: false
+          });
+          getIO().to(`user_${receiverId}`).emit('new_notification', {
+            notification,
+            unreadCount
+          });
+        } catch {
+          // 소켓 push 실패 무시
+        }
+      }
+    } catch {
+      // 알림 생성 실패 무시 (메시지 전송은 정상 처리)
+    }
+
     res.status(201).json({
       success: true,
       message: populatedMessage
@@ -177,6 +206,36 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error('Send message error:', error);
     res.status(500).json({ error: 'Server error while sending message' });
+  }
+};
+
+// 내 채팅방들의 심부름별 미읽음 메시지 카운트
+export const getChatUnreadCounts = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const userId = (user._id as mongoose.Types.ObjectId).toString();
+
+    const chats = await Chat.find({ participants: user._id });
+
+    const counts: Record<string, number> = {};
+    for (const chat of chats) {
+      const errandId = chat.errand.toString();
+      const unread = chat.messages.filter(
+        m => m.sender.toString() !== userId && !m.isRead
+      ).length;
+      if (unread > 0) {
+        counts[errandId] = (counts[errandId] || 0) + unread;
+      }
+    }
+
+    res.json({ success: true, counts });
+  } catch (error) {
+    console.error('Get chat unread counts error:', error);
+    res.status(500).json({ error: 'Server error while fetching unread counts' });
   }
 };
 

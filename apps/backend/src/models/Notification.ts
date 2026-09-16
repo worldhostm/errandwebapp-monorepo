@@ -4,7 +4,7 @@ export interface INotification extends Document {
   userId: Types.ObjectId;
   title: string;
   message: string;
-  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized';
+  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized' | 'chat_message';
   relatedErrand?: Types.ObjectId;
   isRead: boolean;
   createdAt: Date;
@@ -32,7 +32,7 @@ const NotificationSchema = new Schema<INotification>({
   },
   type: {
     type: String,
-    enum: ['errand_completed', 'errand_accepted', 'errand_disputed', 'system', 'payment_completed', 'errand_finalized'],
+    enum: ['errand_completed', 'errand_accepted', 'errand_disputed', 'system', 'payment_completed', 'errand_finalized', 'chat_message'],
     required: true
   },
   relatedErrand: {

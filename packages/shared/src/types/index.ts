@@ -68,7 +68,7 @@ export interface Notification {
   id: string;
   title: string;
   message: string;
-  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized';
+  type: 'errand_completed' | 'errand_accepted' | 'errand_disputed' | 'system' | 'payment_completed' | 'errand_finalized' | 'chat_message';
   isRead: boolean;
   createdAt: string;
   relatedErrand?: {

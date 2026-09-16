@@ -1,8 +1,11 @@
 import express from 'express';
-import { getChatByErrand, sendMessage, markMessagesAsRead } from '../controllers/chatController';
+import { getChatByErrand, sendMessage, markMessagesAsRead, getChatUnreadCounts } from '../controllers/chatController';
 import { auth } from '../middleware/auth';
 
 const router = express.Router();
+
+// GET /api/chat/unread-counts - 내 채팅방 심부름별 미읽음 카운트
+router.get('/unread-counts', auth, getChatUnreadCounts);
 
 // GET /api/chat/errand/:errandId - Get chat for errand
 router.get('/errand/:errandId', auth, getChatByErrand);

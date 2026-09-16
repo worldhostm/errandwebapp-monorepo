@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
@@ -13,7 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://burum-i.com"),
   title: "부름이 - 주변 심부름으로 부수입 벌기",
   description: "부름이는 주변의 간단한 심부름을 수행하며 부수입을 얻을 수 있는 위치기반 플랫폼입니다. 가까운 곳의 심부름을 찾아 수행하고 수익을 얻어보세요.",
   keywords: ["심부름", "부수입", "알바", "위치기반", "일자리", "사이드잡", "부름이"],
@@ -24,11 +31,6 @@ export const metadata: Metadata = {
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
   category: "Business",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
   robots: {
     index: true,
     follow: true,

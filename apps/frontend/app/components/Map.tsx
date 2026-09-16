@@ -5,7 +5,7 @@ import { Map, MapMarker, Circle } from 'react-kakao-maps-sdk'
 import type { ErrandLocation, User } from '../lib/types'
 import { getDefaultProfileImage } from '../lib/imageUtils'
 import { createProfileMarkerImage } from '../lib/profileMarker'
-import { getRadiusFromZoomLevel } from '../lib/mapUtils'
+import { getRadiusFromZoomLevel, PIN_COLORS, getPinColorIndex } from '../lib/mapUtils'
 import { getDefaultMarkerImages } from '../lib/categoryUtils'
 import { createClusters, createClusterMarkerImage, type ClusterMarker } from '../lib/clustering'
 import KakaoMapWrapper from './KakaoMapWrapper'
@@ -379,9 +379,8 @@ export default function MapComponent({
           ))}
 
           {/* 클러스터되지 않은 심부름 마커들 - 다양한 색상으로 표시 */}
-          {unclusteredErrands.map((errand, index) => {
-            const colors = ['/marker-red.svg', '/marker-blue.svg', '/marker-green.svg', '/marker-orange.svg', '/marker-purple.svg']
-            const markerColor = colors[index % colors.length]
+          {unclusteredErrands.map((errand) => {
+            const markerColor = PIN_COLORS[getPinColorIndex(errand.id, errands)].svg
             
             return (
               <MapMarker

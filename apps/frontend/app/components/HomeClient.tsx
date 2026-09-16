@@ -21,6 +21,7 @@ import { getCategoryInfo } from '../lib/categoryUtils'
 import { authApi, errandApi, notificationApi } from '../lib/api'
 import { checkLocationPermission, requestLocationWithPermission } from '../lib/locationUtils'
 import { STORAGE_KEYS, LOCATIONS, TIMING, MAP } from '../lib/constants'
+import { PIN_COLORS, getPinColorIndex } from '../lib/mapUtils'
 import type { ErrandLocation, ErrandFormData, Notification } from '../lib/types'
 import { convertErrandToErrandLocation, User } from '../lib/types'
 import { errandCache } from '../lib/errandCache'
@@ -929,8 +930,9 @@ export default function HomeClient() {
                 </button>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {filteredErrands.map((errand) => {
+                {filteredErrands.map((errand, index) => {
                   const categoryInfo = getCategoryInfo(errand.category)
+                  const pinColor = PIN_COLORS[getPinColorIndex(errand.id, filteredErrands)].css
                   return (
                     <div
                       key={errand.id}
@@ -944,6 +946,11 @@ export default function HomeClient() {
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-lg">{categoryInfo.emoji}</span>
                             <h4 className="font-medium text-black">{errand.title}</h4>
+                            <span
+                              title={`지도 핀 ${index + 1}번`}
+                              style={{ backgroundColor: pinColor }}
+                              className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                            />
                           </div>
                           {errand.requestedBy && (
                             <p className="text-xs text-black mb-2">

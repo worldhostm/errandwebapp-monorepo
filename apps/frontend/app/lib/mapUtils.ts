@@ -1,5 +1,20 @@
 import type { ErrandLocation } from './types'
 
+// 지도 핀 색상 정의 (Map.tsx 마커 SVG와 카드 UI 색상 동기화)
+export const PIN_COLORS = [
+  { svg: '/marker-red.svg',    css: '#EF4444' },
+  { svg: '/marker-blue.svg',   css: '#3B82F6' },
+  { svg: '/marker-green.svg',  css: '#22C55E' },
+  { svg: '/marker-orange.svg', css: '#F97316' },
+  { svg: '/marker-purple.svg', css: '#A855F7' },
+] as const
+
+// 전체 심부름 배열에서 해당 심부름의 핀 색상 인덱스 반환
+export const getPinColorIndex = (errandId: string, allErrands: { id: string }[]): number => {
+  const index = allErrands.findIndex(e => e.id === errandId)
+  return (index === -1 ? 0 : index) % PIN_COLORS.length
+}
+
 // 두 지점 간 거리 계산 (Haversine formula)
 export const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
   const R = 6371 // 지구 반지름 (km)

@@ -2,6 +2,8 @@
 
 import { useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
+import Modal from './ui/Modal'
+import Button from './ui/Button'
 
 interface CompletionVerificationModalProps {
   isOpen: boolean
@@ -14,14 +16,14 @@ export default function CompletionVerificationModal({
   isOpen,
   onClose,
   errandTitle,
-  onSubmit
+  onSubmit,
 }: CompletionVerificationModalProps) {
   const [capturedImage, setCapturedImage] = useState<string | null>(null)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [completionMessage, setCompletionMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [useCamera, setUseCamera] = useState(false)
-  
+
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -29,10 +31,7 @@ export default function CompletionVerificationModal({
 
   const startCamera = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } // 후면 카메라 사용
-      })
-      
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
       if (videoRef.current) {
         videoRef.current.srcObject = stream
         streamRef.current = stream
@@ -57,18 +56,14 @@ export default function CompletionVerificationModal({
       const video = videoRef.current
       const canvas = canvasRef.current
       const context = canvas.getContext('2d')
-      
       if (context) {
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
         context.drawImage(video, 0, 0)
-        
         canvas.toBlob((blob) => {
           if (blob) {
             const file = new File([blob], `completion-${Date.now()}.jpg`, { type: 'image/jpeg' })
-            const imageUrl = URL.createObjectURL(blob)
-            
-            setCapturedImage(imageUrl)
+            setCapturedImage(URL.createObjectURL(blob))
             setImageFile(file)
             stopCamera()
           }
@@ -81,8 +76,7 @@ export default function CompletionVerificationModal({
     const file = event.target.files?.[0]
     if (file) {
       if (file.type.startsWith('image/')) {
-        const imageUrl = URL.createObjectURL(file)
-        setCapturedImage(imageUrl)
+        setCapturedImage(URL.createObjectURL(file))
         setImageFile(file)
       } else {
         alert('이미지 파일만 업로드 가능합니다.')
@@ -95,7 +89,6 @@ export default function CompletionVerificationModal({
       alert('사진과 완료 메시지를 모두 입력해주세요.')
       return
     }
-
     setIsSubmitting(true)
     try {
       await onSubmit(imageFile, completionMessage.trim())
@@ -119,150 +112,97 @@ export default function CompletionVerificationModal({
   const resetImage = () => {
     setCapturedImage(null)
     setImageFile(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-black">
-              심부름 완료 인증
-            </h3>
-            <button
-              type="button"
-              onClick={handleClose}
-              className="text-black hover:text-black"
-            >
-              ✕
-            </button>
-          </div>
+    <Modal isOpen={isOpen} onClose={handleClose} title="심부름 완료 인증" size="lg">
+      <div className="mb-4">
+        <h4 className="font-medium mb-2">심부름 제목</h4>
+        <p className="bg-base-200 p-3 rounded-md text-sm">{errandTitle}</p>
+      </div>
 
-          <div className="mb-4">
-            <h4 className="font-medium text-black mb-2">심부름 제목</h4>
-            <p className="text-black bg-gray-50 p-3 rounded-md">{errandTitle}</p>
-          </div>
+      <div className="mb-6">
+        <h4 className="font-medium mb-3">완료 인증 사진</h4>
 
-          <div className="mb-6">
-            <h4 className="font-medium text-black mb-3">완료 인증 사진</h4>
-            
-            {!capturedImage ? (
-              <div className="space-y-4">
-                {!useCamera ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button
-                      onClick={startCamera}
-                      className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors"
-                    >
-                      <span className="text-2xl">📷</span>
-                      <span className="text-black">카메라로 촬영</span>
-                    </button>
-                    
-                    <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors cursor-pointer">
-                      <span className="text-2xl">📁</span>
-                      <span className="text-black">파일 업로드</span>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="relative">
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className="w-full rounded-lg"
-                        style={{ maxHeight: '400px', objectFit: 'cover' }}
-                      />
-                      <canvas ref={canvasRef} className="hidden" />
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <button
-                        onClick={capturePhoto}
-                        className="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors"
-                      >
-                        📸 촬영하기
-                      </button>
-                      <button
-                        onClick={stopCamera}
-                        className="px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                      >
-                        취소
-                      </button>
-                    </div>
-                  </div>
-                )}
+        {!capturedImage ? (
+          <div className="space-y-4">
+            {!useCamera ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button
+                  onClick={startCamera}
+                  className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-base-300 rounded-lg hover:border-primary transition-colors"
+                >
+                  <span className="text-2xl">📷</span>
+                  <span>카메라로 촬영</span>
+                </button>
+                <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-base-300 rounded-lg hover:border-primary transition-colors cursor-pointer">
+                  <span className="text-2xl">📁</span>
+                  <span>파일 업로드</span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
               </div>
             ) : (
               <div className="space-y-4">
                 <div className="relative">
-                  <Image
-                    src={capturedImage}
-                    alt="완료 인증 사진"
-                    width={600}
-                    height={400}
-                    className="w-full rounded-lg object-contain bg-gray-100"
-                    style={{ maxHeight: '400px' }}
-                  />
+                  <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg" style={{ maxHeight: '400px', objectFit: 'cover' }} />
+                  <canvas ref={canvasRef} className="hidden" />
                 </div>
-                
-                <button
-                  onClick={resetImage}
-                  className="w-full py-2 px-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                >
-                  다시 촬영/업로드
-                </button>
+                <div className="flex gap-2">
+                  <Button variant="primary" onClick={capturePhoto} className="flex-1">📸 촬영하기</Button>
+                  <Button variant="ghost" onClick={stopCamera}>취소</Button>
+                </div>
               </div>
             )}
           </div>
-
-          <div className="mb-6">
-            <label className="block font-medium text-black mb-2">
-              완료 메시지 <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              value={completionMessage}
-              onChange={(e) => setCompletionMessage(e.target.value)}
-              placeholder="심부름을 어떻게 완료했는지 간단히 설명해주세요..."
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows={4}
-              maxLength={500}
+        ) : (
+          <div className="space-y-4">
+            <Image
+              src={capturedImage}
+              alt="완료 인증 사진"
+              width={600}
+              height={400}
+              className="w-full rounded-lg object-contain bg-base-200"
+              style={{ maxHeight: '400px' }}
             />
-            <div className="text-right text-sm text-black mt-1">
-              {completionMessage.length}/500
-            </div>
+            <Button variant="ghost" fullWidth onClick={resetImage}>다시 촬영/업로드</Button>
           </div>
-
-          <div className="flex gap-3 pt-4 border-t">
-            <button
-              onClick={handleClose}
-              disabled={isSubmitting}
-              className="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!capturedImage || !completionMessage.trim() || isSubmitting}
-              className="flex-1 py-3 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? '제출 중...' : '완료 인증 제출'}
-            </button>
-          </div>
-        </div>
+        )}
       </div>
-    </div>
+
+      <div className="mb-6">
+        <label className="block font-medium mb-2">
+          완료 메시지 <span className="text-error">*</span>
+        </label>
+        <textarea
+          value={completionMessage}
+          onChange={(e) => setCompletionMessage(e.target.value)}
+          placeholder="심부름을 어떻게 완료했는지 간단히 설명해주세요..."
+          className="textarea textarea-bordered w-full resize-none"
+          rows={4}
+          maxLength={500}
+        />
+        <div className="text-right text-xs text-base-content/50 mt-1">{completionMessage.length}/500</div>
+      </div>
+
+      <div className="flex gap-3 pt-4 border-t border-base-200">
+        <Button variant="ghost" onClick={handleClose} disabled={isSubmitting} className="flex-1">취소</Button>
+        <Button
+          variant="success"
+          onClick={handleSubmit}
+          disabled={!capturedImage || !completionMessage.trim()}
+          loading={isSubmitting}
+          className="flex-1"
+        >
+          완료 인증 제출
+        </Button>
+      </div>
+    </Modal>
   )
 }

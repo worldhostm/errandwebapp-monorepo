@@ -2,6 +2,8 @@
 
 import type { ErrandLocation } from '../lib/types'
 import { getCategoryInfo } from '../lib/categoryUtils'
+import Modal from './ui/Modal'
+import Badge from './ui/Badge'
 
 interface ClusterModalProps {
   isOpen: boolean
@@ -11,85 +13,73 @@ interface ClusterModalProps {
   onErrandSelect: (errand: ErrandLocation) => void
 }
 
-export default function ClusterModal({ 
-  isOpen, 
-  onClose, 
-  errands, 
+const statusLabel: Record<string, string> = {
+  pending: '대기중',
+  accepted: '수락됨',
+  in_progress: '진행중',
+  completed: '완료',
+}
+
+const statusVariant: Record<string, 'warning' | 'secondary' | 'info' | 'success'> = {
+  pending: 'warning',
+  accepted: 'secondary',
+  in_progress: 'info',
+  completed: 'success',
+}
+
+export default function ClusterModal({
+  isOpen,
+  onClose,
+  errands,
   position,
-  onErrandSelect 
+  onErrandSelect,
 }: ClusterModalProps) {
-  if (!isOpen || !position || !errands || errands.length === 0) {
-    return null
-  }
+  if (!position || !errands || errands.length === 0) return null
 
   return (
-    <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto shadow-lg">
-        <div className="p-4">
-          {/* 헤더 */}
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-black">
-              이 지역의 심부름 ({errands.length}개)
-            </h3>
-            <button
-              onClick={onClose}
-              className="text-black hover:text-black text-xl"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`이 지역의 심부름 (${errands.length}개)`}
+      size="md"
+    >
+      <div className="space-y-3">
+        {errands.map((errand) => {
+          const categoryInfo = getCategoryInfo(errand.category)
+          return (
+            <div
+              key={errand.id}
+              className="p-3 border border-base-200 rounded-lg cursor-pointer hover:bg-base-50 hover:border-primary/40 transition-colors"
+              onClick={() => {
+                onErrandSelect(errand)
+                onClose()
+              }}
             >
-              ✕
-            </button>
-          </div>
-
-          {/* 심부름 목록 */}
-          <div className="space-y-3">
-            {errands.map((errand) => {
-              const categoryInfo = getCategoryInfo(errand.category)
-              return (
-                <div
-                  key={errand.id}
-                  className="p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 hover:border-blue-300 transition-colors"
-                  onClick={() => {
-                    onErrandSelect(errand)
-                    onClose()
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm">{categoryInfo.emoji}</span>
-                        <h4 className="font-medium text-black text-sm">{errand.title}</h4>
-                      </div>
-                      {errand.isUrgent && (
-                        <span className="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">
-                          🚨 마감임박
-                        </span>
-                      )}
-                    </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      errand.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      errand.status === 'accepted' ? 'bg-orange-100 text-orange-800' :
-                      errand.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
-                      {errand.status === 'pending' ? '대기중' :
-                       errand.status === 'accepted' ? '수락됨' :
-                       errand.status === 'in_progress' ? '진행중' : '완료'}
-                    </span>
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm">{categoryInfo.emoji}</span>
+                    <h4 className="font-medium text-sm">{errand.title}</h4>
                   </div>
-                  
-                  <p className="text-black text-sm mb-2 line-clamp-2">{errand.description}</p>
-                  
-                  <div className="flex justify-between items-center text-xs text-black">
-                    <span className="text-black">💰 ₩{errand.reward.toLocaleString()}</span>
-                    {errand.distance && (
-                      <span className="text-black">📍 {errand.distance.toFixed(1)}km</span>
-                    )}
-                  </div>
+                  {errand.isUrgent && (
+                    <Badge variant="error" size="xs">🚨 마감임박</Badge>
+                  )}
                 </div>
-              )
-            })}
-          </div>
-        </div>
+                <Badge variant={statusVariant[errand.status] ?? 'ghost'} size="sm">
+                  {statusLabel[errand.status] ?? errand.status}
+                </Badge>
+              </div>
+
+              <p className="text-base-content/60 text-sm mb-2 line-clamp-2">{errand.description}</p>
+
+              <div className="flex justify-between items-center text-xs text-base-content/50">
+                <span>💰 ₩{errand.reward.toLocaleString()}</span>
+                {errand.distance && <span>📍 {errand.distance.toFixed(1)}km</span>}
+              </div>
+            </div>
+          )
+        })}
       </div>
-    </div>
+    </Modal>
   )
 }

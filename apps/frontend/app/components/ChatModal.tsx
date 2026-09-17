@@ -5,6 +5,7 @@ import type { LocalMessage } from '../lib/types'
 import { chatApi } from '../lib/api'
 import { getSocket } from '../lib/socket'
 import type { Socket } from 'socket.io-client'
+import Button from './ui/Button'
 
 interface ChatModalProps {
   isOpen: boolean
@@ -190,15 +191,15 @@ export default function ChatModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full h-[600px] flex flex-col">
-        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+      <div className="bg-base-100 rounded-lg max-w-md w-full h-[600px] flex flex-col">
+        <div className="p-4 border-b border-base-300 flex justify-between items-center">
           <div>
-            <h3 className="font-semibold text-lg text-black">
+            <h3 className="font-semibold text-lg">
               {loading ? '채팅 로딩 중...' : otherUser?.name || '알 수 없는 사용자'}
             </h3>
-            <p className="text-sm text-black truncate">{errandTitle}</p>
+            <p className="text-sm text-base-content/70 truncate">{errandTitle}</p>
           </div>
-          <button onClick={onClose} className="text-black hover:text-black">
+          <button onClick={onClose} className="text-base-content hover:text-base-content/70">
             ✕
           </button>
         </div>
@@ -206,79 +207,74 @@ export default function ChatModal({
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <span className="ml-2 text-black">채팅을 불러오는 중...</span>
+              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <span className="ml-2 text-base-content/70">채팅을 불러오는 중...</span>
             </div>
           ) : error ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <p className="text-red-600 mb-2">{error}</p>
-                <button
-                  onClick={loadChatData}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  다시 시도
-                </button>
+                <p className="text-error mb-2">{error}</p>
+                <Button variant="primary" onClick={loadChatData}>다시 시도</Button>
               </div>
             </div>
           ) : messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
-              <p className="text-black">채팅을 시작해보세요!</p>
+              <p className="text-base-content/60">채팅을 시작해보세요!</p>
             </div>
           ) : (
             messages
               .filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i)
               .map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.senderId === currentUserId ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className="max-w-[70%]">
-                  <div
-                    className={`p-3 rounded-lg ${
-                      message.senderId === currentUserId
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 text-black'
-                    }`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                  </div>
-                  <div
-                    className={`flex items-center gap-1 text-xs text-black mt-1 ${
-                      message.senderId === currentUserId ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
-                    {message.senderId === currentUserId && (
-                      <span className={message.isRead ? 'text-blue-500' : 'text-gray-400'}>
-                        {message.isRead ? '읽음' : '전송됨'}
-                      </span>
-                    )}
-                    {formatTime(message.timestamp)}
+                <div
+                  key={message.id}
+                  className={`flex ${message.senderId === currentUserId ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className="max-w-[70%]">
+                    <div
+                      className={`p-3 rounded-lg ${
+                        message.senderId === currentUserId
+                          ? 'bg-primary text-primary-content'
+                          : 'bg-base-200 text-base-content'
+                      }`}
+                    >
+                      <p className="text-sm">{message.content}</p>
+                    </div>
+                    <div
+                      className={`flex items-center gap-1 text-xs text-base-content/60 mt-1 ${
+                        message.senderId === currentUserId ? 'justify-end' : 'justify-start'
+                      }`}
+                    >
+                      {message.senderId === currentUserId && (
+                        <span className={message.isRead ? 'text-primary' : 'text-base-content/40'}>
+                          {message.isRead ? '읽음' : '전송됨'}
+                        </span>
+                      )}
+                      {formatTime(message.timestamp)}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200">
+        <form onSubmit={handleSendMessage} className="p-4 border-t border-base-300">
           <div className="flex gap-2">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="메시지를 입력하세요..."
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
+              className="input input-bordered flex-1"
               disabled={loading || !!error || !chatId}
             />
-            <button
+            <Button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+              variant="primary"
               disabled={!newMessage.trim() || loading || !!error || !chatId}
             >
               전송
-            </button>
+            </Button>
           </div>
         </form>
       </div>

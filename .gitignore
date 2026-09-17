@@ -44,3 +44,6 @@ node_modules/
 
 playwright-report/data
 test-results/
+
+*storybook.log
+storybook-static
